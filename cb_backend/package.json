@@ -17,12 +17,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "image-to-pdf": "^2.0.0",
     "jimp": "^0.22.12",
     "jpeg-js": "^0.4.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
     "openai": "^4.56.0",
-    "opencv.js": "^1.2.1"
+    "opencv.js": "^1.2.1",
+    "replicate": "^0.32.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

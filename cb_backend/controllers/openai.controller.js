@@ -9,7 +9,6 @@ const queryChatGPT = (prompt) => {
 }
 
 const getPagesDescription = (descriptions) => {
-    console.log(descriptions)
     return JSON.parse(descriptions).pageDescriptions
 }
 
@@ -49,7 +48,7 @@ const queryPagesDescriptions = (pageCount, childPreferences) => {
             messages: [{ role: "user",
                 content: [
                     {
-                        "type": "text", "text": `Generate the pages of a children's colouring book. Make up random images to generate with a standard diffusion model and use the getPagesDescription function to pass each page desciption. The child likes ${childPreferences}.Get creative in assembling little scenarios and pictures for each page, but keep the descriptions concise and short for the Stable Diffusion model.`
+                        "type": "text", "text": `Generate exactly ${pageCount} pages of a children's colouring book. Give the page descriptions to generate random black and white images with a standard diffusion model. The child likes ${childPreferences}.Give short, simple little creative scenes for each page, but keep the descriptions simple for generation, and only include a few preferences in each image.`
                     }
                 ]
             }],
@@ -68,5 +67,6 @@ const handleQuery = (req, res) => {
 
 module.exports = {
     queryChatGPT,
-    handleQuery
+    handleQuery,
+    queryPagesDescriptions
 }
