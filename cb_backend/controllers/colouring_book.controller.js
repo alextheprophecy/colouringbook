@@ -1,4 +1,4 @@
-const {queryFluxSchnell} = require("./replicate.controller");
+const {queryFluxSchnell, queryFluxBetter} = require("./replicate.controller");
 const {Axios} = require("axios");
 const crypto = require('crypto')
 const axios = require("axios");
@@ -6,6 +6,8 @@ const imgToPDF = require('image-to-pdf')
 const {createWriteStream, appendFile} = require("fs");
 const {queryPagesDescriptions} = require("./openai.controller");
 
+
+const SAVEPATH = "../Builds/ColouringBooks/"
 const genColouringBook = (req, res) =>{
      const constImages = ["https://replicate.delivery/yhqm/WTyuUWfPRjRsdCJhhDPjYV7pvOblnQn5RgcESmJFREVjh1pJA/out-0.png", "https://replicate.delivery/yhqm/WTyuUWfPRjRsdCJhhDPjYV7pvOblnQn5RgcESmJFREVjh1pJA/out-0.png"]
 
@@ -25,15 +27,15 @@ const genColouringBook = (req, res) =>{
         )
         Promise.all(images).then(b64_array => {
             const hash = crypto.createHash('sha1').update(Date.now().toString().concat(b64_array[0])).digest('hex').slice(0,10)
-            const fileName = `coloring_book_${hash}.pdf`
-            const stream = imgToPDF(b64_array, imgToPDF.sizes.A4).pipe(createWriteStream(`./lib/builds/${fileName}`))
+            const fileName = `colouring_book_${hash}.pdf`
+            const stream = imgToPDF(b64_array, imgToPDF.sizes.A4).pipe(createWriteStream(SAVEPATH.concat(fileName)))
             stream.on("finish", () => {
-                appendFile('./lib/builds/books_descriptions.txt', `${fileName}: ${preferences}`, (err) => {
+                appendFile(`${SAVEPATH}books_descriptions.txt`, `\n${fileName}:     ${preferences}`, (err) => {
                     if(err){
                         console.log(err)
                         res.send(400)
                     }
-                    res.status(200).send(`Succesfully generated in:     ${fileName}`)
+                    res.status(200).send(`Succesfully generated in: ${fileName}`)
                 })
             })
         })
