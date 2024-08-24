@@ -1,6 +1,10 @@
 const OpenAI = require("openai");
 const openai = new OpenAI();
 
+const childPrompt = (childPreferences) => `a children\'s colouring book. Give the page descriptions to generate random black and white detailed images. Describe properly the characteristics of the contents of the pages for clear colourless image generation using a stable diffusion model. No colour description. The child likes ${childPreferences}.`
+const adultPrompt = (adultPreferences) => `a grown up\'s colouring book. Give the page descriptions to generate random black and white detailed images, with a standard diffusion model. Make sure the image is clear, and unshaded. The adult likes ${adultPreferences}.`
+
+const FORCHILD = true
 const queryChatGPT = (prompt) => {
     return openai.chat.completions.create({
         messages: [{ role: "user", content: prompt }],
@@ -9,10 +13,13 @@ const queryChatGPT = (prompt) => {
 }
 
 const getPagesDescription = (descriptions) => {
+    console.log(descriptions)
     return JSON.parse(descriptions).pageDescriptions
 }
 
 const queryPagesDescriptions = (pageCount, childPreferences) => {
+
+    const preferences = FORCHILD?childPrompt(childPreferences):adultPrompt(childPreferences)
     const tools =  [
         {
             type: "function",
@@ -48,7 +55,7 @@ const queryPagesDescriptions = (pageCount, childPreferences) => {
             messages: [{ role: "user",
                 content: [
                     {
-                        "type": "text", "text": `Generate exactly ${pageCount} pages of a children's colouring book. Give the page descriptions to generate random black and white images with a standard diffusion model. The child likes ${childPreferences}.Give short, simple little creative scenes for each page, but keep the descriptions simple for generation, and only include a few preferences in each image.`
+                        "type": "text", "text": `Generate exactly ${pageCount} pages of ${preferences} Give short and simple descriptions to generate simple little creative scenes for each page, and only include a few preferences in each image.`
                     }
                 ]
             }],

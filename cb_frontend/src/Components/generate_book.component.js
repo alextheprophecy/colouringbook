@@ -4,7 +4,7 @@ import axios from "axios";
 const GenerateBook = () => {
     const [preferences, setPreferences] = useState("snails, bees, chess, and ice cream.")
     const [pages, setPages] = useState([])
-    const PAGECOUNT = 5
+    const PAGECOUNT = 2
 
     const updatePreferences = (e) => {
         setPreferences(e.target.value)
@@ -24,7 +24,7 @@ const GenerateBook = () => {
         )
     }
 
-    return <div>
+    return     <div>
         <input type="text" value={preferences} onChange={updatePreferences}/>
         <button onClick={handleUpload}> Add </button>
         {showBook()}

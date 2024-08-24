@@ -8,9 +8,9 @@ const {queryPagesDescriptions} = require("./openai.controller");
 
 
 const SAVEPATH = "../Builds/ColouringBooks/"
+const CHILD_PROMPT = (descr)=>`Children's detailed coloring book page of "${descr}". Get creative in the drawing. Only black outlines, no text, colorless, black and white, no missing limbs, no extra limbs, coherent`
+const ADULT_PROMPT = (descr)=>`Adult's detailed colouring book page of "${descr}". With no shading, no text, no writing, unshaded, colorless, thin lines, black and white`
 const genColouringBook = (req, res) =>{
-     const constImages = ["https://replicate.delivery/yhqm/WTyuUWfPRjRsdCJhhDPjYV7pvOblnQn5RgcESmJFREVjh1pJA/out-0.png", "https://replicate.delivery/yhqm/WTyuUWfPRjRsdCJhhDPjYV7pvOblnQn5RgcESmJFREVjh1pJA/out-0.png"]
-
     const imageCount = req.query.imageCount
     const preferences = req.query.preferences
 
@@ -19,8 +19,8 @@ const genColouringBook = (req, res) =>{
         let pageDescriptions = JSON.parse(a)
         if(pageDescriptions.length>imageCount) pageDescriptions = pageDescriptions.splice(0,imageCount)
 
-        const images = pageDescriptions.map(descr =>
-            queryFluxSchnell(`Children's colouring book page of "${descr}", no text, no writing, colorless, black and white`).then(imgLink => {
+        const images = pageDescriptions.map(descr    =>
+            queryFluxBetter(CHILD_PROMPT(descr)).then(imgLink => {
                 console.log("LINK: ", imgLink)
                 return axios.get(imgLink, {responseType: 'arraybuffer'}).then(response => Buffer.from(response.data, 'base64'))
             })

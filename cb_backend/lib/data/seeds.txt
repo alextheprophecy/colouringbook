@@ -1,0 +1,16 @@
+flux-dev:
+cb_9356c82c25:
+    img3: 41834
+    img0: 115
+    img1: 44486
+
+cb_334a372993:
+    img3: 18864
+    img0: 39266 -g -proofs: 2 -proportions a little off?
+    img2: 34895 -g - simple -proofs: 2
+
+cb_6484b44d4f:
+    img1: 56256 -g
+    img3: 34135 -vg
+
+    52489 -bit anime, half shading
