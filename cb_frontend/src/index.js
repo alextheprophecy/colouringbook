@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ColourBookify from "./Components/colour_bookify.component";
-import GenerateBook from "./Components/generate_book.component";
-import ExampleBook from "./Components/example_book.component";
+import TranslatedApp from "./Components/App";
+import './i18n'; //load translation files from /public/locales
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ExampleBook/>
+    <TranslatedApp/>
   </React.StrictMode>
 );

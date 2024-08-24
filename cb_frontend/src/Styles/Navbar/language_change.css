@@ -1,0 +1,13 @@
+.top-right{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 20px;
+    background-color: darkred;
+}
+
+.language_buttons_container{
+    display: flex;
+    flex-wrap: wrap;
+}
