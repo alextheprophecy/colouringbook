@@ -1,10 +1,9 @@
 const OpenAI = require("openai");
 const openai = new OpenAI();
 
-const childPrompt = (childPreferences) => `a children\'s colouring book. Give the page descriptions to generate random black and white detailed images. Describe properly the characteristics of the contents of the pages for clear colourless image generation using a stable diffusion model. No colour description. The child likes ${childPreferences}.`
-const adultPrompt = (adultPreferences) => `a grown up\'s colouring book. Give the page descriptions to generate random black and white detailed images, with a standard diffusion model. Make sure the image is clear, and unshaded. The adult likes ${adultPreferences}.`
+const childPrompt = (childPreferences) => `a children\'s colouring book. Give the page descriptions to generate black and white detailed images. Describe properly the characteristics of the contents of the pages for clear colourless image generation using a stable diffusion model. No colour description. The child likes ${childPreferences}.`
+const adultPrompt = (adultPreferences) => `a grown up\'s colouring book. Give the page descriptions to generate black and white detailed images, with a standard diffusion model.  Describe properly the characteristics of the contents of the pages for clear colourless, unshaded image generation using a stable diffusion model. No colour description. The adult likes ${adultPreferences}.`
 
-const FORCHILD = true
 const queryChatGPT = (prompt) => {
     return openai.chat.completions.create({
         messages: [{ role: "user", content: prompt }],
@@ -17,9 +16,9 @@ const getPagesDescription = (descriptions) => {
     return JSON.parse(descriptions).pageDescriptions
 }
 
-const queryPagesDescriptions = (pageCount, childPreferences) => {
+const queryPagesDescriptions = (pageCount, book_preferences, forAdult= false) => {
 
-    const preferences = FORCHILD?childPrompt(childPreferences):adultPrompt(childPreferences)
+    const preferences = forAdult?adultPrompt(book_preferences):childPrompt(book_preferences)
     const tools =  [
         {
             type: "function",

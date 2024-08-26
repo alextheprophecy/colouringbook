@@ -7,9 +7,11 @@
         "scpecific": "Fornisci suggerimenti specifici per ogni pagina"
     },
     "creation": {
-        "placeholder": "Mario gioca con...",
         "option1": "Migliore qualit\u00e0 dell'immagine (aumento del prezzo)",
         "option2": "Colorazione pi\u00f9 difficile",
-        "option3": "Solo una pagina"
+        "option3": "Solo una pagina",
+        "create": "Crea il mio libro",
+        "warning1": "Please fill in the book description!",
+        "placeholder1": "Mario gioca con..."
     }
 }

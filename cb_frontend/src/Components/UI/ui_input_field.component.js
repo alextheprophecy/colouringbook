@@ -18,6 +18,7 @@ const InputField = ({ width, height, placeholder_text, updateValue}) => {
             }
         };
         adjustHeight()
+        textarea.style.height = '175px'; // Dirty hardcode to make placeholder show properly
 
         textarea.addEventListener('input', adjustHeight)
 

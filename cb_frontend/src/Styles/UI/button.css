@@ -1,4 +1,5 @@
 .create_button{
+    z-index: 2;
     align-self: center;
     width: 100%;
     height: 2.25rem;
@@ -21,6 +22,18 @@
     &:active{
         background-color: darkred;
         box-shadow: inset 2px 2px 7px rgba(0,0,0,0.5);
+    }
+}
 
+.help-button{
+    font-size: 1.2rem;
+    height: 2.5rem;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    background-color: indianred;
+
+
+    &:hover{
+        background-color: red;
+        box-shadow: 2px 2px 7px rgba(0,0,0,0.6);
     }
 }

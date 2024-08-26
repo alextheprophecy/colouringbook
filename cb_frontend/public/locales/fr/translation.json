@@ -7,9 +7,20 @@
         "scpecific": "Donnez des consignes sp\u00e9cifiques pour chaque page"
     },
     "creation": {
-        "placeholder": "Mario jouant avec...",
         "option1": "Meilleure qualit\u00e9 d'image (augmentation du prix)",
         "option2": "Coloriage plus difficile",
-        "option3": "Une seule page"
+        "option3": "Une seule page",
+        "create": "Cr\u00e9er mon livre",
+        "warning1": "Veuillez remplir la description de votre livre!",
+        "placeholder1": "Mario jouant aux \u00e9checs contre une grenouille dans un parc, ils sont tous les deux concentr\u00e9s et s'amusent. \nUn dragon soufflant sur les bougies de son g\u00e2teau d'anniversaire.",
+        "placeholder2": "Un lapin en tenue de football marquant un but. Le ballon est dans le coin inf\u00e9rieur du filet. Le grand texte \u00ab BUT \u00bb est \u00e9crit en haut de la page. \nUn gnome heureux assis sur une souche d'arbre en train de manger une pizza.",
+        "placeholder3": "Un groupe de trois grenouilles sautant par-dessus la lune.\nUn grand coffre au tr\u00e9sor ouvert, brillant et rempli de pizzas et de glaces.",
+        "tips_button": "Aide: Comment cr\u00e9er son livre?",
+        "tips_close_button": "Cliquez \u00e0 nouveau pour masquer",
+        "tips1": "G\u00e9n\u00e9rez plusieurs pages en \u00e9crivant chaque sc\u00e8ne dans une phrase distincte\n\n[do]Un dragon soufflant sur les bougies de son g\u00e2teau d'anniversaire. Un troupeau de 5 moutons heureux dans un champ, regardant la t\u00e9l\u00e9vision sur un grand \u00e9cran[/do]",
+        "tips2": "Les personnages/personnes c\u00e9l\u00e8bres peuvent donner des r\u00e9sultats incoh\u00e9rents\n\n[avoid]Mario, Superman, Elon Musk[/avoid]\n[do]Un chien, un dragon, un gnome, une f\u00e9e, un homme grand avec une moustache, un homme souriant avec de grands cheveux jaunes ondul\u00e9s[/do]",
+        "tips3": "Utilisez des descriptions sp\u00e9cifiques. \n[avoid]\u2026jouant ensemble[/avoid][do]\u2026jouant au loup et courant dans un grand champ d'herbe[/do] \n[avoid]des chiens[/avoid]  [do] un groupe de trois chiens[/do]",
+        "tips4": "\u00c9vitez de regrouper trop de personnages\n[avoid]\u2026avec un dragon, un grand \u00e9l\u00e9phant, un crocodile et un lutin heureux[/avoid] [do]avec un lutin assis \u00e0 c\u00f4t\u00e9 d\u2019un dragon.[/do]",
+        "tips5": "Pour des sc\u00e8nes plus complexes ou une meilleure qualit\u00e9, activez \"Meilleure qualit\u00e9\""
     }
 }

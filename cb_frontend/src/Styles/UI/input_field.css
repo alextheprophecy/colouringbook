@@ -3,12 +3,14 @@ textarea {
     bottom: 50%;
     width: 40vw;
     min-width: 400px;
-    height: 20px;
+    height: 50px;
     max-height: 30vh; /* Set a reasonable max-height */
     resize: none;
     background-color: transparent;
     border: none;
     outline: none;
+
+    line-height: 1.8vw;
     font-family: "Lucida Console", sans-serif;
     font-size: 1.5vw;
     color: rosybrown;
@@ -25,7 +27,7 @@ textarea::-webkit-scrollbar {
 
 /* Placeholder styles */
 textarea::placeholder {
-    color: rosybrown;
+    color: rgba(188, 143, 143, 0.67);
     vertical-align: bottom;
 }
 textarea:focus::placeholder {

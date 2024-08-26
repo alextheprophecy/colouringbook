@@ -9,7 +9,7 @@ i18n
     .use(initReactI18next)
     .init({
         debug: true,
-        fallbackLng: 'en_gb',
+        fallbackLng: 'fr',
     });
 
 //https://lokalise.com/blog/how-to-internationalize-react-application-using-i18next/

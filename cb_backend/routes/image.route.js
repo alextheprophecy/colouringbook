@@ -5,5 +5,5 @@ const {genColouringBook} = require("../controllers/colouring_book.controller");
 const router = express.Router();
 
 // router.get('/modify',modifyImg);
-router.get('/generate', genColouringBook)
+router.get('/generateImages', genColouringBook)
 module.exports = router;
