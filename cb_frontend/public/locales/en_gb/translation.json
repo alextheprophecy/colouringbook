@@ -5,5 +5,11 @@
         "batman-mario": "Batman and mario playing different sports together, happiness, outdoors",
         "scenarios": "Turn any scenario into a colouring page!",
         "scpecific": "Give specific prompts for each page"
+    },
+    "creation": {
+        "placeholder": "Mario playing with\u2026",
+        "option1": "Better quality (increased price)",
+        "option2": "More difficult colouring",
+        "option3": "Only one page"
     }
 }

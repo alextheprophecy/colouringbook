@@ -5,5 +5,11 @@
         "batman-mario": "Batman und Mario spielen gemeinsam verschiedene Sportarten, Gl\u00fcck, drau\u00dfen",
         "scenarios": "Verwandle jedes Szenario in eine Ausmalseite!",
         "scpecific": "Geben Sie spezifische Anweisungen f\u00fcr jede Seite"
+    },
+    "creation": {
+        "placeholder": "Mario spielt mit...",
+        "option1": "Bessere Bildqualit\u00e4t (Preiserh\u00f6hung)",
+        "option2": "Schwierigeres Ausmalen",
+        "option3": "Nur eine Seite"
     }
 }

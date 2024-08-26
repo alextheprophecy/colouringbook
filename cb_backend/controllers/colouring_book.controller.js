@@ -20,7 +20,7 @@ const genColouringBook = (req, res) =>{
         if(pageDescriptions.length>imageCount) pageDescriptions = pageDescriptions.splice(0,imageCount)
 
         const images = pageDescriptions.map(descr    =>
-            queryFluxBetter(CHILD_PROMPT(descr)).then(imgLink => {
+            queryFluxSchnell(CHILD_PROMPT(descr)).then(imgLink => {
                 console.log("LINK: ", imgLink)
                 return axios.get(imgLink, {responseType: 'arraybuffer'}).then(response => Buffer.from(response.data, 'base64'))
             })

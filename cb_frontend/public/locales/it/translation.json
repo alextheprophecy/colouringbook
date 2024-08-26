@@ -5,5 +5,11 @@
         "batman-mario": "Batman e Mario che giocano insieme a diversi sport, felicit\u00e0, all'aperto",
         "scenarios": "Trasforma qualsiasi scenario in una pagina da colorare!",
         "scpecific": "Fornisci suggerimenti specifici per ogni pagina"
+    },
+    "creation": {
+        "placeholder": "Mario gioca con...",
+        "option1": "Migliore qualit\u00e0 dell'immagine (aumento del prezzo)",
+        "option2": "Colorazione pi\u00f9 difficile",
+        "option3": "Solo una pagina"
     }
 }
