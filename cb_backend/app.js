@@ -4,24 +4,25 @@ const bodyParser = require('body-parser');
 const dotenv = require("dotenv") //setting environment variables s.a. secret key
 dotenv.config()
 
-const ImageRoute = require("./routes/image.route");
-
-
-const app = express();
-
-//const CONNECTDB = require(“../config/config”);
+const PORT  = process.env.PORT || 5000 ;
 
 //Database Connection
-//Connect.CONNECTDB(process.env.MONGO_DB_URL);
+const CONNECTDB = require('./config/config')
+CONNECTDB(process.env.MONGO_DB_URL);
 
-const PORT  = process.env.PORT || 5000 ;
-//middlewares
+const ImageRoute = require("./routes/image.route");
+const UserRoute = require("./routes/user.route");
+
+const app = express();
 app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(cors());
 
 //Routes
-app.use("/api/image",ImageRoute);
+app.use("/api/image", ImageRoute);
+app.use("/api/user", UserRoute);
 
 //listen to the port
 app.listen(PORT, ()=> {

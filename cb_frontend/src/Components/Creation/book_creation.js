@@ -8,8 +8,9 @@ import UI_Button from "../UI/ui_button";
 import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";
 import CreationTips from "./creation_tips.component";
+import api, {apiGet, apiPost} from "../../Hooks/ApiHandler";
 
-const PAGECOUNT = 4
+const PAGE_COUNT = 4
 
 const BookCreation = () => {
     const {t} = useTranslation()
@@ -24,13 +25,22 @@ const BookCreation = () => {
     const createBook = () => {
         if(creationParams.description==='')return alert(t('creation.warning1'))
         setCreationVisible(false)
-        const pages = creationParams.option3?1:PAGECOUNT
+        const pages = creationParams.option3?1:PAGE_COUNT
         const preferences = creationParams.description
         const forAdult = creationParams.option2
         const greaterQuality = creationParams.option1
         axios.get("http://localhost:5000/api/image/generateImages", {params: {imageCount: pages, preferences: preferences, forAdult: forAdult, greaterQuality: greaterQuality}}).then((r)=> {
             console.log(r.data)
             setImages(r.data)
+        })
+    }
+
+    const testButton = () => {
+        api.get('image/test', {params: {imageCount: 4}}).then(r=>{
+            if(!r) return
+            console.log('gone through', r.data)
+
+            alert(r.data)
         })
     }
 
@@ -63,7 +73,7 @@ const BookCreation = () => {
                 <div><UI_Switch updateValue={updateParameter('option1')}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
                 <div><UI_Switch updateValue={updateParameter('option3')} toggled={true}/> <span className={'switch-caption'}>{t('creation.option3')}</span></div>
-                <UI_Button button_text={t('creation.create')} callbackFunction={createBook}/>
+                <UI_Button button_text={t('creation.create')} callbackFunction={testButton}/>
             </div>
         </div>
         <CreationTips visible={tipsVisible} setVisible={setTipsVisible}/>

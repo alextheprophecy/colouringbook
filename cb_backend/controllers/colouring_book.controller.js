@@ -44,10 +44,16 @@ const genPDFFromImages = (req, res) => {
             res.status(200).send(`Succesfully generated in: ${fileName}`)
         })
     })
+}
 
+const genTest = (req, res, next) => {
+    res.send(
+        "OK!"
+    )
 }
 
 module.exports = {
     genColouringBook,
-    genPDFFromImages
+    genPDFFromImages,
+    genTest
 }
