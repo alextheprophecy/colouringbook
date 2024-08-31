@@ -1,4 +1,4 @@
-const User = require('../models/user.model')
+const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
 
 const jwt_TTL = '1h'
@@ -57,3 +57,5 @@ class UserControllers {
     }
 
 }
+
+module.exports = UserControllers

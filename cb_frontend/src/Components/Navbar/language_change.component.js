@@ -13,7 +13,7 @@ const LanguageChange = () => {
     const { t, i18n } = useTranslation();
 
 
-    return <span className={'top-right language_buttons_container'}>
+    return <span className={'bottom-right language_buttons_container'}>
         {Object.keys(locales).map((locale) => (
             <div key={locale}><button style={{ fontWeight: i18n.resolvedLanguage === locale ? 'bold' : 'normal' }} type="submit" onClick={() => i18n.changeLanguage(locale)}>
                 {locales[locale].title}

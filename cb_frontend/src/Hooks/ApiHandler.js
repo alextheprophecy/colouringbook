@@ -37,7 +37,7 @@ api.interceptors.response.use(
                 break;
         }
 
-        alert(error.response?.data)
+        alert(JSON.stringify(error.response?.data))
         return Promise.resolve()
     }
 )

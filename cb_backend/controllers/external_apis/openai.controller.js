@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 const openai = new OpenAI();
 
-const childPrompt = (childPreferences) => `a children\'s colouring book. Give the page descriptions to generate black and white detailed images. Describe properly the characteristics of the contents of the pages for clear colourless image generation using a stable diffusion model. No colour description. The child likes ${childPreferences}.`
+const childPrompt = (childPreferences) => `a children\'s colouring book. Give the page descriptions to generate black and white detailed images. Describe properly the characteristics of the contents of the pages for clear colourless image generation using a stable diffusion model. No color description. Do not mention any colors. The child likes ${childPreferences}.`
 const adultPrompt = (adultPreferences) => `a grown up\'s colouring book. Give the page descriptions to generate black and white detailed images, with a standard diffusion model.  Describe properly the characteristics of the contents of the pages for clear colourless, unshaded image generation using a stable diffusion model. No colour description. The adult likes ${adultPreferences}.`
 
 const queryChatGPT = (prompt) => {

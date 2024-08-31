@@ -11,10 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "@techstark/opencv-js": "^4.10.0-beta.1",
+    "aws-sdk": "^2.1687.0",
     "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
+    "cloudinary": "^2.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -25,6 +27,7 @@
     "mongoose": "^8.5.3",
     "openai": "^4.56.0",
     "opencv.js": "^1.2.1",
+    "p-limit": "^6.1.0",
     "replicate": "^0.32.0"
   },
   "devDependencies": {

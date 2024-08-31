@@ -4,12 +4,14 @@ import LanguageChange from "./Components/Navbar/language_change.component";
 import './Styles/main.css'
 import BookCreation from "./Components/Creation/book_creation";
 import LoginForm from "./Components/Navbar/login_form.component";
+import Profile from "./Components/Navbar/profile.component";
 function App() {
     return (
         <div className={'main-container'}>
-            <LoginForm/>
 
             <BookCreation/>
+            <LoginForm/>
+            <Profile/>
 
         </div>
     );

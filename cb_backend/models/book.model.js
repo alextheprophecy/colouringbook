@@ -1,17 +1,22 @@
 const {Schema, model} = require('mongoose')
 
 const BookSchema = new Schema({
-    title: {
-        type:String,
-        required:true
-    },
     userId: {
-        type:String,
-        required:true
+        type: Schema.ObjectId,
+        required: true
     },
-    res_path: {
+    description: {
         type: String,
         required: true
+    },
+    pages: {
+        type: Number,
+        required: true,
+        default: 0
     }
-});
+},
+    {
+        timestamps: true
+    });
+
 module.exports = model("Book", BookSchema);

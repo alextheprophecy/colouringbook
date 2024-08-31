@@ -9,8 +9,9 @@ import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";
 import CreationTips from "./creation_tips.component";
 import api, {apiGet, apiPost} from "../../Hooks/ApiHandler";
+import {getUserData, getUserId, saveUserData, updateUserData} from "../../Hooks/UserDataHandler";
 
-const PAGE_COUNT = 4
+const PAGE_COUNT = 2
 
 const BookCreation = () => {
     const {t} = useTranslation()
@@ -19,7 +20,7 @@ const BookCreation = () => {
     const [tipsVisible, setTipsVisible] = useState(false)
 
     const [creationParams, setCreationParams] = useState({description:'', option1: false, option2: false, option3: true})
-
+    const [creditCost, setCreditCost] = useState(0)
     const [images, setImages] = useState([])
 
     const createBook = () => {
@@ -29,14 +30,19 @@ const BookCreation = () => {
         const preferences = creationParams.description
         const forAdult = creationParams.option2
         const greaterQuality = creationParams.option1
-        axios.get("http://localhost:5000/api/image/generateImages", {params: {imageCount: pages, preferences: preferences, forAdult: forAdult, greaterQuality: greaterQuality}}).then((r)=> {
-            console.log(r.data)
-            setImages(r.data)
+
+        const bookData = {imageCount: pages, preferences: preferences, forAdult: forAdult, greaterQuality: greaterQuality}
+
+        api.post('image/generateImages', bookData).then(r => {
+            if(!r) return
+            const {credits_updated, images} = r.data
+            setImages(images)
+            updateUserData({credits: credits_updated})
         })
     }
 
     const testButton = () => {
-        api.get('image/test', {params: {imageCount: 4}}).then(r=>{
+        api.post('image/test', {bookDescription: {imageCount: 600}, user_id: getUserId()}).then(r=>{
             if(!r) return
             console.log('gone through', r.data)
 
@@ -51,6 +57,10 @@ const BookCreation = () => {
     const showTips = () => {
         setTipsVisible(!tipsVisible)
     }
+
+    const usedCredits = () => <div>Cost:
+        {(creationParams.option3?1:PAGE_COUNT)*(creationParams.option1?10:1)} credits
+    </div>
 
     const updateParameter = param => value => setCreationParams({...creationParams, [param]: value})
 
@@ -73,9 +83,11 @@ const BookCreation = () => {
                 <div><UI_Switch updateValue={updateParameter('option1')}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
                 <div><UI_Switch updateValue={updateParameter('option3')} toggled={true}/> <span className={'switch-caption'}>{t('creation.option3')}</span></div>
-                <UI_Button button_text={t('creation.create')} callbackFunction={testButton}/>
+                {usedCredits()}
+                <UI_Button button_text={t('creation.create')} callbackFunction={createBook}/>
             </div>
         </div>
+
         <CreationTips visible={tipsVisible} setVisible={setTipsVisible}/>
     </div>
 

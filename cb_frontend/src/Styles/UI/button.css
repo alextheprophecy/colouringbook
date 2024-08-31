@@ -6,7 +6,7 @@
     border: none;
     border-radius: 5px;
     left: 0.25em;
-    bottom: 0.2em;
+    /*bottom: 0.2em;*/
 
     font-family: "Lucida Console", sans-serif;
     font-size: 1.2rem;
@@ -26,10 +26,15 @@
 }
 
 .help-button{
+    position: fixed;
+    display: inline-block;
+    top: 0;
+    left:0;
     font-size: 1.2rem;
     height: 2.5rem;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
     background-color: indianred;
+    margin: 0;
 
 
     &:hover{

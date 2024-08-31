@@ -30,7 +30,7 @@
 }
 
 .book-title{
-    font-family: Bu-Wicked;
+    font-family: Bu-Wicked, sans-serif;
     font-size: 2.3rem;
     text-align: center;
 }

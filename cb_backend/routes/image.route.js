@@ -1,12 +1,13 @@
 const express =  require("express");
 // const {modifyImg} = require("../controllers/image.controller");
-const {handleQuery} = require("../controllers/openai.controller");
-const {genColouringBook, genTest} = require("../controllers/colouring_book.controller");
+const {handleQuery} = require("../controllers/external_apis/openai.controller");
+const {genColouringBook, genTest} = require("../controllers/book/colouring_book.controller");
 const {verifyToken} = require('../middleware/auth');
+const generateUserBook = require("../controllers/user/user.controller");
 
 const router = express.Router();
 
-router.get('/generateImages', verifyToken, genColouringBook)
-router.get('/test', verifyToken, genTest)
+router.post('/generateImages', verifyToken, generateUserBook)
+// router.post('/test', verifyToken, genTest)
 
 module.exports = router;

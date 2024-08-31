@@ -15,14 +15,16 @@ const LoginForm = () => {
         e.preventDefault();
         handleLogin(formData)
     }
-    const loginHTML = () =>  <div className={'login-form'}>
+    const loginHTML = () =>
         <form onSubmit={onLogin}>
             <input type={'text'} name={'email'} onChange={handleChange}/>
             <input type={'password'} name={'password'} onChange={handleChange}/>
             <input type={'submit'} value={'login'}/>
         </form>
-    </div>
 
-    return isUserLoggedIn() ? <LogoutComponent/>:loginHTML()
+
+    return <div className={'login-form'}>
+        {isUserLoggedIn() ? <LogoutComponent/> : loginHTML()}
+    </div>
 }
 export default LoginForm
