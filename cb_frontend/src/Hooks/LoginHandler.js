@@ -6,6 +6,7 @@ const handleLogin = (loginData) => {
     api.post('user/login', loginData).then((r)=> {
         if(!r)return
         const {__v, ...data} = r.data.user
+
         saveUserData(data)
         window.location.reload()
     })

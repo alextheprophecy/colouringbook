@@ -1,18 +1,17 @@
 import { Suspense } from 'react';
-import ExampleBook from "./Components/example_book.component";
+import ExampleBooks from "./Components/example_books.component";
 import LanguageChange from "./Components/Navbar/language_change.component";
 import './Styles/main.css'
 import BookCreation from "./Components/Creation/book_creation";
 import LoginForm from "./Components/Navbar/login_form.component";
 import Profile from "./Components/Navbar/profile.component";
+import Gallery from "./Components/gallery.component";
 function App() {
     return (
         <div className={'main-container'}>
-
-            <BookCreation/>
+            <Gallery/>
             <LoginForm/>
             <Profile/>
-
         </div>
     );
 }

@@ -1,35 +1,58 @@
 const User = require("../../models/user.model");
+const Book = require("../../models/book.model");
 const {generateColouringBook} = require("../book/colouring_book.controller");
+const {getBookImages} = require("../external_apis/aws.controller");
 
 const generateUserBook = (req, res, next) => {
     const user = req.user
-    console.log(user)
     const bookData = req.body
+    console.log('gonna create', JSON.stringify(user))
+    console.log('book create', JSON.stringify(bookData))
 
-    checkCreditsSufficient(user, {greaterQuality: bookData.greaterQuality, imageCount: bookData.imageCount })
+    _checkCreditsSufficient(user, {greaterQuality: bookData.greaterQuality, imageCount: bookData.imageCount })
         .then((newCredits) => {
+            console.log('has the credits')
+
             user.credits = newCredits
-            generateColouringBook(bookData, user, res)
-            // res.status(200).json('valid')
+            generateColouringBook(bookData, user, res).then( (images) =>
+                res.status(200).json({credits_updated: user.credits, images: images})
+            )
         })
     .catch(err => res.status(400).send(err))
 }
 
+const getUserBooks = (req, res, next) => {
+    const user = req.user
+    Book.find({ userId: user.id }).then(async (books) => {
+        const books_data = await Promise.all(
+            books.map(async (book) => ({
+                title: book.description,
+                pages: await getBookImages(user, book),
+                date: book.createdAt,
+            }))
+        )
 
-
-const checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
-    const creditCost = imageCount * (greaterQuality?10:1)
-    if(creditCost<=0) res.status(400).send('error calculating credits')
-
-    return getUser(user.id).then(user => {
-        if(!user) throw new Error('User not Found')
-        const newSum = user.credits - creditCost
-        if(newSum<0) throw new Error('Not enough credits')
-
-        return User.updateOne({ id: user._id }, {credits: newSum}).exec().then(() => newSum)
+        res.status(200).send(books_data)
     })
 }
 
-const getUser = (user) => User.findOne({ id: user.id })
+const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
+    const creditCost = imageCount * (greaterQuality?10:1)
+    if(creditCost<=0) throw new Error('error calculating credits')
 
-module.exports =  generateUserBook
+
+    return User.findOneAndUpdate(
+        {_id: user.id, credits: {$gte: creditCost}}, {"$inc": {credits: -creditCost}}, {new: true}
+    ).then((updatedUser) => {
+        console.log('user', updatedUser)
+        if(!updatedUser){
+            throw new Error('Insufficient funds!')
+        }
+        return updatedUser.credits
+    })
+}
+
+module.exports = {
+    generateUserBook,
+    getUserBooks
+}

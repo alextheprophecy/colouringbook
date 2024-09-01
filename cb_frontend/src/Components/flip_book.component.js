@@ -14,7 +14,7 @@ const FlipBook = ({title, pages_directory, pages}) => {
             <HTMLFlipBook className={"curved-page"} size={"stretch"} width={300} height={450}>
                 {pages.map((p, i) =>
                     p===BLANK_PAGE ? _getBlankPageHTML(i) :
-                        ['.jpg', '.png'].some(ext => p.endsWith(ext)) ? _getImagePageHTML(pages_directory + p, i) : _getTextPageHTML(p, i)
+                        ['.jpg', '.png'].some(ext => p.split('?')[0].endsWith(ext)) ? _getImagePageHTML(pages_directory + p, i) : _getTextPageHTML(p, i)
                 )}
             </HTMLFlipBook>
         </span>

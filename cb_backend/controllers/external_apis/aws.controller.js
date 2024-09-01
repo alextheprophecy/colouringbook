@@ -1,36 +1,57 @@
-const AWS = require('aws-sdk');
 const axios = require("axios");
+const {S3Client, GetObjectCommand, PutObjectCommand} = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
+
+const client = new S3Client({ region: 'eu-north-1'});
 
 const bucketName='colouringbookpages';
-const s3 = new AWS.S3();
 
-const _getImagePath = (user_email, book_id, imageIndex) => `${user_email}/${book_id}/p.${imageIndex}`
+const IMAGE_URL_TTL = 10 //in seconds
 
-const getUserImages = () => {
+/**
+ *
+ * @param user
+ * @param book
+ * @return {Promise<Awaited<String>[]>} returns list of presigned URLs for each page of the given book
+ */
+const getBookImages = (user, book) => {
+    console.log('fetching: ', JSON.stringify(book), _getImagePath(user.email, book.id, 0))
+    const params = (index) => new GetObjectCommand({
+        Bucket: bucketName,
+        Key: _getImagePath(user.email, book.id, index)
+    })
 
+    return Promise.all(
+        Array.from({length: book.pages}, (_, i) => {
+            return getSignedUrl(client, params(i), {expiresIn: IMAGE_URL_TTL})
+        })
+    )
 }
 
 const uploadImages = (user, book_id, images) => {
     return Promise.all(images.map((img, i) =>
-        uploadFileToS3(img, bucketName, _getImagePath(user.email, book_id, i))
+        _uploadFileFromURLToS3(img, _getImagePath(user.email, book_id, i))
     ))
 }
 
-const uploadFileToS3 = (url, bucket, key) => {
+const _getImagePath = (user_email, book_id, imageIndex) => `${user_email.replace('@', '(at)')}/${book_id}/p${imageIndex}.png`
+
+const _uploadFileFromURLToS3 = (url, key) => {
     return axios.get(url, { responseType: "arraybuffer", responseEncoding: "binary" }).then((response) => {
-        const params = {
+        const params = new PutObjectCommand({
             ContentType: response.headers["content-type"],
             ContentLength: response.data.length.toString(), // or response.header["content-length"] if available for the type of file downloaded
-            Bucket: bucket,
+            Bucket: bucketName,
             Body: response.data,
-            Key: key,
-        };
-        return s3.putObject(params).promise();
+            Key: key
+        })
+
+        return client.send(params)
     });
 }
 
 
 module.exports = {
     uploadImages,
-    getUserImages
+    getBookImages,
 }

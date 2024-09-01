@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import InputField from "../UI/ui_input_field.component";
 import UI_Switch from "../UI/ui_switch.component";
 import UI_Button from "../UI/ui_button";
+import Gallery from "../gallery.component";
 
 import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";
@@ -11,7 +12,7 @@ import CreationTips from "./creation_tips.component";
 import api, {apiGet, apiPost} from "../../Hooks/ApiHandler";
 import {getUserData, getUserId, saveUserData, updateUserData} from "../../Hooks/UserDataHandler";
 
-const PAGE_COUNT = 2
+const PAGE_COUNT = 4
 
 const BookCreation = () => {
     const {t} = useTranslation()
@@ -35,7 +36,7 @@ const BookCreation = () => {
 
         api.post('image/generateImages', bookData).then(r => {
             if(!r) return
-            const {credits_updated, images} = r.data
+            const {credits_updated, images} = (r.data)
             setImages(images)
             updateUserData({credits: credits_updated})
         })
@@ -87,7 +88,6 @@ const BookCreation = () => {
                 <UI_Button button_text={t('creation.create')} callbackFunction={createBook}/>
             </div>
         </div>
-
         <CreationTips visible={tipsVisible} setVisible={setTipsVisible}/>
     </div>
 

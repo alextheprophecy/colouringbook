@@ -7,6 +7,7 @@
  * @property {number} _id
  * */
 const USER_DATA = 'auth-user-data'
+const BOOK_DATA = 'book-data'
 
 
 const getUserId = () => getUserData()._id
@@ -30,11 +31,17 @@ const removeUserData = () => localStorage.removeItem(USER_DATA)
 
 const isUserLoggedIn = () => getUserData()!==null
 
+const saveBookData = (books) => localStorage.setItem(BOOK_DATA, JSON.stringify(books))
+
+const getBookData = () =>  JSON.parse(localStorage.getItem(BOOK_DATA))
+
 export {
     getUserId,
     saveUserData,
     getUserData,
     removeUserData,
     isUserLoggedIn,
-    updateUserData
+    updateUserData,
+    getBookData,
+    saveBookData
 }

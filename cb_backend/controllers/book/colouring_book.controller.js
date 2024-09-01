@@ -14,21 +14,19 @@ const generateColouringBook = (bookData, user, res) => {
     const forAdult = bookData.forAdult
     const imageModel = bookData.greaterQuality?queryFluxBetter:queryFluxSchnell
 
-    console.log('generating', bookData, user.name)
-
-    queryPagesDescriptions(imageCount, preferences, forAdult).then(a=> {
+    return queryPagesDescriptions(imageCount, preferences, forAdult).then(a=> {
         let pageDescriptions = JSON.parse(a)
         if (pageDescriptions.length > imageCount) pageDescriptions = pageDescriptions.splice(0, imageCount)
 
         console.log('going to query flux')
-        Promise.all(pageDescriptions.map(descr =>
-            imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr)))).then(images => {
-            addNewBookToUser(user, {description: preferences, pages: imageCount}).then(newBook =>
-                uploadImages(user, newBook.id, images).then(a => {
-                    res.status(200).json({credits_updated: user.credits, images: images})
-                })
+        return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr))))
+            .then(images =>
+                addNewBookToUser(user, {description: preferences, pages: imageCount}).then(newBook =>
+                    uploadImages(user, newBook.id, images).then(a =>
+                        images
+                    )
+                )
             )
-        })
     })
 }
 

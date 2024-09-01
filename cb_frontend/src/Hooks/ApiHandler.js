@@ -1,7 +1,7 @@
 import axios, {get} from "axios";
 import {getUserData} from "./UserDataHandler";
 
-const BASE_URL = 'http://localhost:5000/api/'
+const BASE_URL = 'http://192.168.1.95:5000/api/'
 
 const api = axios.create({baseURL: BASE_URL});
 
@@ -17,27 +17,30 @@ api.interceptors.response.use(
         // Handle errors
         const { status } = error.response || {}
 
+        const errMsg = JSON.stringify(error.response?.data)
+        let alertMsg
+
         switch (status) {
             case 400:
-                console.log("Bad Request", error.response?.data);
+                alertMsg = "Bad Request. " + errMsg
                 break;
             case 401:
-                console.log("Unauthorized: Please log in again.");
+                alertMsg = "Unauthorized: Please log in again. " + errMsg
                 // Optionally redirect to login page
                 // window.location.href = "/login";
                 break;
             case 404:
-                console.log("Not Found", error.response?.data);
+                alertMsg = "Not Found. " + errMsg
                 break;
             case 500:
-                console.log("Server Error", error.response?.data);
+                alertMsg = "Server Error. " + errMsg
                 break;
             default:
-                console.log("An unknown error occurred", error.response?.data);
+                alertMsg = "An unknown error occurred. " + errMsg
                 break;
         }
 
-        alert(JSON.stringify(error.response?.data))
+        alert(alertMsg)
         return Promise.resolve()
     }
 )

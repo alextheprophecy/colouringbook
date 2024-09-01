@@ -3,7 +3,7 @@ import GenerateBook from "./Creation/generate_book.component";
 import {useTranslation} from "react-i18next";
 import FlipBook from "./flip_book.component";
 
-const ExampleBook = () => {
+const ExampleBooks = () => {
     const {t} = useTranslation()
 
     const BOOK1 = {title: t('examplebooks.rabbits'), pages_directory: "assets/images/book-football-rabbits/", pages: ['out-0.jpg','pic4.jpg', 'pic2.jpg', 'pic3.jpg', 'pic6.jpg', 'pic7.jpg', 'pic5.jpg']}
@@ -30,4 +30,4 @@ const ExampleBook = () => {
     </div>
 }
 
-export default ExampleBook
+export default ExampleBooks
