@@ -7,6 +7,7 @@
  * @property {number} _id
  * */
 const USER_DATA = 'auth-user-data'
+const TOKEN_DATA = 'auth-user-token'
 const BOOK_DATA = 'book-data'
 
 
@@ -27,7 +28,11 @@ const updateUserData = (newData) => {
  * @return {UserData|null} The user data object if available, otherwise null.
  */
 const getUserData = () => JSON.parse(localStorage.getItem(USER_DATA))
-const removeUserData = () => localStorage.removeItem(USER_DATA)
+const removeAllUserData = () => {
+    localStorage.removeItem(USER_DATA)
+    localStorage.removeItem(BOOK_DATA)
+    localStorage.removeItem(TOKEN_DATA)
+}
 
 const isUserLoggedIn = () => getUserData()!==null
 
@@ -35,13 +40,18 @@ const saveBookData = (books) => localStorage.setItem(BOOK_DATA, JSON.stringify(b
 
 const getBookData = () =>  JSON.parse(localStorage.getItem(BOOK_DATA))
 
+const saveUserToken = (tokenData) => localStorage.setItem(TOKEN_DATA, JSON.stringify(tokenData))
+const getUserToken = () => JSON.parse(localStorage.getItem(TOKEN_DATA))
+
 export {
     getUserId,
     saveUserData,
     getUserData,
-    removeUserData,
+    removeAllUserData,
     isUserLoggedIn,
     updateUserData,
     getBookData,
-    saveBookData
+    saveBookData,
+    saveUserToken,
+    getUserToken
 }

@@ -18,7 +18,10 @@ const LoginForm = () => {
     const loginHTML = () =>
         <form onSubmit={onLogin}>
             <input type={'text'} name={'email'} onChange={handleChange}/>
+            <br/>
             <input type={'password'} name={'password'} onChange={handleChange}/>
+            <br/>
+
             <input type={'submit'} value={'login'}/>
         </form>
 

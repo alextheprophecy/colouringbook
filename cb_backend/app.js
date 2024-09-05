@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
+
 const dotenv = require("dotenv") //setting environment variables s.a. secret key
 dotenv.config()
 
@@ -18,7 +20,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(cors());
+app.use(cookieParser());
+
+// Allow CORS for a specific origin with credentials //TODO: change!!!!!
+const corsOptions = {
+    origin: 'http://localhost:3000', // Set the frontend origin here
+    credentials: true, // Allow credentials (cookies, authorization headers)
+}
+app.use(cors(corsOptions));
 
 //Routes
 app.use("/api/image", ImageRoute);

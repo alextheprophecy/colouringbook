@@ -35,6 +35,10 @@ const addNewBookToUser = (user, {description, pages}) => {
     return book.save()
 }
 
+const test = (req, res) => {
+    res.status(200).json('RESULT')
+}
+
 
 const genPDFFromImages = (req, res) => {
     const imageCount = req.query.imageCount
@@ -60,4 +64,5 @@ const genPDFFromImages = (req, res) => {
 module.exports = {
     generateColouringBook,
     genPDFFromImages,
+    test
 }

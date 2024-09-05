@@ -1,12 +1,29 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
+const {generateUserBook} = require("./user.controller");
 
-const jwt_TTL = '1h'
+const access_TTL = '1h'
+const refresh_TTL = '7d'
 
 const emailValidator = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(String(email).toLowerCase())
-};
+}
+
+const gen_token = (access_t = true, user) => jwt.sign(
+    { id: user._id, email: user.email },
+    access_t?process.env.JWT_ACCESS_SECRET:process.env.JWT_REFRESH_SECRET,
+    { expiresIn: access_t?access_TTL:refresh_TTL})
+
+const add_cookie = (res, cookie_name, cookie) => {
+    const cookieOptions = { httpOnly: true,
+        //secure: true, TODO: enable for https
+        sameSite: 'Strict' }
+
+    res.cookie(cookie_name, cookie, cookieOptions);
+    return res
+}
+
 
 class UserControllers {
 
@@ -34,25 +51,27 @@ class UserControllers {
             if (!user) return res.status(404).json('No account under this email')
 
             return user.matchPassword(password).then(isMatch => {
-                if (!isMatch) {
-                    return res.status(401).json('Incorrect email password combination')
-                }
+                if (!isMatch)return res.status(401).json('Incorrect email password combination')
 
-                // Generate JWT token
-                const token = jwt.sign(
-                    { id: user._id, email: user.email },
-                    process.env.JWT_SECRET,
-                    { expiresIn: jwt_TTL}
-                )
+                const userDetails = user.toObject()
+                delete userDetails.password
 
-                // Use `toObject` to safely convert Mongoose document to a plain object
-                const otherDetails = user.toObject()
-                delete otherDetails.password
+                const access_token = gen_token(true, user)
+                const refresh_token = gen_token(false, user)
 
-                res.status(200).json({ user: { ...otherDetails, token } })
-            });
+                add_cookie(res, 'refreshToken', refresh_token).status(200).json({user: userDetails, token: access_token})
+            })
         }).catch(error => {
             next(error)
+        })
+    }
+
+    static RefreshTokens = (req, res, next) => {
+        const cookies = req.cookies
+        console.log(cookies.refreshToken)
+        jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+            if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
+            else res.status(200).json(gen_token(true, user))
         })
     }
 

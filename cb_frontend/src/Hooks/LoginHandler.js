@@ -1,19 +1,23 @@
 import api from "./ApiHandler"
 import axios from "axios";
-import {removeUserData, saveUserData} from "./UserDataHandler";
+import {removeAllUserData, saveUserData, saveUserToken} from "./UserDataHandler";
 
 const handleLogin = (loginData) => {
     api.post('user/login', loginData).then((r)=> {
         if(!r)return
         const {__v, ...data} = r.data.user
-
+        const tokenData = r.data.token
+        console.log('token_Data savd: ', tokenData)
         saveUserData(data)
-        window.location.reload()
+        saveUserToken(tokenData)
+        window.location.href = '/create'
     })
 }
 
-const handleLogout = () =>{
-    removeUserData()
+const handleLogout = () => {
+    alert('Logged out!')
+    removeAllUserData()
+
     window.location.reload()
 }
 

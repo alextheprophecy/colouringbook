@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 import InputField from "../UI/ui_input_field.component";
@@ -10,7 +10,14 @@ import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";
 import CreationTips from "./creation_tips.component";
 import api, {apiGet, apiPost} from "../../Hooks/ApiHandler";
-import {getUserData, getUserId, saveUserData, updateUserData} from "../../Hooks/UserDataHandler";
+import {
+    getUserData,
+    getUserId,
+    getUserToken,
+    isUserLoggedIn,
+    saveUserData,
+    updateUserData
+} from "../../Hooks/UserDataHandler";
 
 const PAGE_COUNT = 4
 
@@ -23,6 +30,13 @@ const BookCreation = () => {
     const [creationParams, setCreationParams] = useState({description:'', option1: false, option2: false, option3: true})
     const [creditCost, setCreditCost] = useState(0)
     const [images, setImages] = useState([])
+
+
+    useEffect(() => {
+        if(!isUserLoggedIn()){
+            window.location.href = '/login'
+        }
+    }, []);
 
     const createBook = () => {
         if(creationParams.description==='')return alert(t('creation.warning1'))
@@ -39,7 +53,12 @@ const BookCreation = () => {
             const {credits_updated, images} = (r.data)
             setImages(images)
             updateUserData({credits: credits_updated})
-        })
+        })/*
+        api.get('image/test').then(c => {
+            if(!c)return
+            console.log('SUCCESS:', c.data)
+            alert(c.data)
+        })*/
     }
 
     const testButton = () => {
