@@ -21,19 +21,40 @@ const generateUserBook = (req, res, next) => {
     .catch(err => res.status(400).send(err))
 }
 
+const generateBookDescription = (req, res) => {
+    let bookData = req.query
+    bookData.onlyDescriptions = true
+    generateColouringBook(bookData, req.user, res).then(bookDescr =>
+        res.status(200).json(bookDescr)
+    )
+}
+
 const getUserBooks = (req, res, next) => {
     const user = req.user
-    Book.find({ userId: user.id }).then(async (books) => {
+    Book.find({ userId: user.id }).sort({createdAt: -1}).then(async (books) => {
         const books_data = await Promise.all(
             books.map(async (book) => ({
+                id: book.id,
                 title: book.description,
                 pages: await getBookImages(user, book),
                 date: book.createdAt,
+                has_pdf: book.has_pdf
             }))
         )
 
         res.status(200).send(books_data)
     })
+}
+
+const getBookPDF = (req, res) =>  {
+    const user = req.user
+    const book = req.query.book
+    if(book.has_pdf){
+        getBookPDF()
+        return res.status(200)
+    }
+    console.log(book)
+    res.status(200).send(book.has_pdf)
 }
 
 const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
@@ -54,5 +75,7 @@ const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
 
 module.exports = {
     generateUserBook,
-    getUserBooks
+    getUserBooks,
+    getBookPDF,
+    generateBookDescription
 }

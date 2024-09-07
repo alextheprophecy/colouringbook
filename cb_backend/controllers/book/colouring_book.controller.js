@@ -2,21 +2,31 @@ const {queryFluxSchnell, queryFluxBetter} = require("../external_apis/replicate.
 const crypto = require('crypto')
 const imgToPDF = require('image-to-pdf')
 const {createWriteStream, appendFile} = require("fs");
-const {queryPagesDescriptions} = require("../external_apis/openai.controller");
-const {uploadImages} = require("../external_apis/aws.controller");
+const {queryPagesDescriptions, getPageDescriptions_2} = require("../external_apis/openai.controller");
+const {uploadImages, uploadStreamToPDF} = require("../external_apis/aws.controller");
 const Book = require("../../models/book.model");
+
+const MAX_PAGE_COUNT = 6
 
 const CHILD_PROMPT = (descr)=>`${descr}. Children's detailed colouring book. Only black outlines, no text, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent`
 const ADULT_PROMPT = (descr)=>`${descr}. Adult's detailed colouring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 const generateColouringBook = (bookData, user, res) => {
-    const imageCount = bookData.imageCount
+    const onlyDescriptions = bookData.onlyDescriptions
+
+    const imageCount = Number(Math.min(bookData.imageCount, MAX_PAGE_COUNT))
     const preferences = bookData.preferences
     const forAdult = bookData.forAdult
     const imageModel = bookData.greaterQuality?queryFluxBetter:queryFluxSchnell
+    console.log(imageCount, preferences)
+    return getPageDescriptions_2(imageCount, preferences, forAdult).then(a=> {
+        let pageDescriptions = a// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
+        console.log('results : ', pageDescriptions)
 
-    return queryPagesDescriptions(imageCount, preferences, forAdult).then(a=> {
-        let pageDescriptions = JSON.parse(a)
         if (pageDescriptions.length > imageCount) pageDescriptions = pageDescriptions.splice(0, imageCount)
+
+        pageDescriptions = pageDescriptions.map(p => p.pageDescription)
+
+        if(onlyDescriptions) return pageDescriptions
 
         console.log('going to query flux')
         return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr))))
@@ -40,16 +50,14 @@ const test = (req, res) => {
 }
 
 
-const genPDFFromImages = (req, res) => {
+const genBookPDF = (req, res) => {
     const imageCount = req.query.imageCount
     const preferences = req.query.preferences?req.query.preferences:''
     //each imlink: axios.get(imgLink, {responseType: 'arraybuffer'})
     const b64_array = imageLinks.map(img => Buffer.from(img, 'base64'))
 
-    const hash = crypto.createHash('sha1').update(Date.now().toString().concat(b64_array[0])).digest('hex').slice(0,10)
-    const fileName = `colouring_book_${hash}.pdf`
-    const stream = imgToPDF(b64_array, imgToPDF.sizes.A4).pipe(createWriteStream(SAVEPATH.concat(fileName)))
-    stream.on("finish", () => {
+    uploadStreamToPDF(imgToPDF(b64_array, imgToPDF.sizes.A4))
+    /*stream.on("finish", () => {
         appendFile(`${SAVEPATH}books_descriptions.txt`, `\n${fileName}:     ${preferences}`, (err) => {
             if(err){
                 console.log(err)
@@ -57,12 +65,12 @@ const genPDFFromImages = (req, res) => {
             }
             res.status(200).send(`Succesfully generated in: ${fileName}`)
         })
-    })
+    })*/
 }
 
 
 module.exports = {
     generateColouringBook,
-    genPDFFromImages,
+    genBookPDF,
     test
 }

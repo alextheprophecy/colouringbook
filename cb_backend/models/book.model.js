@@ -13,6 +13,14 @@ const BookSchema = new Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    has_pdf: {
+        type: Boolean,
+        default: false
+    },
+    gen_seed: {
+        type: Number,
+        default: 420
     }
 },
     {

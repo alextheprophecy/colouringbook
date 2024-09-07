@@ -8,6 +8,7 @@ import Profile from "./Components/Navbar/profile.component";
 import Gallery from "./Components/gallery.component";
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import BurgerMenu from "./Components/Navbar/burger_menu.component";
+import Playground from "./Components/Creation/playground.component";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route exact path='/create' element={<BookCreation/>}></Route>
                 <Route exact path='/login' element={<LoginForm/>}></Route>
                 <Route exact path='/gallery' element={<Gallery/>}></Route>
+                <Route exact path='/playground' element={<Playground/>}></Route>
             </Routes>
         </div>
     );

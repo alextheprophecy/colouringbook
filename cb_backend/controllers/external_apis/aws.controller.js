@@ -1,12 +1,20 @@
 const axios = require("axios");
 const {S3Client, GetObjectCommand, PutObjectCommand} = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
+const { Upload } = require('@aws-sdk/lib-storage')
 
-const client = new S3Client({ region: 'eu-north-1'});
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
+const {PassThrough} = require("stream");
+
+const client = new S3Client({ region: process.env.AWS_DEFAULT_REGION});
 
 const bucketName='colouringbookpages';
 
 const IMAGE_URL_TTL = 10 //in seconds
+const PDF_URL_TTL = 12* 3600 //in seconds
+
+const _bookPath = (user_email, book_id) => `${user_email.replace('@', '(at)')}/${book_id}`
+const _getImagePath = (user_email, book_id, imageIndex) => `${_bookPath(user_email, book_id)}/p${imageIndex}.png`
+const _getPDFPath = (user_email, book_id) => `${_bookPath(user_email, book_id)}/book.pdf`
 
 /**
  *
@@ -15,7 +23,6 @@ const IMAGE_URL_TTL = 10 //in seconds
  * @return {Promise<Awaited<String>[]>} returns list of presigned URLs for each page of the given book
  */
 const getBookImages = (user, book) => {
-    console.log('fetching: ', JSON.stringify(book), _getImagePath(user.email, book.id, 0))
     const params = (index) => new GetObjectCommand({
         Bucket: bucketName,
         Key: _getImagePath(user.email, book.id, index)
@@ -34,7 +41,6 @@ const uploadImages = (user, book_id, images) => {
     ))
 }
 
-const _getImagePath = (user_email, book_id, imageIndex) => `${user_email.replace('@', '(at)')}/${book_id}/p${imageIndex}.png`
 
 const _uploadFileFromURLToS3 = (url, key) => {
     return axios.get(url, { responseType: "arraybuffer", responseEncoding: "binary" }).then((response) => {
@@ -50,8 +56,46 @@ const _uploadFileFromURLToS3 = (url, key) => {
     });
 }
 
+const getPDF = (user_email, book) => {
+    const params = (index) => new GetObjectCommand({
+        Bucket: bucketName,
+        Key: _getPDFPath(user_email, book.id)
+    })
+    getSignedUrl(client, params(i), {expiresIn: IMAGE_URL_TTL}).then(url => res.send(200))
+
+}
+
+async function uploadStreamToPDF(readableStream, user, book) {
+    const Key = _getPDFPath(user.email, book.id);
+    const passThroughStream = new PassThrough();
+
+    let res;
+
+    try {
+        const parallelUploads3 = new Upload({
+            client,
+            params: {
+                Bucket: bucketName,
+                Key,
+                Body: passThroughStream,
+                ACL:'public-read',
+            },
+            queueSize: 4,
+            partSize: 1024 * 1024 * 5,
+            leavePartsOnError: false,
+        });
+
+        readableStream.pipe(passThroughStream);
+        res = await parallelUploads3.done();
+    } catch (e) {
+        console.log(e);
+    }
+
+    return res;
+}
 
 module.exports = {
+    uploadStreamToPDF,
     uploadImages,
     getBookImages,
 }

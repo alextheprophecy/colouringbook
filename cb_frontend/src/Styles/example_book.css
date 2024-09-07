@@ -27,6 +27,7 @@
 .book-container {
     width: 45%;
     padding: 20px;
+    text-align: center;
 }
 
 .book-title{
@@ -101,4 +102,9 @@
 
 .blank-page{
     background-color: white;
+}
+
+.book-download-button{
+    margin: 5px;
+    font-size: 1.2rem;
 }

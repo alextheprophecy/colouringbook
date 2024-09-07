@@ -20,12 +20,19 @@ const Gallery = () => {
             if(!r) return
             setBooks(r.data)
             saveBookData(r.data)
+            window.location.reload()
         })
 
     }
 
+    const downloadBook = (book) => {
+        api.get('image/getBookPDF', {params: {book: book}}).then(r => {
+            alert(JSON.stringify(r.data))
+        })
+    }
+
     const showBooks = () => {
-        const bookData = book => ({title: book.title, pages_directory: '', pages: book.pages})
+        const bookData = book => ({title: book.title, pages_directory: '', pages: book.pages, on_download:() => downloadBook(book)})
         return books.map(b => <FlipBook {...bookData(b)}/>)
     }
 

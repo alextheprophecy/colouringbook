@@ -15,10 +15,8 @@ const handleLogin = (loginData) => {
 }
 
 const handleLogout = () => {
-    alert('Logged out!')
     removeAllUserData()
-
-    window.location.reload()
+    window.location.href = '/login'
 }
 
 export {

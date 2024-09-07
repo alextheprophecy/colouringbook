@@ -1,4 +1,4 @@
-import { slide as Menu } from 'react-burger-menu'
+import {bubble as Menu } from 'react-burger-menu'
 import {Component} from "react";
 import '../../Styles/Navbar/burger_menu.css'
 import {Link} from "react-router-dom";
@@ -21,8 +21,8 @@ class BurgerMenu extends Component{
                 <br/>
                 <br/>
                 <Link to={'/'}>Examples</Link>
-                <Link to={'/gallery'}>My Gallery</Link>
-                <Link to={'/create'}>Generate</Link>
+                {isUserLoggedIn()?(<Link to={'/gallery'}>My Gallery</Link>):''}
+                {isUserLoggedIn()?(<Link to={'/create'}>Generate</Link>):''}
             </Menu>
             </div>
         );

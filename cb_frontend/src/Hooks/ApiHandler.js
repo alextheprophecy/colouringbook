@@ -1,5 +1,6 @@
 import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
+import {handleLogout} from "./LoginHandler";
 
 const BASE_URL = 'http://localhost:5000/api/'
 
@@ -17,8 +18,7 @@ api.interceptors.response.use(
         const { status } = error.response || {}
 
         let errMsg = error.response?.data
-        if(!errMsg) errMsg = error.response.error
-        errMsg = JSON.stringify(errMsg)
+        // if(!errMsg) errMsg = error.response.error
 
         let alertMsg
 
@@ -27,12 +27,10 @@ api.interceptors.response.use(
                 alertMsg = "Bad Request. " + errMsg
                 break;
             case 401: //refresh token
-                alertMsg = "Unauthorized: " + errMsg
-                if(errMsg.startsWith("Expired Token")) return refreshToken(error)
-                break;
+                if(errMsg.includes("Expired Token")) return refreshToken(error)
             case 403: //refresh your token
                 alertMsg = "Unauthorized: " + errMsg
-                window.location.href = '/login'
+                handleLogout()
                 break;
             case 404:
                 alertMsg = "Not Found. " + errMsg
@@ -56,8 +54,8 @@ const setReqTokenHeaders = (req, token) => {
 }
 
 const refreshToken = async (error) => {
-    const newAccessTokens = await api.get('/user/refreshTokens')
-    saveUserToken(newAccessTokens.data)
+    const newAccessToken = await api.get('/user/refreshToken')
+    saveUserToken(newAccessToken.data)
 
     const originalRequest = error.config;
     console.log('resending request with refreshed token: ', originalRequest)

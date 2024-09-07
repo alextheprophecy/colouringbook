@@ -66,7 +66,7 @@ class UserControllers {
         })
     }
 
-    static RefreshTokens = (req, res, next) => {
+    static RefreshToken = (req, res, next) => {
         const cookies = req.cookies
         console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
