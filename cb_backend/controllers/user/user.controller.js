@@ -1,7 +1,8 @@
 const User = require("../../models/user.model");
 const Book = require("../../models/book.model");
-const {generateColouringBook} = require("../book/colouring_book.controller");
-const {getBookImages} = require("../external_apis/aws.controller");
+const {generateColouringBook, genBookPDF} = require("../book/colouring_book.controller");
+const {getBookImages} = require("../user/files.controller");
+const {getPDF} = require("./files.controller");
 
 const generateUserBook = (req, res, next) => {
     const user = req.user
@@ -49,12 +50,15 @@ const getUserBooks = (req, res, next) => {
 const getBookPDF = (req, res) =>  {
     const user = req.user
     const book = req.query.book
-    if(book.has_pdf){
-        getBookPDF()
-        return res.status(200)
-    }
-    console.log(book)
-    res.status(200).send(book.has_pdf)
+
+    return Book.findOne({userId: user.id, _id: book.id}).then(b => {
+        if(b.has_pdf) return getPDF(user, b).then(url => res.status(200).send(url))
+        Promise.all([genBookPDF(user, b), Book.findOneAndUpdate({_id: b.id}, {has_pdf: true})])
+            .then(_ =>
+                getPDF(user, b).then(url => res.status(200).send(url))
+            )
+    })
+
 }
 
 const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {

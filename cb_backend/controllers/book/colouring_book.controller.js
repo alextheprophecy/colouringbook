@@ -1,15 +1,15 @@
 const {queryFluxSchnell, queryFluxBetter} = require("../external_apis/replicate.controller");
 const crypto = require('crypto')
-const imgToPDF = require('image-to-pdf')
 const {createWriteStream, appendFile} = require("fs");
 const {queryPagesDescriptions, getPageDescriptions_2} = require("../external_apis/openai.controller");
-const {uploadImages, uploadStreamToPDF} = require("../external_apis/aws.controller");
 const Book = require("../../models/book.model");
+const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
 
 const MAX_PAGE_COUNT = 6
 
 const CHILD_PROMPT = (descr)=>`${descr}. Children's detailed colouring book. Only black outlines, no text, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent`
 const ADULT_PROMPT = (descr)=>`${descr}. Adult's detailed colouring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
+
 const generateColouringBook = (bookData, user, res) => {
     const onlyDescriptions = bookData.onlyDescriptions
 
@@ -32,7 +32,7 @@ const generateColouringBook = (bookData, user, res) => {
         return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr))))
             .then(images =>
                 addNewBookToUser(user, {description: preferences, pages: imageCount}).then(newBook =>
-                    uploadImages(user, newBook.id, images).then(a =>
+                    uploadBookImages(user, newBook.id, images).then(a =>
                         images
                     )
                 )
@@ -50,23 +50,11 @@ const test = (req, res) => {
 }
 
 
-const genBookPDF = (req, res) => {
-    const imageCount = req.query.imageCount
-    const preferences = req.query.preferences?req.query.preferences:''
-    //each imlink: axios.get(imgLink, {responseType: 'arraybuffer'})
-    const b64_array = imageLinks.map(img => Buffer.from(img, 'base64'))
+const genBookPDF = (user, book) =>
+    Promise.all(Array.from({length: book.pages}, (_, i) => getImageData(user, book, i))).then(imageBuffers =>
+        saveBookPDF(imageBuffers, user, book)
+    )
 
-    uploadStreamToPDF(imgToPDF(b64_array, imgToPDF.sizes.A4))
-    /*stream.on("finish", () => {
-        appendFile(`${SAVEPATH}books_descriptions.txt`, `\n${fileName}:     ${preferences}`, (err) => {
-            if(err){
-                console.log(err)
-                res.send(400)
-            }
-            res.status(200).send(`Succesfully generated in: ${fileName}`)
-        })
-    })*/
-}
 
 
 module.exports = {
