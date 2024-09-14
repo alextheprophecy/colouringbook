@@ -6,9 +6,9 @@
  * @property {string} token - The JWT token for authentication.
  * @property {number} _id
  * */
-const USER_DATA = 'auth-user-data'
-const TOKEN_DATA = 'auth-user-token'
-const BOOK_DATA = 'book-data'
+const USER_DATA = 'cb-auth-user-data'
+const TOKEN_DATA = 'cb-auth-user-token'
+const BOOK_DATA = 'cb-book-data'
 
 
 const getUserId = () => getUserData()._id

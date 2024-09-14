@@ -15,7 +15,7 @@ const adultPrompt = (adultPreferences) =>
     The adult prefers: ${adultPreferences}. 
     Important: Ensure complete and accurate anatomy for figures, and make scenes interesting but not over-complicated. Avoid generic descriptions like 'beautiful' or 'whimsical'.`;
 
-const queryChatGPTMini = (prompt) => {
+const query_gpt4o_mini = (prompt) => {
     return openai.chat.completions.create({
         messages: [{ role: "user", content: prompt }],
         model: "gpt-4o-mini",
@@ -168,7 +168,7 @@ const getPageDescriptions_2 = (pageCount, book_preferences, forAdult= false) => 
 
 
 module.exports = {
-    queryChatGPTMini,
+    query_gpt4o_mini,
     queryPagesDescriptions,
     getPageDescriptions_2,
     query_gpt4o2024,

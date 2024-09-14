@@ -1,4 +1,4 @@
-const {query_gpt4o2024, query_formatted_gpt4o2024} = require("../external_apis/openai.controller")
+const {query_gpt4o2024, query_formatted_gpt4o2024, query_gpt4o_mini} = require("../external_apis/openai.controller")
 const {z} = require('zod')
 
 const sys_AdvancedStory = (pageCount) =>
@@ -24,11 +24,12 @@ const usr_AdvancedPages = (storyOutline, pageIndex) =>
 
 
 const sys_SimpleStory = (pageCount) =>
-    `You are an expert children's story designer. Your role is to create a simple, imaginative, and coherent story for a coloring-book in ${pageCount} scenes. 
-    Each scene should have a clear transition to the next, ensuring continuity between them.
-    Focus on distinct and persistent character features (e.g., a frog with a small hat or a superhero with a torn cape). 
-    Do not include any mention of colors, as this will be a black-and-white coloring-book. 
-    Provide the story in a paragraph in ${pageCount} scenes.`;
+    `You are an expert children's story designer. Your role is to create a simple, imaginative, and coherent story for a coloring book in ${pageCount} scenes. 
+    Each scene should include a clear transition to the next while ensuring continuity of characters and environment. 
+    Reiterate the description of characters, their distinct features (e.g., a frog with a small hat or a superhero with a torn cape), and the environment in each scene, as if it is being described for the first time. 
+    This will ensure consistent visuals throughout the story. 
+    Avoid any mention of colors, as this will be a black-and-white coloring book. Provide the story in ${pageCount} scenes.`;
+
 
 const usr_SimpleStory = (preferences, pageCount) =>
     `${preferences}. From these ideas, provide an exiting children's story with ${pageCount} scenes.`
@@ -48,18 +49,12 @@ const usr_SimplePages = (story, pageCount) =>
     ${story} Use the page_descriptions_response Object to return an array of $\{pageCount} page descriptions and page titles.`
 
 
-const storyAdvanced = (preferences, pageCount, forAdult=false) => {
-    query_gpt4o2024(sys_AdvancedStory(pageCount),
-        usr_AdvancedPages(preferences, pageCount)).then(story => {
-    })
-}
-
 const page_descriptions_response = (pageCount) => z.object({
     pages_array: z.array(z.object({page_title: z.string(), page_description: z.string()}))
 })
 
 const pagesSimpleStory = (preferences, pageCount, forAdult=false) => {
-    return query_gpt4o2024(sys_AdvancedStory(pageCount), usr_SimpleStory(preferences, pageCount)).then(story => {
+    return query_gpt4o2024(sys_SimpleStory(pageCount), usr_SimpleStory(preferences, pageCount)).then(story => {
         console.log('STORY TIME: ', story)
 
         return query_formatted_gpt4o2024(sys_SimplePages(pageCount), usr_SimplePages(story, pageCount),
@@ -69,8 +64,11 @@ const pagesSimpleStory = (preferences, pageCount, forAdult=false) => {
     })
 }
 
+const pageSummary = (story, pageIndex, flux_prompt) => {
+    query_gpt4o_mini()
+}
+
 
 module.exports = {
-    storyAdvanced,
     pagesSimpleStory
 }

@@ -17,11 +17,11 @@ const Gallery = () => {
 
     const loadValues = () => {
         api.get('user/getBooks').then(r => {
-            console.log('books: ', r.data)
             if(!r) return
+            console.log('books: ', r.data)
             setBooks(r.data)
             saveBookData(r.data)
-            window.location.reload()
+            //window.location.reload()
         })
 
     }
