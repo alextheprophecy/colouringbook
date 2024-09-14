@@ -1,101 +1,63 @@
 const axios = require("axios");
-const {S3Client, GetObjectCommand, PutObjectCommand} = require("@aws-sdk/client-s3");
+const {S3Client, GetObjectCommand, PutObjectCommand} = require("@aws-sdk/client-s3")
 const { Upload } = require('@aws-sdk/lib-storage')
-
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 const {PassThrough} = require("stream");
-
 const client = new S3Client({ region: process.env.AWS_DEFAULT_REGION});
 
-const bucketName='colouringbookpages';
-
-const IMAGE_URL_TTL = 10 //in seconds
-const PDF_URL_TTL = 12* 3600 //in seconds
-
-const _bookPath = (user_email, book_id) => `${user_email.replace('@', '(at)')}/${book_id}`
-const _getImagePath = (user_email, book_id, imageIndex) => `${_bookPath(user_email, book_id)}/p${imageIndex}.png`
-const _getPDFPath = (user_email, book_id) => `${_bookPath(user_email, book_id)}/book.pdf`
-
-/**
- *
- * @param user
- * @param book
- * @return {Promise<Awaited<String>[]>} returns list of presigned URLs for each page of the given book
- */
-const getBookImages = (user, book) => {
-    const params = (index) => new GetObjectCommand({
-        Bucket: bucketName,
-        Key: _getImagePath(user.email, book.id, index)
-    })
-
-    return Promise.all(
-        Array.from({length: book.pages}, (_, i) => {
-            return getSignedUrl(client, params(i), {expiresIn: IMAGE_URL_TTL})
-        })
-    )
-}
-
-const uploadImages = (user, book_id, images) => {
-    return Promise.all(images.map((img, i) =>
-        _uploadFileFromURLToS3(img, _getImagePath(user.email, book_id, i))
-    ))
-}
+const BUCKET_NAME='colouringbookpages'
 
 
-const _uploadFileFromURLToS3 = (url, key) => {
+
+const getFileUrl = (file_data) =>
+    getSignedUrl(client, new GetObjectCommand({Bucket: BUCKET_NAME, Key: file_data.key}), {expiresIn: file_data.TTL})
+
+
+const uploadFromURL = (url, file_data) => {
     return axios.get(url, { responseType: "arraybuffer", responseEncoding: "binary" }).then((response) => {
         const params = new PutObjectCommand({
             ContentType: response.headers["content-type"],
             ContentLength: response.data.length.toString(), // or response.header["content-length"] if available for the type of file downloaded
-            Bucket: bucketName,
+            Bucket: BUCKET_NAME,
             Body: response.data,
-            Key: key
+            Key: file_data.key
         })
-
         return client.send(params)
-    });
-}
-
-const getPDF = (user_email, book) => {
-    const params = (index) => new GetObjectCommand({
-        Bucket: bucketName,
-        Key: _getPDFPath(user_email, book.id)
     })
-    getSignedUrl(client, params(i), {expiresIn: IMAGE_URL_TTL}).then(url => res.send(200))
-
 }
 
-async function uploadStreamToPDF(readableStream, user, book) {
-    const Key = _getPDFPath(user.email, book.id);
-    const passThroughStream = new PassThrough();
-
-    let res;
-
-    try {
-        const parallelUploads3 = new Upload({
-            client,
-            params: {
-                Bucket: bucketName,
-                Key,
-                Body: passThroughStream,
-                ACL:'public-read',
-            },
-            queueSize: 4,
-            partSize: 1024 * 1024 * 5,
-            leavePartsOnError: false,
-        });
-
-        readableStream.pipe(passThroughStream);
-        res = await parallelUploads3.done();
-    } catch (e) {
-        console.log(e);
-    }
-
-    return res;
+const uploadStream = (stream, key, contentType) => {
+    const upload = new Upload({
+        client,
+        params: {
+            Bucket: BUCKET_NAME,
+            Key: key,
+            Body: stream,
+            ContentType: contentType,
+        },
+    })
+    return upload.done()
 }
+
+const getFileData = async (key) => {
+    const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: key
+    })
+    const response = await client.send(command)
+    const imageStream = response.Body
+    return new Promise((resolve, reject) => {
+        const chunks = []
+        imageStream.on('data', (chunk) => chunks.push(chunk))  // Collect image data in chunks
+        imageStream.on('end', () => resolve(Buffer.concat(chunks)))  // Return as a buffer
+        imageStream.on('error', reject)
+    })
+}
+
 
 module.exports = {
-    uploadStreamToPDF,
-    uploadImages,
-    getBookImages,
+    getFileUrl,
+    uploadFromURL,
+    getFileData,
+    uploadStream,
 }
