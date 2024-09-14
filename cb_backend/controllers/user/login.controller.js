@@ -1,7 +1,7 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
 
-const access_TTL = '1h'
+const access_TTL = '10s'
 const refresh_TTL = '7d'
 
 const emailValidator = (email) => {
@@ -70,7 +70,7 @@ class UserControllers {
         console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
             if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
-            else res.status(200).json(gen_token(true, user))
+            else res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
         })
     }
 
