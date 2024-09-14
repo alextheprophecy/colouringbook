@@ -20,7 +20,7 @@ const BookSchema = new Schema({
     },
     gen_seed: {
         type: Number,
-        default: 420
+        default: 0
     }
 },
     {

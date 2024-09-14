@@ -2,7 +2,6 @@ const express =  require("express");
 const {Register,Login, RefreshToken} = require("../controllers/user/login.controller");
 const {getUserBooks} = require("../controllers/user/user.controller");
 const {verifyToken} = require("../middleware/auth");
-const {clientUrl} = require("../controllers/external_apis/aws.controller");
 const router = express.Router();
 
 const testAuth = (req, res) => {
