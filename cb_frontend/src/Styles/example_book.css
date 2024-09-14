@@ -1,18 +1,11 @@
 @font-face {
     font-family: Bu-Wicked;
-    src: local('Bu-Wicked'), url(/public/assets/fonts/BuWicked/BuWicked-2dOW.ttf)
+    src: local('Bu-Wicked'), url(/public/assets/fonts/BuWicked/BuWicked-2dOW.ttf);
 }
 
-.perspective-container {
-    width: 100%;
-    margin: auto;
-    perspective: 2000px;
-}
-
-.flex-container{
+.flex-container {
     margin: auto;
     width: 100vw;
-    /*transform: rotateX(30deg);*/
     display: flex;
     row-gap: 15px;
     justify-content: center;
@@ -28,21 +21,27 @@
     width: 45%;
     padding: 20px;
     text-align: center;
+    position: relative; /* Required to position the button relative to the container */
+
 }
 
-.book-title{
+.book-title {
     font-family: Bu-Wicked, sans-serif;
-    font-size: 2.3rem;
+    font-size: 2.5rem;
+    color: darkred;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.book-cover {
+    background-color: darkred;
+    font-family: Bu-Wicked;
+    color: antiquewhite;
+    font-size: 2rem;
     text-align: center;
 }
 
-.book-cover{
-    background-color: indianred;
-    object-fit: cover;
-}
-
-
-.empty-page{
+.empty-page {
     padding: 5px;
     background-color: white;
     box-shadow: none;
@@ -51,11 +50,8 @@
 .rounded-r {
     border-top-left-radius: 45% 5%;
     border-bottom-left-radius: 40% 3%;
-
-    /*
-    border-bottom-right-radius: 105px 15px;
-    */
-
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3),
     8px 8px 7px rgba(0, 0, 0, 0.35),
     0px 8px 5px rgba(0, 0, 0, 0.35);
@@ -64,47 +60,122 @@
 .rounded-l {
     border-top-right-radius: 45% 5%;
     border-bottom-right-radius: 40% 3%;
-
-    /*
-    border-bottom-left-radius: 105px 15px;
-    */
-
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
     box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.3),
     0px 8px 5px rgba(0, 0, 0, 0.35),
     -8px 8px 7px rgba(0, 0, 0, 0.35);
 }
 
-.book-cover{
-    background-color: darkred;
-    font-family: Bu-Wicked;
-    color: antiquewhite;
-    font-size: 2rem;
-    text-align: center;
-}
-
 .no-select {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.text-page{
+.text-page {
     background-color: indianred;
-    font-family: Bu-Wicked;
     color: antiquewhite;
-    font-size: 2rem;
+    font-family: Bu-Wicked, sans-serif;
+    font-size: 2.2rem;
     text-align: center;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.blank-page{
+.blank-page {
     background-color: white;
 }
 
-.book-download-button{
-    margin: 5px;
+.page-text-content {
+    max-width: 80%;
+    margin: auto;
+}
+
+.flipbook-wrapper {
+    position: relative;
+}
+
+.page-button {
+    padding: 1rem 0.2rem;
+    outline: none;
+    position: absolute;
+    top: 50%;
+
+    background-color: rgba(188, 143, 143, 0.5);
+
+    &:hover{
+        background-color: rgba(188, 143, 143, 0.85)!important;
+    }
+}
+
+.next-page{
+    right: 1rem;
+    transform: translate(100%, -50%); /* Centers the button vertically */
+    &:hover{
+        transform: scale(150%) translate(75%, -25%);
+    }
+}
+
+.prev-page {
+    left: 1rem;
+    transform: translate(-100%, -50%); /* Centers the button vertically */
+
+    &:hover{
+        transform: scale(150%) translate(-75%, -25%);
+    }
+}
+
+.download-button {
+    margin: 5px auto; /* Centers the button horizontally */
+    padding: 0.5rem 1rem;
+    background-color: rosybrown;
+}
+
+
+.flipbook-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
+    font-family: "Lucida Console", sans-serif;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: background-color 0.4s ease, box-shadow 0.3s ease;
+}
+
+.flipbook-button:hover {
+    background-color: #be9797;
+    box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.flipbook-button:active {
+    background-color: darkred;
+    box-shadow: inset 2px 2px 7px rgba(0, 0, 0, 0.5);
+}
+
+.horizontal-flip {
+    transform: scaleX(-1);
+}
+
+.arrow-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    &:hover
+}
+
+.download-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
 }

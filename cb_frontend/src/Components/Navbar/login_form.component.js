@@ -16,18 +16,45 @@ const LoginForm = () => {
         handleLogin(formData)
     }
     const loginHTML = () =>
-        <form onSubmit={onLogin}>
-            <input type={'text'} name={'email'} onChange={handleChange}/>
-            <br/>
-            <input type={'password'} name={'password'} onChange={handleChange}/>
-            <br/>
-
-            <input type={'submit'} value={'login'}/>
+        <form className="login-form" onSubmit={onLogin}>
+            <div className="login-field">
+                <input
+                    className="login-input"
+                    type="text"
+                    name="email"
+                    placeholder="Email"
+                    onChange={handleChange}
+                />
+                <div className="line"></div>
+            </div>
+            <div className="login-field">
+                <input
+                    className="login-input"
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                />
+                <div className="line"></div>
+            </div>
+            <input
+                className="login-submit"
+                type="submit"
+                value="Login"
+            />
         </form>
 
+    /*<form onSubmit={onLogin}>
+        <input type={'text'} name={'email'} onChange={handleChange}/>
+        <br/>
+        <input type={'password'} name={'password'} onChange={handleChange}/>
+        <br/>
 
-    return <div className={'login-form'}>
-        {isUserLoggedIn() ? <LogoutComponent/> : loginHTML()}
-    </div>
+        <input type={'submit'} value={'login'}/>
+    </form>*/
+
+
+    return isUserLoggedIn() ? <LogoutComponent/> : loginHTML()
+
 }
 export default LoginForm

@@ -9,23 +9,23 @@
 
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
-    background: #373a47;
+    background: rosybrown;
 }
 
 /* Color/shape of burger icon bars on hover*/
 .bm-burger-bars-hover {
-    background: #a90000;
+    background: darkred;
 }
 
 /* Position and sizing of clickable cross button */
 .bm-cross-button {
-    height: 24px;
-    width: 24px;
+    height: 30px;
+    width: 30px;
 }
 
 /* Color/shape of close button cross */
 .bm-cross {
-    background: #bdc3c7;
+    background: white;
 }
 
 /*
@@ -41,11 +41,14 @@ Note: Beware of modifying this element as it can break the animations - you shou
     overflow: hidden;
     margin: 0;
     padding: 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 /* General sidebar styles */
 .bm-menu {
-    background: #373a47;
+    background: #a26b6b;
+    width: 80%;
     padding: 2.5em 1.5em 0;
     font-size: 1.5em;
     overflow: clip;
@@ -54,7 +57,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 /* Morph shape necessary with bubble or elastic */
 .bm-morph-shape {
-    fill: #373a47;
+    fill: #a26b6b;
     overflow: clip;
 
 }
@@ -64,6 +67,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
     color: #b8b7ad;
     overflow: clip;
     line-height: 2rem;
+    background-color: #a26b6b;
 }
 
 /* Individual item */
@@ -71,17 +75,30 @@ Note: Beware of modifying this element as it can break the animations - you shou
     display: inline-block;
     color: wheat;
     text-decoration: none;
-    background-color: rgba(0,0,0,0.1);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
-    &:hover{
-        color: rosybrown;
-    }
+    position: relative; /* Needed for the line positioning */
+    transition: color 0.4s ease, background-color 0.4s ease;
 }
 
-/* Styling of overlay */
-.bm-overlay {
-    background: rgba(0, 0, 0, 0.3);
+.bm-item::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    height: 3px;
+    width: 0;
+    background: rosybrown;
+    border-radius: 3px;
+    transition: width 0.3s ease, left 0.3s ease;
+}
 
+.bm-item:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.bm-item:hover {
+    color: white;
 }

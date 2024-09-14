@@ -28,6 +28,7 @@ api.interceptors.response.use(
                 break;
             case 401: //refresh token
                 if(errMsg.includes("Expired Token")) return refreshToken(error)
+                break
             case 403: //refresh your token
                 alertMsg = "Unauthorized: " + errMsg
                 handleLogout()

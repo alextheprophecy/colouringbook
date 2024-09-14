@@ -17,6 +17,7 @@ const Gallery = () => {
 
     const loadValues = () => {
         api.get('user/getBooks').then(r => {
+            console.log('books: ', r.data)
             if(!r) return
             setBooks(r.data)
             saveBookData(r.data)
@@ -27,7 +28,15 @@ const Gallery = () => {
 
     const downloadBook = (book) => {
         api.get('image/getBookPDF', {params: {book: book}}).then(r => {
-            alert(JSON.stringify(r.data))
+            const url = r.data
+            console.log(url)
+            // Create a temporary <a> element and trigger the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ColouringBook.pdf`; // Set filename for the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         })
     }
 

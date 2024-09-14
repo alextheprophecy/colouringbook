@@ -1,29 +1,44 @@
 import {bubble as Menu } from 'react-burger-menu'
-import {Component} from "react";
+import {Component, useState} from "react";
 import '../../Styles/Navbar/burger_menu.css'
 import {Link} from "react-router-dom";
 import {isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import LogoutComponent from "./logout.component";
 import {handleLogout} from "../../Hooks/LoginHandler";
 class BurgerMenu extends Component{
-
-    login_logout_button () {
-        return isUserLoggedIn()? <span onClick={() => handleLogout()}>Logout</span>
-            : <Link to={'/login'}>Login</Link>
+    constructor(props) {
+        super(props)
+        this.state = {isOpen: false}
+    }
+    toggleMenu = () => {
+        this.setState(prevState => ({ isOpen: !prevState.isOpen }))
     }
 
+    closeMenu = () => {
+        this.setState({ isOpen: false})
+    }
+
+    login_logout_button = () =>
+        isUserLoggedIn() ?
+            <span onClick={() => handleLogout()}>Logout</span> :
+            this.getMenuLink('/login', 'Login')
+
+
+    getMenuLink = (url, name) => <Link onClick={this.closeMenu} to={url}>{name}</Link>
+
+
     render () {
-        // NOTE: You also need to provide styles, see https://github.com/negomi/react-burger-menu#styling
+
         return (
             <div style={{overflow: 'hidden'}}>
-            <Menu>
-                {this.login_logout_button()}
-                <br/>
-                <br/>
-                <Link to={'/'}>Examples</Link>
-                {isUserLoggedIn()?(<Link to={'/gallery'}>My Gallery</Link>):''}
-                {isUserLoggedIn()?(<Link to={'/create'}>Generate</Link>):''}
-            </Menu>
+                <Menu isOpen={this.state.isOpen} onOpen={this.toggleMenu} onClose={this.toggleMenu}>
+                    {this.login_logout_button()}
+                    <br/>
+                    <br/>
+                    {this.getMenuLink('/', 'Examples')}
+                    {isUserLoggedIn()?this.getMenuLink('/gallery', 'My Gallery'):''}
+                    {isUserLoggedIn()?this.getMenuLink('/create', 'Generate'):''}
+                </Menu>
             </div>
         );
     }

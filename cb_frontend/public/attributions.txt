@@ -1,0 +1,14 @@
+﻿license: Freeware
+link: https://www.fontspace.com/bu-wicked-font-f16641
+
+
+https://www.svgrepo.com/svg
+    Minimalistic SVG Vector 3
+    LICENSE: CC Attribution License
+    AUTHOR: Solar Icons
+
+
+    /*No attribution necessary*/
+    COLLECTION: Interface Line Icons 2
+    LICENSE: CC0 License
+    UPLOADER: SVG Repo
