@@ -2,7 +2,6 @@ const axios = require("axios");
 const {S3Client, GetObjectCommand, PutObjectCommand} = require("@aws-sdk/client-s3")
 const { Upload } = require('@aws-sdk/lib-storage')
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
-const {PassThrough} = require("stream");
 const client = new S3Client({ region: process.env.AWS_DEFAULT_REGION});
 
 const BUCKET_NAME='colouringbookpages'

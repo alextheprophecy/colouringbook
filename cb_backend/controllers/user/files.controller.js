@@ -1,6 +1,5 @@
 const {getFileUrl, uploadFromURL, getFileData, uploadStream} = require("../external_apis/aws.controller");
 const imgToPDF = require('image-to-pdf')
-const {createWriteStream} = require("fs");
 const { PassThrough } = require('stream');
 
 const URL_TTL = {IMAGE: (Number)(10), PDF: (Number)(12 * 3600)}

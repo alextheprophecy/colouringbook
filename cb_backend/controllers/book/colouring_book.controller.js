@@ -1,7 +1,5 @@
 const {queryFluxSchnell, queryFluxBetter} = require("../external_apis/replicate.controller");
-const crypto = require('crypto')
-const {createWriteStream, appendFile} = require("fs");
-const {queryPagesDescriptions, getPageDescriptions_2} = require("../external_apis/openai.controller");
+const {getPageDescriptions_2} = require("../external_apis/openai.controller");
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
 
@@ -10,7 +8,7 @@ const MAX_PAGE_COUNT = 6
 const CHILD_PROMPT = (descr)=>`${descr}. Children's detailed colouring book. Only black outlines, no text, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent`
 const ADULT_PROMPT = (descr)=>`${descr}. Adult's detailed colouring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
-const generateColouringBook = (bookData, user, res) => {
+const generateColouringBook = (bookData, user) => {
     const onlyDescriptions = bookData.onlyDescriptions
 
     const imageCount = Number(Math.min(bookData.imageCount, MAX_PAGE_COUNT))

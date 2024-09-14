@@ -4,7 +4,7 @@ const {generateColouringBook, genBookPDF} = require("../book/colouring_book.cont
 const {getBookImages} = require("../user/files.controller");
 const {getPDF} = require("./files.controller");
 
-const generateUserBook = (req, res, next) => {
+const generateUserBook = (req, res) => {
     const user = req.user
     const bookData = req.body
     console.log('gonna create', JSON.stringify(user))
@@ -25,12 +25,12 @@ const generateUserBook = (req, res, next) => {
 const generateBookDescription = (req, res) => {
     let bookData = req.query
     bookData.onlyDescriptions = true
-    generateColouringBook(bookData, req.user, res).then(bookDescr =>
+    generateColouringBook(bookData, req.user).then(bookDescr =>
         res.status(200).json(bookDescr)
     )
 }
 
-const getUserBooks = (req, res, next) => {
+const getUserBooks = (req, res) => {
     const user = req.user
     Book.find({ userId: user.id }).sort({createdAt: -1}).then(async (books) => {
         const books_data = await Promise.all(

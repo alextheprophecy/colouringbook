@@ -1,12 +1,11 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
-const {generateUserBook} = require("./user.controller");
 
 const access_TTL = '1h'
 const refresh_TTL = '7d'
 
 const emailValidator = (email) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(String(email).toLowerCase())
 }
 
@@ -66,7 +65,7 @@ class UserControllers {
         })
     }
 
-    static RefreshToken = (req, res, next) => {
+    static RefreshToken = (req, res) => {
         const cookies = req.cookies
         console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
