@@ -17,31 +17,31 @@ const generateColouringBook = (bookData, user, res) => {
     const preferences = bookData.preferences
     const forAdult = bookData.forAdult
     const imageModel = bookData.greaterQuality?queryFluxBetter:queryFluxSchnell
+
     console.log(imageCount, preferences)
     return getPageDescriptions_2(imageCount, preferences, forAdult).then(a=> {
-        let pageDescriptions = a// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
+        let pageDescriptions = a.map(p => p.pageDescription)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
         console.log('results : ', pageDescriptions)
 
         if (pageDescriptions.length > imageCount) pageDescriptions = pageDescriptions.splice(0, imageCount)
-
-        pageDescriptions = pageDescriptions.map(p => p.pageDescription)
-
         if(onlyDescriptions) return pageDescriptions
 
         console.log('going to query flux')
         return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr))))
-            .then(images =>
-                addNewBookToUser(user, {description: preferences, pages: imageCount}).then(newBook =>
-                    uploadBookImages(user, newBook.id, images).then(a =>
-                        images
+            .then(images_obj => {
+                const images = images_obj.map(i=>i.image)
+                return addNewBookToUser(user, {description: preferences, pages: imageCount, seed: images_obj[0].seed}).then(newBook =>
+                        uploadBookImages(user, newBook.id, images).then(_ =>
+                            images
+                        )
                     )
-                )
+                }
             )
     })
 }
 
-const addNewBookToUser = (user, {description, pages}) => {
-    const book = new Book({userId: user.id, description: description, pages: pages})
+const addNewBookToUser = (user, {description, pages, seed}) => {
+    const book = new Book({userId: user.id, description: description, pages: pages, gen_seed: seed})
     return book.save()
 }
 
