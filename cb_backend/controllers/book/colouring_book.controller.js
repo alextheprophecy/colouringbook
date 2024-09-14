@@ -2,6 +2,7 @@ const {queryFluxSchnell, queryFluxBetter} = require("../external_apis/replicate.
 const {getPageDescriptions_2} = require("../external_apis/openai.controller");
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
+const {pagesSimpleStory} = require("./book_description.controller");
 
 const MAX_PAGE_COUNT = 6
 
@@ -15,26 +16,26 @@ const generateColouringBook = (bookData, user) => {
     const preferences = bookData.preferences
     const forAdult = bookData.forAdult
     const imageModel = bookData.greaterQuality?queryFluxBetter:queryFluxSchnell
+    const gen_seed = Math.floor(Math.random()*100_000)
 
     console.log(imageCount, preferences)
-    return getPageDescriptions_2(imageCount, preferences, forAdult).then(a=> {
-        let pageDescriptions = a.map(p => p.pageDescription)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
+    return pagesSimpleStory(preferences, imageCount, forAdult).then(a=> {
+        console.log('RESULT: ', a)
+        let pageDescriptions = a.map(p => p.page_description)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
         console.log('results : ', pageDescriptions)
 
         if (pageDescriptions.length > imageCount) pageDescriptions = pageDescriptions.splice(0, imageCount)
         if(onlyDescriptions) return pageDescriptions
 
         console.log('going to query flux')
-        return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr))))
-            .then(images_obj => {
-                const images = images_obj.map(i=>i.image)
-                return addNewBookToUser(user, {description: preferences, pages: imageCount, seed: images_obj[0].seed}).then(newBook =>
-                        uploadBookImages(user, newBook.id, images).then(_ =>
-                            images
-                        )
+        return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr), gen_seed)))
+            .then(images => {
+                return addNewBookToUser(user, {description: preferences, pages: imageCount, seed: gen_seed}).then(newBook =>
+                    uploadBookImages(user, newBook.id, images).then(_ =>
+                        images
                     )
-                }
-            )
+                )
+            })
     })
 }
 

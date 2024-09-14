@@ -22,6 +22,41 @@ const queryChatGPTMini = (prompt) => {
     }).then(completion => completion.choices[0].message.content);
 }
 
+const query_formatted_gpt4o2024 = (systemPrompt, userPrompt, responseFormat, responseName) => {
+    const openaiModel = 'gpt-4o-2024-08-06'
+
+    return openai.beta.chat.completions.parse(
+        {
+            model: openaiModel,
+            messages: [
+                {"role": "system", "content": systemPrompt},
+                {"role": "user", "content": userPrompt}
+            ],
+            response_format: zodResponseFormat(responseFormat, responseName)
+        }).then( res => {
+            const message = res.choices[0]?.message;
+
+            if (message?.parsed) return message.parsed
+            else throw new Error(`Refusal Error: ${message.refusal}`)
+        })
+}
+
+
+const query_gpt4o2024 = (systemPrompt, userPrompt) => {
+    const openaiModel = 'gpt-4o-2024-08-06'
+
+    return openai.chat.completions.create(
+        {
+            model: openaiModel,
+            messages: [
+                {"role": "system", "content": systemPrompt},
+                {"role": "user", "content": userPrompt}
+            ]
+        }).then( res => {
+        return res.choices[0].message.content
+    })
+}
+
 const getPagesDescription = (descriptions) => {
     console.log(descriptions)
     return JSON.parse(descriptions).pageDescriptions
@@ -106,18 +141,25 @@ const getPageDescriptions_2 = (pageCount, book_preferences, forAdult= false) => 
     Ensure continuity and thematic coherence across all ${pageCount} pages. Avoid vague language or general terms and remove any references to color. 
     Every description must enable the generation of clear, accurate black-and-white line art without relying on assumptions.`;
 
+    const systemPrompt4 = (pageCount) =>
+        `You are an expert in creating highly detailed, precise, and exhaustive descriptions for generating ${pageCount} black-and-white coloring book images. 
+    Your role is to describe every element of the scene clearly, ensuring no assumptions are made about common terms or objects. 
+    Provide comprehensive details about spatial positioning, anatomy, and the interaction between characters and objects. When actions or movements are involved, describe them explicitly, including body positions, gestures, facial expressions, and physical surroundings. 
+    For example, if a character is standing, specify the orientation of their body, the position of their limbs, and their interaction with the environment. 
+    Ensure continuity and thematic coherence across all ${pageCount} pages. Avoid vague language or general terms and remove any references to color. 
+    Every description must enable the generation of clear, accurate black-and-white line art without relying on assumptions.`;
+
     const userPrompt = childPrompt(book_preferences, pageCount)
 
-    console.log('prompting')
     return openai.beta.chat.completions.parse({
         model: openaiModel,
         messages: [
-            {"role": "system", "content": systemPrompt3(pageCount)},
+            {"role": "system", "content": systemPrompt4(pageCount)},
             {"role": "user", "content": `${userPrompt} Use the pageDescriptionsResponse Object to return an array of ${pageCount} page descriptions.`},
         ],
         response_format: zodResponseFormat(pageDescriptionsResponse, 'pageDescriptionsResponse'),
     }).then( res => {
-
+        console.log(`used: ${book_preferences}\n`, res.usage)
         const message = res.choices[0]?.message;
         if (message?.parsed) return message.parsed.pagesArray
         else throw new Error(`Error generating book descriptions using openai API for ${openaiModel}. Refusal Error: ${message.refusal}`)
@@ -128,5 +170,7 @@ const getPageDescriptions_2 = (pageCount, book_preferences, forAdult= false) => 
 module.exports = {
     queryChatGPTMini,
     queryPagesDescriptions,
-    getPageDescriptions_2
+    getPageDescriptions_2,
+    query_gpt4o2024,
+    query_formatted_gpt4o2024
 }
