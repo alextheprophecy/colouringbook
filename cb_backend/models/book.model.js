@@ -21,6 +21,10 @@ const BookSchema = new Schema({
     gen_seed: {
         type: Number,
         default: 0
+    },
+    page_summaries: {
+        type: [String], // Array of strings to store fun summaries for each page
+        default: [] // Default to an empty array
     }
 },
     {

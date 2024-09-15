@@ -6,7 +6,7 @@ const DEFAULT_DEV_SEEDS = [19129, 34895, 34135] //19129 good
 const SAFETY_CHECKER = false
 
 
-const randomSavedSeed = (seed_list) => {
+const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {
     return seed_list[Math.floor(Math.random()*seed_list.length)]
 }
 
@@ -45,5 +45,6 @@ const queryFluxBetter = (prompt, seed = randomSavedSeed(DEFAULT_DEV_SEEDS)) => {
 
 module.exports = {
     queryFluxSchnell,
-    queryFluxBetter
+    queryFluxBetter,
+    randomSavedSeed
 }

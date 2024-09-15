@@ -7,8 +7,6 @@ const {getPDF} = require("./files.controller");
 const generateUserBook = (req, res) => {
     const user = req.user
     const bookData = req.body
-    console.log('gonna create', JSON.stringify(user))
-    console.log('book create', JSON.stringify(bookData))
 
     _checkCreditsSufficient(user, {greaterQuality: bookData.greaterQuality, imageCount: bookData.imageCount })
         .then((newCredits) => {
@@ -34,15 +32,19 @@ const getUserBooks = (req, res) => {
     const user = req.user
     Book.find({ userId: user.id }).sort({createdAt: -1}).then(async (books) => {
         const books_data = await Promise.all(
-            books.map(async (book) => ({
-                id: book.id,
-                title: book.description,
-                pages: await getBookImages(user, book),
-                date: book.createdAt,
-                has_pdf: book.has_pdf
-            }))
+            books.map((book) =>
+                getBookImages(user, book).then(images => ({
+                    id: book.id,
+                    title: book.description,
+                    date: book.createdAt,
+                    has_pdf: book.has_pdf,
+                    page_summaries: book.page_summaries,
+                    pages: images
+                }))
+            )
         )
 
+        console.log(books_data)
         res.status(200).send(books_data)
     })
 }

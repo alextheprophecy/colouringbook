@@ -2,7 +2,7 @@ const {getFileUrl, uploadFromURL, getFileData, uploadStream} = require("../exter
 const imgToPDF = require('image-to-pdf')
 const { PassThrough } = require('stream');
 
-const URL_TTL = {IMAGE: (Number)(10), PDF: (Number)(12 * 3600)}
+const URL_TTL = {IMAGE: (Number)(3600), PDF: (Number)(12 * 3600)}
 
 const _book_key = (user_email, book_id) => `${user_email.replace('@', '(at)')}/${book_id}`
 

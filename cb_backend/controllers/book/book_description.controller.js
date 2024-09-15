@@ -2,8 +2,8 @@ const {query_gpt4o2024, query_formatted_gpt4o2024, query_gpt4o_mini} = require("
 const {z} = require('zod')
 
 const sys_AdvancedStory = (pageCount) =>
-    `You are an expert children's book writer. Your role is to create a simple, imaginative, and coherent story for a coloring-book in ${pageCount} scenes. 
-    Each scene should have a clear transition to the next, ensuring continuity between them. 
+    `You are an expert children's coloring-book designer. Your role is to create a simple, imaginative, and coherent story for a coloring-book in ${pageCount} scenes. 
+    Each image-scene should be a clear transition to the next, ensuring continuity between them. Each scene should be a photographically capturable moment.
     Focus on distinct and persistent character features (e.g., a frog with a small hat or a man with a striped small shirt). 
     Do not include any mention of colors, as this will be a black-and-white coloring-book. 
     Provide the story in ${pageCount} scenes with engaging actions and interactions for each scene.`;
@@ -35,40 +35,63 @@ const usr_SimpleStory = (preferences, pageCount) =>
     `${preferences}. From these ideas, provide an exiting children's story with ${pageCount} scenes.`
 
 const sys_SimplePages = (pageCount) =>
-    `You are an expert in creating highly detailed, precise descriptions for generating ${pageCount} black-and-white coloring-book images. 
-    Your role is to describe every element of the scene clearly, ensuring no assumptions are made about common terms, objects or characters. 
-    Provide comprehensive details about spatial positioning, anatomy, and the interaction between characters and objects. When actions or movements are involved,
-    describe them explicitly, including body positions, gestures, facial expressions, and physical surroundings. For example, if a character is standing, 
-    specify the orientation of their body, the position of their limbs, and their interaction with the environment. 
-    You must repeat the characters' appearance and clothes descriptions across all similar scenes. Maintain coherence with character descriptions. Avoid vague language or assumptions
-    about common objects, and do not reference any colors. Each description should enable the generation of clear, accurate black-and-white line art.`;
+    `You are an expert in creating simple yet detailed descriptions for generating ${pageCount} black-and-white coloring book images. 
+    Your role is to clearly describe the characters, their appearances, actions, and environments with minimal clutter. 
+    Ensure that the description for each character (including their species, size, clothing, and features) is consistent across all pages, repeating this information in every scene to maintain continuity. 
+    Focus on one or two primary actions or interactions per scene, keeping the description straightforward and easy to visualize.
+    Avoid introducing too many elements or actions on a single page. 
+    Each scene should be simple but rich in detail, with clear spatial positioning of characters and objects. 
+    Avoid any references to colors and make sure the description supports the generation of clear, black-and-white line art.`;
 
 const usr_SimplePages = (story, pageCount) =>
-   `Give ${pageCount} page-image descriptions of the following scenes to generate black-and-white coloring-book images.
-    Repeat character appearances and environment descriptions for every scene, to maintain continuity between the pages.
-    ${story} Use the page_descriptions_response Object to return an array of $\{pageCount} page descriptions and page titles.`
+    `Provide ${pageCount} detailed page descriptions for the following story, suitable for black-and-white coloring book images. 
+    Ensure character descriptions (species, appearance, and clothing) are repeated on each page to maintain visual continuity. 
+    Each scene should focus on simple actions, keeping the number of elements to a minimum while still being descriptive. 
+    Avoid clutter and unnecessary details, but provide enough information for clear visual generation. 
+    Story: ${story}. 
+    Return the result using the page_descriptions_response Object, with ${pageCount} page descriptions and titles.`;
 
-
-const page_descriptions_response = (pageCount) => z.object({
+const page_descriptions_response = () => z.object({
     pages_array: z.array(z.object({page_title: z.string(), page_description: z.string()}))
 })
 
+//return array pageDescriptions
 const pagesSimpleStory = (preferences, pageCount, forAdult=false) => {
-    return query_gpt4o2024(sys_SimpleStory(pageCount), usr_SimpleStory(preferences, pageCount)).then(story => {
+    return query_gpt4o2024(sys_AdvancedStory(pageCount), usr_SimpleStory(preferences, pageCount)).then(story => {
         console.log('STORY TIME: ', story)
 
         return query_formatted_gpt4o2024(sys_SimplePages(pageCount), usr_SimplePages(story, pageCount),
-            page_descriptions_response(pageCount), 'page_descriptions_response').then(pageDescriptionsZOD => {
-                return pageDescriptionsZOD.pages_array
+            page_descriptions_response(), 'page_descriptions_response').then(pageDescriptionsZOD => {
+                const pages_array = (pageDescriptionsZOD.pages_array).splice(0, pageCount)
+                return Promise.all(pages_array.map((page, i) =>
+                    pageSummary(story, i, page.page_description).then(summary =>
+                        ({...page, page_summary: summary}))
+                ))
         })
     })
 }
 
-const pageSummary = (story, pageIndex, flux_prompt) => {
-    query_gpt4o_mini()
+//return string page Summary
+const pageSummary = (story, pageIndex, pageDescription) => {
+    const sys_PageSummary =
+        `You are an expert in creating fun, brief and engaging short scene notes, descriptions or dialogues for children's coloring books. 
+        Your role is to read the story and the scene description and turn it into a short, creative, and fun one-two sentence note that children will enjoy. 
+        This note should match the tone of a children's book, using simple language, and keeping the content easy to understand. Do NOT style the note.
+         Do not add emojis or other symbols. Ensure that the note aligns with the story’s overall theme and characters, while keeping it appropriate for young readers. Mention some colours to help
+        guide the children in colouring the book.`
+
+    const usr_PageSummary = (story, sceneIndex, pageDescription) =>
+        `Here is a children's story: 
+        "${story}"    
+         We are on scene ${sceneIndex}. Here is the description of the scene:    
+        "${pageDescription}"
+        Please create a brief, fun summary, note, or dialogue that we can put next to this coloring book image. Make sure it is playful, only one or two sentences long and suitable for children.`
+
+    return query_gpt4o_mini(sys_PageSummary, usr_PageSummary(story, pageIndex, pageDescription))
 }
 
 
 module.exports = {
-    pagesSimpleStory
+    pagesSimpleStory,
+    pageSummary
 }
