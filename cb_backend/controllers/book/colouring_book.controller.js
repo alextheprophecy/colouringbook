@@ -21,7 +21,7 @@ const generateColouringBook = (bookData, user) => {
     return pagesSimpleStory(preferences, imageCount, forAdult).then(pages_array => {
         let pageDescriptions = pages_array.map(p => p.page_description)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
         let pageSummaries = pages_array.map(p => p.page_summary)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
-        console.log('results : ', pageSummaries)
+        console.log('results : ', pageDescriptions)
 
         if (pageDescriptions.length > imageCount) pageDescriptions = pageDescriptions.splice(0, imageCount)
         if (onlyDescriptions) return pageDescriptions

@@ -13,15 +13,15 @@ const generateUserBook = (req, res) => {
             console.log('has the credits')
 
             user.credits = newCredits
-            generateColouringBook(bookData, user, res).then( (images) =>
-                res.status(200).json({credits_updated: user.credits, images: images})
+            generateColouringBook(bookData, user).then(pages =>
+                res.status(200).json({credits_updated: user.credits, pages: pages})
             )
         })
     .catch(err => res.status(400).send(err))
 }
 
 const generateBookDescription = (req, res) => {
-    let bookData = req.query
+    let bookData = req.body
     bookData.onlyDescriptions = true
     generateColouringBook(bookData, req.user).then(bookDescr =>
         res.status(200).json(bookDescr)

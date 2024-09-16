@@ -6,7 +6,7 @@ const {generateUserBook, getBookPDF, generateBookDescription} = require("../cont
 const router = express.Router();
 
 router.post('/generateImages', verifyToken, generateUserBook)
-router.get('/generateDescription', verifyToken, generateBookDescription)
+router.post('/generateDescription', verifyToken, generateBookDescription)
 router.get('/getBookPDF', verifyToken, getBookPDF)
 router.get('/test', verifyToken, test)
 
