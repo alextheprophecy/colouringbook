@@ -2,8 +2,8 @@ import {useState} from "react";
 import api from "../../Hooks/ApiHandler";
 import '../../Styles/Creation/playground.css'
 const Playground = () => {
-    const [preferences, setPreferences] = useState("snails, bees, chess, and ice cream.")
-    const [pageCount, setPageCount] = useState(2)
+    const [preferences, setPreferences] = useState("a brave monkey going on a wild adventure")
+    const [pageCount, setPageCount] = useState(4)
 
     const [bookDescr, setBookDescr] = useState([])
 
@@ -15,7 +15,7 @@ const Playground = () => {
     }
     const handleUpload = () => {
         console.log("sending", URL)
-        api.get("/image/generateDescription", {params: {imageCount: pageCount, preferences: preferences}}).then((r)=> {
+        api.post("/image/generateDescription", {imageCount: pageCount, preferences: preferences}).then((r)=> {
             console.log(r.data)
             setBookDescr(r.data)
         })

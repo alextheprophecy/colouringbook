@@ -30,7 +30,7 @@ const BookCreation = () => {
 
     const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: false, option2: false, option3: false})
     const [creditCost, setCreditCost] = useState(0)
-    const [images, setImages] = useState([])
+    const [pages, setPages] = useState([])
 
 
     useEffect(() => {
@@ -51,8 +51,8 @@ const BookCreation = () => {
 
         api.post('image/generateImages', bookData).then(r => {
             if(!r) return
-            const {credits_updated, images} = (r.data)
-            setImages(images)
+            const {credits_updated, pages} = (r.data)
+            setPages(pages)
             updateUserData({credits: credits_updated})
         })/*
         api.get('image/test').then(c => {
@@ -88,11 +88,11 @@ const BookCreation = () => {
     const editionForm = () => {
         const loadingPage = <>Loading <div className="loader"></div></>
         const editionPage = <div style={{width:'100vw', height:'100vh'}}>
-            <FlipBook title={creationParams.description} pages_directory={''} pages={images}/>
+            <FlipBook title={creationParams.description} pages_directory={''} pages={pages}/>
         </div>
 
         return <div className={'edition-container'}>
-            {images.length===0 ? loadingPage : editionPage}
+            {pages.length===0 ? loadingPage : editionPage}
         </div>
     }
 

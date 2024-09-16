@@ -41,6 +41,7 @@ const saveBookData = (books) => localStorage.setItem(BOOK_DATA, JSON.stringify(b
 const getBookData = () =>  JSON.parse(localStorage.getItem(BOOK_DATA))
 
 const saveUserToken = (tokenData) => localStorage.setItem(TOKEN_DATA, JSON.stringify(tokenData))
+
 const getUserToken = () => JSON.parse(localStorage.getItem(TOKEN_DATA))
 
 export {
