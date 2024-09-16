@@ -67,11 +67,14 @@ const usr_SimplePages = (story, pageCount) =>
     Also describe the environment or background in a simple, uncluttered way that supports the character's actions or interactions.
     Avoid clutter, unnecessary details, or any references to color, while providing enough information for clear visual generation.
     Story: ${story}.
-    Return the result using the page_descriptions_response Object, with ${pageCount} page descriptions and titles.`;*/
+    Return the result using the page_descriptions_array_response Object, with ${pageCount} page descriptions and titles.`;*/
 
-const page_descriptions_response = () => z.object({
-    pages_array: z.array(z.object({page_title: z.string(), page_description: z.string()}))
+const page_descriptions_array_response = () => z.object({
+    pages_array: z.array(page_description_response)
 })
+
+const page_description_response = () =>
+    z.object({page_title: z.string(), page_description: z.string()})
 
 //return array pageDescriptions
 const pagesSimpleStory = (preferences, pageCount, forAdult=false) => {
@@ -79,13 +82,21 @@ const pagesSimpleStory = (preferences, pageCount, forAdult=false) => {
         console.log('STORY TIME: ', story)
 
         return query_formatted_gpt4o2024(sys_SimplePages(pageCount), usr_SimplePages(story, pageCount),
-            page_descriptions_response(), 'page_descriptions_response').then(pageDescriptionsZOD => {
-                const pages_array = (pageDescriptionsZOD.pages_array).splice(0, pageCount)
-                return Promise.all(pages_array.map((page, i) =>
-                    pageSummary(story, i, page.page_description).then(summary =>
-                        ({...page, page_summary: summary}))
-                ))
+            page_descriptions_array_response(), 'page_descriptions_array_response').then(pageDescriptionsZOD => {
+            const pages_array = (pageDescriptionsZOD.pages_array).splice(0, pageCount)
+            return Promise.all(pages_array.map((page, i) =>
+                pageSummary(story, i, page.page_description).then(summary =>
+                    ({...page, page_summary: summary}))
+            ))
         })
+    })
+}
+
+
+//return array pageDescriptions
+const pagesAdvancedStory = (preferences, pageCount, forAdult=false) => {
+    return query_gpt4o2024(sys_AdvancedStory(pageCount), usr_SimpleStory(preferences, pageCount)).then(story => {
+
     })
 }
 
@@ -108,8 +119,76 @@ const pageSummary = (story, pageIndex, pageDescription) => {
     return query_gpt4o_mini(sys_PageSummary, usr_PageSummary(story, pageIndex, pageDescription))
 }
 
+class AdvancedGenerator {
+    static MAX_PAGES = 6
+
+    static sys_AdvancedStory = (pageCount) =>
+        `You are an expert in creating detailed and exciting story outlines for children's coloring books. 
+        Your task is to create a coherent and engaging storyline that can be split into ${pageCount} pages. 
+        The story should have clear progression and involve the main character(s) undertaking a simple adventure or activity. 
+        Ensure that the story can easily be split into individual scenes, each suitable for illustration in a coloring book.
+        Avoid abstract concepts and focus on creating scenarios that are fun and visually appealing. 
+        Each scene should include physical actions or activities that can be depicted as a snapshot in the form of a black-and-white image.`
+
+    static usr_AdvancedStory = (preferences, pageCount) =>
+        `Generate a detailed story outline based on the following preferences: ${preferences}. 
+        The story will be split into ${pageCount} pages for a coloring book, with each scene forming a page. 
+        Keep the story simple but engaging, ensuring clear progression and actions in every part of the story. 
+        Make sure that each part of the story can be easily translated into an image with physical actions and activities.`
+
+    static sys_AdvancedPages = (pageCount) =>
+        `You are an expert in creating highly detailed, precise descriptions for generating ${pageCount} black-and-white coloring-book images. 
+        Your role is to describe every element of a scene clearly, ensuring no assumptions are made about common terms, objects, or characters. 
+        Provide comprehensive details about spatial positioning, anatomy, and the interaction between characters and objects. When actions or movements are involved,
+        describe them explicitly, including body positions, gestures, facial expressions, and physical surroundings. 
+        Specify the orientation of characters' bodies, the position of their limbs, and their interaction with the environment. 
+        Repeat the characters' appearance and clothing descriptions across all similar scenes. Maintain coherence with character descriptions in the story.
+        Avoid vague language, references to thoughts, dialogue, or colors. The description should enable the generation of clear, accurate black-and-white line art for a coloring book.`
+
+    static usr_AdvancedPages = (storyOutline, currentPage, totalPageCount) =>
+        `Based on the following story outline: "${storyOutline}", 
+        provide a highly detailed description for page ${currentPage} of ${totalPageCount}, 
+        suitable for generating a black-and-white coloring book image. 
+        Ensure that the description is precise and focused on visual elements only, such as character appearance, physical actions, 
+        body positioning, and interaction with the environment. 
+        Avoid any references to thoughts, feelings, or dialogue, and focus solely on what can be seen in a static, snapshot-style coloring book image. 
+        Repeat the character and environment description (appearance, clothing, and positioning) to maintain consistency across the story.
+        Return the result using the page_description_response Object`
+
+    static advancedPageDescriptions = (preferences, pageCount) => {
+        // First, generate the story outline
+        return query_gpt4o2024(this.sys_AdvancedStory(pageCount), this.usr_AdvancedStory(preferences, pageCount))
+            .then(storyOutline => {
+                console.log('Generated Story Outline: ', storyOutline);
+
+                // Now generate each page one by one
+                const pageDescriptions = [];
+                let pageIndex = 1;
+
+                const generateNextPage = () => {
+                    if (pageIndex > pageCount || pageIndex > this.MAX_PAGES) {
+                        return Promise.resolve(pageDescriptions); // Return the array once all pages are generated
+                    }
+
+                    return query_formatted_gpt4o2024(
+                        this.sys_AdvancedPages(pageCount),
+                        this.usr_AdvancedPages(storyOutline, pageIndex, pageCount),
+                        page_description_response(), 'page_description_response'
+                    ).then(pageDescriptionZOD => {
+                        pageDescriptions.push(pageDescriptionZOD);
+                        pageIndex++;
+                        return generateNextPage(); // Recursive call to generate the next page
+                    });
+                };
+
+                return generateNextPage() // Start the page generation process
+            })
+    }
+}
+
 
 module.exports = {
     pagesSimpleStory,
-    pageSummary
+    pageSummary,
+    AdvancedGenerator
 }

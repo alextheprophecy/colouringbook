@@ -1,12 +1,12 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed} = require("../external_apis/replicate.controller");
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
-const {pagesSimpleStory} = require("./book_description.controller");
+const {pagesSimpleStory, AdvancedGenerator} = require("./book_description.controller");
 
 const MAX_PAGE_COUNT = 6
 
-const CHILD_PROMPT = (description)=>`${description}. Children's detailed colouring book. Only black outlines, no text, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent`
-const ADULT_PROMPT = (description)=>`${description}. Adult's detailed colouring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
+const CHILD_PROMPT = (description)=>`Children's detailed coloring book. ${description}. Only black outlines, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent coloring book.`
+const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
 const generateColouringBook = (bookData, user) => {
     const onlyDescriptions = bookData.onlyDescriptions
@@ -18,7 +18,7 @@ const generateColouringBook = (bookData, user) => {
     const gen_seed = randomSavedSeed()
 
     console.log(imageCount, preferences)
-    return pagesSimpleStory(preferences, imageCount, forAdult).then(pages_array => {
+    return AdvancedGenerator.advancedPageDescriptions(preferences, imageCount, forAdult).then(pages_array => {
         let pageDescriptions = pages_array.map(p => p.page_description)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
         let pageSummaries = pages_array.map(p => p.page_summary)// JSON.parse(a.choices[0].message.content).pagesArray//JSON.parse(a)
         console.log('results : ', pageDescriptions)

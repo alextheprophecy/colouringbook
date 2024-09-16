@@ -29,10 +29,13 @@ const generateBookDescription = (req, res) => {
 }
 
 const getUserBooks = (req, res) => {
+    const MAX_RETURNED_BOOKS = 7
+
     const user = req.user
     Book.find({ userId: user.id }).sort({createdAt: -1}).then(async (books) => {
         const books_data = await Promise.all(
-            books.map((book) =>
+            books.map((book, i) =>
+                (i<MAX_RETURNED_BOOKS)?
                 getBookImages(user, book).then(images => ({
                     id: book.id,
                     title: book.description,
@@ -40,6 +43,12 @@ const getUserBooks = (req, res) => {
                     has_pdf: book.has_pdf,
                     page_summaries: book.page_summaries,
                     pages: images
+                })) :
+                Promise.resolve(({
+                    id: book.id,
+                    title: book.description,
+                    date: book.createdAt,
+                    has_pdf: book.has_pdf
                 }))
             )
         )
