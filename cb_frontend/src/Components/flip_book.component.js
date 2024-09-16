@@ -1,22 +1,34 @@
 import HTMLFlipBook from 'react-pageflip';
 import {useCallback, useRef, useState} from "react";
 const BLANK_PAGE = 0 //placeholder for a blank page in pages of a book
-const FlipBook = ({title, pages_directory, pages, on_download}) => {
+const FlipBook = ({title, pages_directory, pages, on_download, page_summaries}) => {
     const [currentPage, setCurrentPage] = useState(0); // Track the current page
     const flipBookRef = useRef(null);
 
-    const bookLength = pages.length
-    console.log(pages, title)
+    const bookLength = pages?.length
+
+    console.log(page_summaries)
     const _getImagePageHTML = (imageCompletePath, pNumber) => <img src={imageCompletePath} className={`no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}/>
     const _getTextPageHTML = (text, pNumber) => <div className={`text-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}><br/>{text}</div>
     const _getBlankPageHTML = (pNumber) => <div className={`blank-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}></div>
 
-    if(pages.length%2===1) pages.push(BLANK_PAGE) //if odd number of pages, add extra blank page at end
 
+    let mergedPages = [];
+    if (page_summaries && page_summaries.length === bookLength) {
+        pages.forEach((p, i) => {
+            if (page_summaries[i]) {
+                mergedPages.push(page_summaries[i]);  // Add summary page
+            }
+            mergedPages.push(p);  // Add the image or content page
+        });
+    } else {
+        if(pages.length%2===1) pages.push(BLANK_PAGE) //if odd number of pages, add extra blank page at end
+        mergedPages = pages;
+    }
 
     // Function to flip to the next page
     const handleNextPage = () => {
-        if (flipBookRef.current && currentPage < pages.length - 2) {
+        if (flipBookRef.current && currentPage < mergedPages.length - 2) {
             flipBookRef.current.pageFlip().flipNext()
             setCurrentPage(currentPage + 2)
         }
@@ -46,7 +58,7 @@ const FlipBook = ({title, pages_directory, pages, on_download}) => {
 
             <HTMLFlipBook ref={flipBookRef} onFlip={onFlip} size={"stretch"}
                           width={300} height={450}>
-                {pages.map((p, i) =>
+                {mergedPages.map((p, i) =>
                     p===BLANK_PAGE ? _getBlankPageHTML(i) :
                         ['.jpg', '.png'].some(ext => p.split('?')[0].endsWith(ext)) ? _getImagePageHTML(pages_directory + p, i) : _getTextPageHTML(p, i)
                 )}
@@ -59,7 +71,7 @@ const FlipBook = ({title, pages_directory, pages, on_download}) => {
                  </button>
              )}
 
-             {currentPage < pages.length-2 && (
+             {currentPage < mergedPages.length-2 && (
                  <button className="flipbook-button page-button next-page" onClick={handleNextPage}>
                      <img src="/assets/icons/next_page.svg" alt="Next" className="arrow-icon" />
                  </button>

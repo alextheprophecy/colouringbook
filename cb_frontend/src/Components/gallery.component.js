@@ -10,7 +10,6 @@ const Gallery = () => {
 
     useEffect(() => {
         const books = getBookData()
-        console.log('books', books)
         if(books)setBooks(books)
         else loadValues()
     }, []);
@@ -18,10 +17,9 @@ const Gallery = () => {
     const loadValues = () => {
         api.get('user/getBooks').then(r => {
             if(!r) return
-            console.log('books: ', r.data)
             setBooks(r.data)
             saveBookData(r.data)
-            //window.location.reload()
+            window.location.reload()
         })
 
     }
