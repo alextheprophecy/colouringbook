@@ -3,6 +3,7 @@ import axios from "axios";
 import {useTranslation} from "react-i18next";
 import InputField from "../UI/ui_input_field.component";
 import UI_Switch from "../UI/ui_switch.component";
+import NumberInput from "../UI/ui_number_input.component";
 import UI_Button from "../UI/ui_button";
 import Gallery from "../gallery.component";
 
@@ -28,7 +29,7 @@ const BookCreation = () => {
     const [editionVisible, setEditionVisible] = useState(false)
     const [tipsVisible, setTipsVisible] = useState(false)
 
-    const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: false, option2: false, option3: false})
+    const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: false, option2: false})
     const [creditCost, setCreditCost] = useState(0)
     const [pages, setPages] = useState([])
 
@@ -42,12 +43,12 @@ const BookCreation = () => {
     const createBook = () => {
         if(creationParams.description==='')return alert(t('creation.warning1'))
         setCreationVisible(false)
-        const pages = creationParams.option3?1:creationParams.pageCount
+        const pageCount = creationParams.pageCount
         const preferences = creationParams.description
         const forAdult = creationParams.option2
         const greaterQuality = creationParams.option1
 
-        const bookData = {imageCount: pages, preferences: preferences, forAdult: forAdult, greaterQuality: greaterQuality}
+        const bookData = {imageCount: pageCount, preferences: preferences, forAdult: forAdult, greaterQuality: greaterQuality}
 
         api.post('image/generateImages', bookData).then(r => {
             if(!r) return
@@ -63,7 +64,7 @@ const BookCreation = () => {
     }
 
     const testButton = () => {
-        api.post('image/test', {bookDescription: {imageCount: 600}, user_id: getUserId()}).then(r=>{
+        api.post('image/test', {bookDescription: {imageCount: 3}, user_id: getUserId()}).then(r=>{
             if(!r) return
             console.log('gone through', r.data)
 
@@ -80,7 +81,7 @@ const BookCreation = () => {
     }
 
     const usedCredits = () => <div>Cost:
-        {(creationParams.option3?1:creationParams.pageCount)*(creationParams.option1?10:1)} credits
+        {creationParams.pageCount*(creationParams.option1?10:1)} credits
     </div>
 
     const updateParameter = param => value => setCreationParams({...creationParams, [param]: value})
@@ -103,9 +104,12 @@ const BookCreation = () => {
             <div className={"switches-container"}>
                 <div><UI_Switch updateValue={updateParameter('option1')}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
-                <div><UI_Switch updateValue={updateParameter('option3')} toggled={true}/> <span className={'switch-caption'}>{t('creation.option3')}</span></div>
-                <div><input type={'number'} min={1} max={MAX_PAGE_COUNT} placeholder={PAGE_COUNT.toString()} onChange={(e) => updateParameter('pageCount')(e.target.value)}/></div>
-                {usedCredits()}
+                <div className="number-input-container">
+                    <NumberInput updateValue={updateParameter('pageCount')}/>
+                    <div className="cost-container">
+                        <span className="cost-text">{usedCredits()}</span>
+                    </div>
+                </div>
                 <UI_Button button_text={t('creation.create')} callbackFunction={createBook}/>
             </div>
         </div>

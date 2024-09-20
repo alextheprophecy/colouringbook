@@ -1,17 +1,17 @@
 import HTMLFlipBook from 'react-pageflip';
 import {useCallback, useRef, useState} from "react";
 const BLANK_PAGE = 0 //placeholder for a blank page in pages of a book
-const FlipBook = ({title, pages_directory, pages, on_download, page_summaries}) => {
+const FlipBook = ({title, pages_directory, pages = [], on_download, page_summaries}) => {
     const [currentPage, setCurrentPage] = useState(0); // Track the current page
     const flipBookRef = useRef(null);
+    console.log('pages:: ', pages)
 
-    const bookLength = pages?.length
+    const bookLength = pages?.length ?? 0
 
     console.log(page_summaries)
     const _getImagePageHTML = (imageCompletePath, pNumber) => <img src={imageCompletePath} className={`no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}/>
     const _getTextPageHTML = (text, pNumber) => <div className={`text-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}><br/>{text}</div>
     const _getBlankPageHTML = (pNumber) => <div className={`blank-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}></div>
-
 
     let mergedPages = [];
     if (page_summaries && page_summaries.length === bookLength) {
@@ -22,7 +22,7 @@ const FlipBook = ({title, pages_directory, pages, on_download, page_summaries}) 
             mergedPages.push(p);  // Add the image or content page
         });
     } else {
-        if(pages.length%2===1) pages.push(BLANK_PAGE) //if odd number of pages, add extra blank page at end
+        if(bookLength%2===1) pages.push(BLANK_PAGE) //if odd number of pages, add extra blank page at end
         mergedPages = pages;
     }
 

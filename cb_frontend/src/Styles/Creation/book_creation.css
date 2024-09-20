@@ -54,6 +54,24 @@
     color: rosybrown;
 }
 
+.cost-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem; /* Adds space from the number input */
+}
+
+.cost-text {
+    font-family: "Lucida Console", sans-serif;
+    font-size: 1.2rem;
+    color: indianred;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+
 
 .edition-container{
     position: absolute;
