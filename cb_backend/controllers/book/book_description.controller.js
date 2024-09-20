@@ -135,6 +135,7 @@ class AdvancedGenerator {
         The story will be split into ${pageCount} pages for a coloring book, with each scene forming a page. 
         Keep the story simple but engaging, ensuring clear progression and actions in every part of the story. 
         Make sure that each part of the story can be easily translated into an image with physical actions and activities.`
+/*
 
     static sys_AdvancedPages = (pageCount) =>
         `You are an expert in creating highly detailed, precise descriptions for generating ${pageCount} black-and-white coloring-book images. 
@@ -144,16 +145,35 @@ class AdvancedGenerator {
         Specify the orientation of characters' bodies, the position of their limbs, and their interaction with the environment. 
         Repeat the characters' appearance and clothing descriptions across all similar scenes. Maintain coherence with character descriptions in the story.
         Avoid vague language, references to thoughts, dialogue, or colors. The description should enable the generation of clear, accurate black-and-white line art for a coloring book.`
+*/
+
+    static sys_AdvancedPages = (pageCount) =>
+        `You are an expert in generating clear, precise descriptions for generating a single black-and-white coloring book image, as part of a ${pageCount}-page story.         
+        Your goal is to describe every element of the scene in easy-to-visualize terms, ensuring no assumptions are made about common terms, objects, or characters.        
+        Focus on essential visual elements: characters, their positions, clothing, and objects they interact with. 
+        Describe any actions, body postures, or gestures explicitly. Specify things such as the orientation of characters' bodies, the position of their limbs, and their interaction with the environment.
+        Maintain coherence with the characters’ appearance and environment based on the overall story description, by repeating important physical characteristics.
+        Avoid references to colors, complex scenic elements, shading, or abstract details. Stick to descriptions that will translate well into simple black-and-white, colorless line art.`
 
     static usr_AdvancedPages = (storyOutline, currentPage, totalPageCount) =>
-        `Based on the following story outline: "${storyOutline}", 
-        provide a highly detailed description for page ${currentPage} of ${totalPageCount}, 
-        suitable for generating a black-and-white coloring book image. 
-        Ensure that the description is precise and focused on visual elements only, such as character appearance, physical actions, 
-        body positioning, and interaction with the environment. 
-        Avoid any references to thoughts, feelings, or dialogue, and focus solely on what can be seen in a static, snapshot-style coloring book image. 
-        Repeat the character and environment description (appearance, clothing, and positioning) to maintain consistency across the story.
-        Return the result using the page_description_response Object`
+        `Based on the story outline: "${storyOutline}", provide a clear and detailed description for page ${currentPage} of ${totalPageCount}, meant to generate a black-and-white coloring book image. 
+    The description should focus solely on visual elements such as character appearance, body positioning, physical actions, and interaction with the environment. 
+    Repeat the character's appearance, clothing, and positioning within this page; to ensure consistency and remind us what the characters look like. 
+    Avoid any references to color, dialogue, thoughts, feelings, shading, or overly complex scene details. 
+    The scene should be easy to understand, creating a simple, snapshot-style image for a child to color.  Return the result using the page_description_response Object`
+
+    /*
+
+        static usr_AdvancedPages = (storyOutline, currentPage, totalPageCount) =>
+            `Based on the following story outline: "${storyOutline}",
+            provide a detailed description for page ${currentPage} of ${totalPageCount},
+            suitable for generating a black-and-white coloring book image.
+            Ensure that the description is precise and focused on visual elements only, such as character appearance, physical actions,
+            body positioning, and interaction with the environment.
+            Avoid any references to thoughts, feelings, or dialogue, and focus solely on what can be seen in a static, snapshot-style coloring book image.
+            Repeat the character and environment description (appearance, clothing, and positioning) to maintain consistency across the coloring book story.
+            Return the result using the page_description_response Object`
+    */
 
     static advancedPageDescriptions = (preferences, pageCount) => {
         // First, generate the story outline

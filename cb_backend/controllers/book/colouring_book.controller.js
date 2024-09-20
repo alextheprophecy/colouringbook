@@ -28,13 +28,13 @@ const generateColouringBook = (bookData, user) => {
 
         console.log('going to query flux')
         return Promise.all(pageDescriptions.map(descr => imageModel((forAdult?ADULT_PROMPT:CHILD_PROMPT)(descr), gen_seed)))
-            .then(images => {
-                return addNewBookToUser(user,
+            .then(images =>
+                addNewBookToUser(user,
                     {description: preferences, pages: imageCount, seed: gen_seed, page_summaries: pageSummaries}
                 ).then(newBook =>
                     uploadBookImages(user, newBook.id, images).then(_ => images)
                 )
-            })
+            )
     })
 }
 
