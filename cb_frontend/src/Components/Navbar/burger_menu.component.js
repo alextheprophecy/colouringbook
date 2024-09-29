@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import LogoutComponent from "./logout.component";
 import {handleLogout} from "../../Hooks/LoginHandler";
+
 class BurgerMenu extends Component{
     constructor(props) {
         super(props)

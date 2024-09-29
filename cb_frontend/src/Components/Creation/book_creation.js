@@ -35,9 +35,10 @@ const BookCreation = () => {
 
 
     useEffect(() => {
-        if(!isUserLoggedIn()){
+        /*if(!isUserLoggedIn()){
             window.location.href = '/login'
-        }
+        }*/
+        //TODO: uncomment for production!
     }, []);
 
     const createBook = () => {
@@ -98,7 +99,9 @@ const BookCreation = () => {
     }
 
     const creationForm = () => <div className={'creation-container'}>
+{/*
         <UI_Button button_text={t('creation.tips_button')} help_button={true} callbackFunction={showTips}/>
+*/}
         <div className={`creation-form ${!creationVisible ? 'slide-up' : ''}`} onTransitionEnd={showEdition}>
             <InputField updateValue={updateParameter('description')} width={'40vw'} placeholder_text={t('creation.placeholder1')}/>
             <div className={"switches-container"}>

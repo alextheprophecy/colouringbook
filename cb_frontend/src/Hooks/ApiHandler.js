@@ -2,7 +2,7 @@ import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
 import {handleLogout} from "./LoginHandler";
 
-const BASE_URL = 'http://localhost:5000/api/'
+const BASE_URL = 'http://172.20.10.2:5000/api/'
 
 const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
 
@@ -17,7 +17,7 @@ api.interceptors.response.use(
         // Handle errors
         const { status } = error.response || {}
 
-        let errMsg = error.response?.data
+        let errMsg = error.response?.data ?? error.message
         // if(!errMsg) errMsg = error.response.error
 
         let alertMsg

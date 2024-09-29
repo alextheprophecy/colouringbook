@@ -16,9 +16,8 @@ const InputField = ({ width, height, placeholder_text, updateValue}) => {
             } else {
                 textarea.style.overflowY = 'hidden';
             }
-        };
+        }
         adjustHeight()
-        textarea.style.height = '175px'; // Dirty hardcode to make placeholder show properly
 
         textarea.addEventListener('input', adjustHeight)
 
@@ -34,7 +33,7 @@ const InputField = ({ width, height, placeholder_text, updateValue}) => {
                 style={{ resize: 'none', overflow: 'hidden', width: width}} // Disable manual resizing
                 onChange={e=> updateValue(e.target.value)}
             />
-            <div className="line" style={{ width: width }}/>
+            <div className="line"  style={{ width: width }}/>
         </div>
     );
 };

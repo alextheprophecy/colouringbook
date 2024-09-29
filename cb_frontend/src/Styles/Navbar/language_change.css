@@ -1,7 +1,5 @@
 .bottom-right{
     position: fixed;
-    bottom: 0;
-    right: 0;
     width: 350px;
     height: 25px;
     padding: 5px;
@@ -11,4 +9,5 @@
     display: flex;
     flex-wrap: wrap;
     z-index: 5;
+    gap: 2px;
 }

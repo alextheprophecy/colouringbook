@@ -2,6 +2,7 @@ import '../Styles/example_book.css'
 import GenerateBook from "./Creation/generate_book.component";
 import {useTranslation} from "react-i18next";
 import FlipBook from "./flip_book.component";
+import ScribbleText from "./UI/ui_scribble_text.component";
 
 const ExampleBooks = () => {
     const {t} = useTranslation()
@@ -14,6 +15,7 @@ const ExampleBooks = () => {
     const OnlineBook =  {title: 'Online', pages_directory: "https://as1.ftcdn.net/v2/jpg/02/95/26/46/", pages: ['500_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.jpg']}
 
     return <div className={"flex-container"}>
+        <ScribbleText text={"Generate my Coloring Book"}/>
         <span className={"flex-break"}/>
         <FlipBook {...BOOK1}/>
         <span className={"flex-break"}/>

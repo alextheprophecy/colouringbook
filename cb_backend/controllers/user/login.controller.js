@@ -42,6 +42,7 @@ class UserControllers {
     }
 
     static Login = (req, res, next) => {
+        console.log('Loggin in')
         const { email, password } = req.body
 
         if (!email || !password) return res.status(400).json('Please provide email and password')
