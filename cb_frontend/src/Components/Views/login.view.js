@@ -2,10 +2,10 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {handleLogin, handleLogout} from "../../Hooks/LoginHandler";
 import {getUserData, isUserLoggedIn} from "../../Hooks/UserDataHandler";
-import LogoutComponent from "./logout.component";
+import LogoutComponent from "../Navbar/logout.component";
 import '../../Styles/Navbar/login.css'
 
-const LoginForm = () => {
+const LoginView = () => {
     const { t} = useTranslation()
     const [formData, setFormData] = useState({email: '',password: ''})
 
@@ -25,7 +25,6 @@ const LoginForm = () => {
                     placeholder="Email"
                     onChange={handleChange}
                 />
-                <div className="line"></div>
             </div>
             <div className="login-field">
                 <input
@@ -35,7 +34,6 @@ const LoginForm = () => {
                     placeholder="Password"
                     onChange={handleChange}
                 />
-                <div className="line"></div>
             </div>
             <input
                 className="login-submit"
@@ -54,7 +52,7 @@ const LoginForm = () => {
     </form>*/
 
 
-    return isUserLoggedIn() ? <LogoutComponent/> : loginHTML()
+    return isUserLoggedIn() ? <LogoutComponent/>: loginHTML()
 
 }
-export default LoginForm
+export default LoginView

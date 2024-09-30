@@ -4,17 +4,9 @@ import '../../Styles/UI/background.css';
 
 const Background = ({ children }) => (
     <div className="background">
-
         <div className="background-middle">
-
-{/*
-            <div className="background-bottom"></div>
-*/}
             <div className="background-top"></div>
-            <div className="content-over-background">
-                {children}
-
-            </div>
+            {children}
         </div>
 
     </div>

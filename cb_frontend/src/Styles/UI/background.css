@@ -6,64 +6,58 @@
 }
 
 
-.background-top,
-.background-top::after,
-.background-bottom,
-.background-bottom::after{
-    aspect-ratio: 16/9;
-    min-width: 100vw;
-
-    z-index: -1;
-}
-
 .background-top::after,
 .background-middle::before,
 .background-bottom::after {
     filter: invert(44%) sepia(66%) saturate(2210%) hue-rotate(163deg) brightness(97%) contrast(101%);
 }
 
-
-
 .background-top {
-    position: absolute;
-    left: 0;
+    min-width: 100%;
+    aspect-ratio: 16/9;
 
+    position: absolute;
     z-index: -1;
-    background-size: cover;
-    background: white;
+    background: url('/public/assets/textures/paper-texture.jpg') repeat;
+    background-size: contain;
 }
 
 .background-top::after {
     content: '';
+    width: 100%;
+    aspect-ratio: 16/9;
 
     position: absolute;
     top: 0;
     left: 0;
     z-index: -1;
-    background-size: cover;
     background: url('/public/assets/textures/V_2/background-top.png') no-repeat top center transparent;
-}
+    /*
+    background-size: 100% 100vh;
+    */
 
+}
 .background-middle {
     position: relative;
-    z-index: 0;
-    opacity: 1;
+    background: url('/public/assets/textures/paper-texture.jpg') repeat;
+    z-index: -2; /* Ensure it's behind the ::before element and content */
 }
 
 .background-middle::before {
     content: '';
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
     background: url('/public/assets/textures/V_2/background-middle.png') repeat-y center top transparent;
-    z-index: -1;
-    pointer-events: none;
-
+    background-size: 100% auto;
+    z-index: -1; /* Place it above the paper texture but below the content */
+    filter: invert(44%) sepia(66%) saturate(2210%) hue-rotate(163deg) brightness(97%) contrast(101%);
 }
 
+
+/*
 
 .background-bottom {
     position: absolute;
@@ -95,9 +89,4 @@
     pointer-events: auto;
     z-index: 1;
 }
-
-.button-cont{
-    pointer-events:auto;
-    z-index: 5;
-    background-color: red;
-}
+*/

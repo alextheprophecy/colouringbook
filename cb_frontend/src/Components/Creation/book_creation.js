@@ -5,7 +5,7 @@ import InputField from "../UI/ui_input_field.component";
 import UI_Switch from "../UI/ui_switch.component";
 import NumberInput from "../UI/ui_number_input.component";
 import UI_Button from "../UI/ui_button";
-import Gallery from "../gallery.component";
+import Gallery from "../Views/gallery.view";
 
 import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";

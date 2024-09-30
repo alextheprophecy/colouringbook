@@ -1,8 +1,8 @@
-import '../Styles/example_book.css'
-import GenerateBook from "./Creation/generate_book.component";
+import '../../Styles/example_book.css'
+import GenerateBook from "../Creation/generate_book.component";
 import {useTranslation} from "react-i18next";
-import FlipBook from "./flip_book.component";
-import ScribbleText from "./UI/ui_scribble_text.component";
+import FlipBook from "../flip_book.component";
+import ScribbleText from "../UI/ui_scribble_text.component";
 
 const ExampleBooks = () => {
     const {t} = useTranslation()
@@ -16,7 +16,7 @@ const ExampleBooks = () => {
 
     return <div className={"flex-container"}>
         <div style={{width:'60%', textAlign:'center'}}>
-            <ScribbleText text={"Generate my Coloring Book"} roughness={2}/>
+            <ScribbleText text={"Generate my Coloring Book"} roughness={1.5} fillColor={"#027a9f"} strokeColor={"#00a4d7"} />
         </div>
 
         <span className={"flex-break"}/>

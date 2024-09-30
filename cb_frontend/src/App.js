@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import ExampleBooks from "./Components/example_books.component";
+import ExampleBooks from "./Components/Views/example_books.view";
 import BookCreation from "./Components/Creation/book_creation";
-import LoginForm from "./Components/Navbar/login_form.component";
-import Gallery from "./Components/gallery.component";
+import LoginView from "./Components/Views/login.view";
+import Gallery from "./Components/Views/gallery.view";
 import Playground from "./Components/Creation/playground.component";
 import ScribbleText from "./Components/UI/ui_scribble_text.component";
 import BurgerMenu from "./Components/Navbar/burger_menu.component";
@@ -17,7 +17,7 @@ function App() {
             <Routes>
                 <Route exact path='/' element={<ExampleBooks />} />
                 <Route exact path='/create' element={<BookCreation />} />
-                <Route exact path='/login' element={<LoginForm />} />
+                <Route exact path='/login' element={<LoginView />} />
                 <Route exact path='/gallery' element={<Gallery />} />
                 <Route exact path='/playground' element={<Playground />} />
                 <Route exact path='/test' element={<ScribbleText />} />
