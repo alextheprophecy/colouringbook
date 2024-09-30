@@ -3,9 +3,12 @@ import rough from 'roughjs/bundled/rough.esm';
 import { useEffect, useRef, useState } from "react";
 import opentype from 'opentype.js';
 
-const ScribbleText = ({ text = "Error" }) => {
+const ScribbleText = ({ text = "Error",
+          sizeFactor=1, strokeColor='black', fillColor='black',
+                      strokeWidth = 1.75, roughness = 1.5, animate=true}) => {
+
     const FREQUENCY = 10; // Swapping frequency (times per second)
-    const seeds = [1, 2, 3, 4, 5]; // Pre-defined set of seeds
+    const seeds = [1, 2,3,4, 5]; // Pre-defined set of seeds
     const [currentSeedIndex, setCurrentSeedIndex] = useState(0);
     const [font, setFont] = useState(null);
     const svgRef = useRef(null);
@@ -27,7 +30,7 @@ const ScribbleText = ({ text = "Error" }) => {
     const generateSVG = (text) => {
         if (!font) return null; // Font not loaded yet
 
-        const fontSize = 72; // Adjust the font size as needed
+        const fontSize = 100*sizeFactor; // Adjust the font size as needed
         const x = 0;
         const y = fontSize; // y position (font baseline)
         const path = font.getPath(text, x, y, fontSize);
@@ -46,10 +49,10 @@ const ScribbleText = ({ text = "Error" }) => {
         const { pathData, bbox } = result;
 
         const element = roughSvg.path(pathData, {
-            stroke: '#000',
-            strokeWidth: 1.75,
-            roughness: 1.5,
-            fill: '#000',
+            stroke: strokeColor,
+            strokeWidth: strokeWidth,
+            roughness: roughness,
+            fill: fillColor,
             fillStyle: fillStyle,
             seed,
         });
@@ -99,6 +102,9 @@ const ScribbleText = ({ text = "Error" }) => {
         if (svgElements.current[0]) {
             svgRef.current.appendChild(svgElements.current[0]);
         }
+
+        if(!animate)return
+
 
         // Clear any existing interval
         if (intervalRef.current) {

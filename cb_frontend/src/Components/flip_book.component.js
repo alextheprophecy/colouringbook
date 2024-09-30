@@ -1,5 +1,6 @@
 import HTMLFlipBook from 'react-pageflip';
 import {useCallback, useRef, useState} from "react";
+import ScribbleText from "./UI/ui_scribble_text.component";
 const BLANK_PAGE = 0 //placeholder for a blank page in pages of a book
 const FlipBook = ({title, pages_directory, pages = [], on_download, page_summaries}) => {
     const [currentPage, setCurrentPage] = useState(0); // Track the current page
@@ -47,7 +48,9 @@ const FlipBook = ({title, pages_directory, pages = [], on_download, page_summari
 
 
     return  <span className={"book-container"}>
-            <div className={"book-title"}>{`${bookLength}pages- ${title}`}</div>
+            <div className={"book-title"}>
+                {title}
+            </div>
             {on_download ? (
                 <button className="flipbook-button download-button" onClick={on_download}>
                     <img src="/assets/icons/download.svg" alt="Download" className="download-icon" />
@@ -56,7 +59,7 @@ const FlipBook = ({title, pages_directory, pages = [], on_download, page_summari
             ) : ''}
          <div className="flipbook-wrapper">
 
-            <HTMLFlipBook ref={flipBookRef} onFlip={onFlip} size={"stretch"}
+            <HTMLFlipBook ref={flipBookRef} onFlip={onFlip} size={'stretch'}
                           width={300} height={450}>
                 {mergedPages.map((p, i) =>
                     p===BLANK_PAGE ? _getBlankPageHTML(i) :

@@ -19,6 +19,7 @@ import {
     saveUserData,
     updateUserData
 } from "../../Hooks/UserDataHandler";
+import Background from "../UI/background.component";
 
 const PAGE_COUNT = 2
 const MAX_PAGE_COUNT = 6
@@ -98,7 +99,7 @@ const BookCreation = () => {
         </div>
     }
 
-    const creationForm = () => <div className={'creation-container'}>
+    const creationForm = () =><div className={'creation-container'}>
 {/*
         <UI_Button button_text={t('creation.tips_button')} help_button={true} callbackFunction={showTips}/>
 */}
