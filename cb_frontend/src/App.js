@@ -1,25 +1,23 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import ExampleBooks from "./Components/Views/example_books.view";
-import BookCreation from "./Components/Creation/book_creation";
+import CreationView from "./Components/Views/creation.view";
 import LoginView from "./Components/Views/login.view";
-import Gallery from "./Components/Views/gallery.view";
-import Playground from "./Components/Creation/playground.component";
+import GalleryView from "./Components/Views/gallery.view";
+import PlaygroundView from "./Components/Views/playground.view";
 import ScribbleText from "./Components/UI/ui_scribble_text.component";
 import BurgerMenu from "./Components/Navbar/burger_menu.component";
-import LanguageChange from "./Components/Navbar/language_change.component";
-import Profile from "./Components/Navbar/profile.component";
 import Background from './Components/UI/background.component';
 import './Styles/main.css';
+import MainView from "./Components/Views/main.view";
 
 function App() {
     return (
             <Routes>
-                <Route exact path='/' element={<ExampleBooks />} />
-                <Route exact path='/create' element={<BookCreation />} />
+                <Route exact path='/' element={<MainView />} />
+                <Route exact path='/create' element={<CreationView />} />
                 <Route exact path='/login' element={<LoginView />} />
-                <Route exact path='/gallery' element={<Gallery />} />
-                <Route exact path='/playground' element={<Playground />} />
+                <Route exact path='/gallery' element={<GalleryView />} />
+                <Route exact path='/playground' element={<PlaygroundView />} />
                 <Route exact path='/test' element={<ScribbleText />} />
             </Routes>
     );

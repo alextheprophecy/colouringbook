@@ -33,6 +33,11 @@ app.use(cors(corsOptions));
 app.use("/api/image", ImageRoute);
 app.use("/api/user", UserRoute);
 
+//404 Error Handling
+app.use((req, res) => {
+    res.status(404).send('404: Page not Found');
+});
+
 //listen to the port
 app.listen(PORT, ()=> {
     console.log(`listening to port ${PORT}`);

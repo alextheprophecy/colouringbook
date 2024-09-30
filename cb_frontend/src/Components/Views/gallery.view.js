@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 import api from "../../Hooks/ApiHandler";
-import ExampleBooks from "./example_books.view";
+import ExamplesView from "./example_books.view";
 import FlipBook from "../flip_book.component";
 import '../../Styles/gallery.css'
 import {getBookData, saveBookData} from "../../Hooks/UserDataHandler";
 
-const Gallery = () => {
+const GalleryView = () => {
     const [books, setBooks] = useState([])
 
     useEffect(() => {
@@ -53,4 +53,4 @@ const Gallery = () => {
     </div>
 }
 
-export default Gallery
+export default GalleryView

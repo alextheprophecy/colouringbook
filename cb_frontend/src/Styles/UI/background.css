@@ -13,30 +13,28 @@
 }
 
 .background-top {
-    min-width: 100%;
-    aspect-ratio: 16/9;
+    top: 8vh;
 
+
+    width: 100%;
+    aspect-ratio: 16/9;
     position: absolute;
     z-index: -1;
     background: url('/public/assets/textures/paper-texture.jpg') repeat;
-    background-size: contain;
 }
 
 .background-top::after {
     content: '';
     width: 100%;
     aspect-ratio: 16/9;
-
     position: absolute;
-    top: 0;
     left: 0;
     z-index: -1;
-    background: url('/public/assets/textures/V_2/background-top.png') no-repeat top center transparent;
-    /*
-    background-size: 100% 100vh;
-    */
-
+    background: url('/public/assets/textures/V_2/background-top.png') no-repeat top center;
+    background-size: cover;
+    overflow-y: hidden;
 }
+
 .background-middle {
     position: relative;
     background: url('/public/assets/textures/paper-texture.jpg') repeat;
@@ -44,49 +42,28 @@
 }
 
 .background-middle::before {
+    top: 8vh;
+
+
     content: '';
     position: absolute;
-    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('/public/assets/textures/V_2/background-middle.png') repeat-y center top transparent;
+    background: url('/public/assets/textures/V_2/background-middle.png') repeat-y center top;
     background-size: 100% auto;
     z-index: -1; /* Place it above the paper texture but below the content */
     filter: invert(44%) sepia(66%) saturate(2210%) hue-rotate(163deg) brightness(97%) contrast(101%);
 }
 
 
-/*
+@media (max-width: 768px) {
+    .background-top{
+        top: 18vh;
+    }
 
-.background-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    .background-middle::before{
+        top: 18vh;
+    }
 
-    z-index: -1;
-    background-size: cover;
-    background: white;
-    height: min(100vh, auto);
 }
-
-
-.background-bottom::after {
-    content: '';
-
-    position: absolute;
-    width: 100%;
-    aspect-ratio: 16/9;
-    height: auto;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    background-size: cover;
-    background: url('/public/assets/textures/background-bottom-thin.png') no-repeat top center transparent;
-}
-
-.content-over-background {
-    pointer-events: auto;
-    z-index: 1;
-}
-*/

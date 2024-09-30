@@ -1,7 +1,7 @@
 import {useState} from "react";
 import api from "../../Hooks/ApiHandler";
 import '../../Styles/Creation/playground.css'
-const Playground = () => {
+const PlaygroundView = () => {
     const [preferences, setPreferences] = useState("a brave monkey going on a wild adventure")
     const [pageCount, setPageCount] = useState(4)
 
@@ -34,4 +34,4 @@ const Playground = () => {
         <div className='playground-text-container'>{showBook()}</div>
     </div>
 }
-export default Playground;
+export default PlaygroundView;

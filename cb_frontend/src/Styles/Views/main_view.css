@@ -1,0 +1,21 @@
+.main-container {
+    margin: auto;
+    width: 100vw;
+    display: flex;
+    row-gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.main-title {
+    width: 60vw;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .main-title {
+        width: 90%;
+        padding: 0;
+        margin-top: 100px;
+    }
+}

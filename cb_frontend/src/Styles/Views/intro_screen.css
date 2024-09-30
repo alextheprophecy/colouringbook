@@ -1,0 +1,39 @@
+/* intro_screen.css */
+.intro-screen {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/public/assets/textures/paper-texture.jpg');
+    background-repeat: repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.intro-title {
+    width: 50vw;
+    text-align: center;
+    position: relative;
+}
+
+.colour-my,
+.dreams {
+    margin: 0;
+    padding: 0;
+}
+
+.colour-my {
+    /* Ensure it doesn't shift when "Dreams" appears */
+    margin-bottom: 20px;
+}
+
+.dreams {
+    /* Appear below "Colour my" */
+    margin-top: 0;
+}
+
+/* Remove the old fadeIn and fadeOut keyframes since Framer Motion handles animations */

@@ -5,11 +5,11 @@ import InputField from "../UI/ui_input_field.component";
 import UI_Switch from "../UI/ui_switch.component";
 import NumberInput from "../UI/ui_number_input.component";
 import UI_Button from "../UI/ui_button";
-import Gallery from "../Views/gallery.view";
+import GalleryView from "./gallery.view";
 
 import '../../Styles/Creation/book_creation.css'
 import FlipBook from "../flip_book.component";
-import CreationTips from "./creation_tips.component";
+import CreationTips from "../Creation/creation_tips.component";
 import api, {apiGet, apiPost} from "../../Hooks/ApiHandler";
 import {
     getUserData,
@@ -24,7 +24,7 @@ import Background from "../UI/background.component";
 const PAGE_COUNT = 2
 const MAX_PAGE_COUNT = 6
 
-const BookCreation = () => {
+const CreationView = () => {
     const {t} = useTranslation()
     const [creationVisible, setCreationVisible] = useState(true)
     const [editionVisible, setEditionVisible] = useState(false)
@@ -36,10 +36,9 @@ const BookCreation = () => {
 
 
     useEffect(() => {
-        /*if(!isUserLoggedIn()){
+        if(!isUserLoggedIn()){
             window.location.href = '/login'
-        }*/
-        //TODO: uncomment for production!
+        }
     }, []);
 
     const createBook = () => {
@@ -122,4 +121,4 @@ const BookCreation = () => {
 
     return editionVisible?editionForm():creationForm()
 }
-export default BookCreation;
+export default CreationView;
