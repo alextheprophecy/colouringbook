@@ -33,9 +33,9 @@ const CreationView = () => {
 
 
     useEffect(() => {
-       /* if(!isUserLoggedIn()){ Todo: uncomment
+        if(!isUserLoggedIn()){
             window.location.href = '/login'
-        }*/
+        }
     }, []);
 
     const createBook = () => {

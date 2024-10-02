@@ -2,7 +2,7 @@ import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
 import {handleLogout} from "./LoginHandler";
 
-const BASE_URL = 'http://localhost:5000/api/'
+const BASE_URL = 'https://colouring-book-35pe8.ondigitalocean.app/api/'
 
 const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
 
@@ -16,10 +16,15 @@ api.interceptors.response.use(
     error => {
         // Handle errors
         const { status } = error.response || {}
+        const errCode = error.code
 
-        let errMsg = error.response?.data ?? error.message
-        // if(!errMsg) errMsg = error.response.error
+        switch (errCode){
+            case 'ECONNABORTED':
+                alert("Request timeout. Please try again.")
+                return Promise.resolve()
+        }
 
+        let errMsg = `ErrCode: ${errCode}, ` + error.response?.data ?? error.message
         let alertMsg
 
         switch (status) {
