@@ -7,6 +7,7 @@ const {getPDF} = require("./files.controller");
 const generateUserBook = (req, res) => {
     const user = req.user
     const bookData = req.body
+    console.log("generating book for user: ", user.id)
 
     _checkCreditsSufficient(user, {greaterQuality: bookData.greaterQuality, imageCount: bookData.imageCount })
         .then((newCredits) => {
