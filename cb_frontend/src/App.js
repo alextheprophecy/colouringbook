@@ -16,7 +16,7 @@ import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 
 function App() {
     const routes = (
-        <Routes location={}>
+        <Routes>
             <Route exact path='/' element={<MainView />} />
             <Route exact path='/create' element={<CreationView />} />
             <Route exact path='/login' element={<LoginView />} />
