@@ -9,13 +9,17 @@
 const USER_DATA = 'cb-auth-user-data'
 const TOKEN_DATA = 'cb-auth-user-token'
 const BOOK_DATA = 'cb-book-data'
+const SHOW_INTRO = 'cb-show-intro'
 
+const shouldShowIntro = () => localStorage.getItem(SHOW_INTRO)==='true'
+const setShouldShowIntro = (show) => localStorage.setItem(SHOW_INTRO, show?'true':'false')
 
 const getUserId = () => getUserData()._id
 /**
  * @param {UserData} data
  */
 const saveUserData = (data) => {
+    setShouldShowIntro(true)
     localStorage.setItem(USER_DATA, JSON.stringify(data))
 }
 
@@ -32,6 +36,7 @@ const removeAllUserData = () => {
     localStorage.removeItem(USER_DATA)
     localStorage.removeItem(BOOK_DATA)
     localStorage.removeItem(TOKEN_DATA)
+    localStorage.removeItem(SHOW_INTRO)
 }
 
 const isUserLoggedIn = () => getUserData()!==null
@@ -54,5 +59,7 @@ export {
     getBookData,
     saveBookData,
     saveUserToken,
-    getUserToken
+    getUserToken,
+    shouldShowIntro,
+    setShouldShowIntro
 }

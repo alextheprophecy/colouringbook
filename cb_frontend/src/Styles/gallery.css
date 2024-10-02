@@ -10,6 +10,8 @@
 
 
 .flex-container-vertical{
+    position: absolute;
+    top: 20vh;
     margin: auto;
     width: 100vw;
     /*transform: rotateX(30deg);*/

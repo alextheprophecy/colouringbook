@@ -39,9 +39,9 @@ class BurgerMenu extends Component{
                     {this.login_logout_button()}
                     <br/>
                     <br/>
-                    {this.getMenuLink('/', 'Examples')}
+                    {this.getMenuLink('/', 'Home')}
+                    {isUserLoggedIn()?this.getMenuLink('/create', 'Create'):''}
                     {isUserLoggedIn()?this.getMenuLink('/gallery', 'My Gallery'):''}
-                    {isUserLoggedIn()?this.getMenuLink('/create', 'Generate'):''}
                 </Menu>
 
             </div>

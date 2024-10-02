@@ -7,18 +7,9 @@ import {AnimatePresence} from "framer-motion";
 import ExamplesView from "./example_books.view";
 
 const MainView = () => {
-    const [showIntro, setShowIntro] = useState(false);
-
-    const handleIntroEnd = () => {
-        setShowIntro(false);
-    }
 
     return <div className={"main-container"}>
-        <AnimatePresence>
-            {showIntro && <IntroScreen onAnimationEnd={handleIntroEnd} />}
-        </AnimatePresence>
-
-        {!showIntro && <ExamplesView/>}
+       <ExamplesView/>
 
     </div>
 }

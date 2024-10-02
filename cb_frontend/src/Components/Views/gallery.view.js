@@ -19,7 +19,6 @@ const GalleryView = () => {
             if(!r) return
             setBooks(r.data)
             saveBookData(r.data)
-            window.location.reload()
         })
 
     }

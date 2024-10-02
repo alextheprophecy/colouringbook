@@ -2,33 +2,39 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px; /* Add some spacing between the number and arrows */
 }
 
 /* Number display area */
 .number-display {
     font-weight: bold;
-    background-color: wheat;
-    border-radius: 5px;
-    box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.3);
-    margin-right: 5px;
+    background-color: #b0e0e6; /* Light blue background */
+    border-radius: 5px; /* Fully round, to make it oval */
+    box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.2); /* Softer shadow */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3rem; /* Match width with the switch */
-    height: 1.75rem; /* Adjust height for consistency */
-    padding: 5px;
+    width: 3rem; /* Keep width narrow to make it oval vertically */
+    height: calc(1.5rem * 2 + 4px); /* Equal to the combined height of two buttons */
+    color: #007ba7; /* Darker blue for text */
+    font-size: 1.2rem;
     position: relative;
+    transition: background-color 0.3s;
 }
 
-/* Number input itself */
+.number-display:hover {
+    background-color: #00a4d7; /* Change background on hover */
+}
+
+/* Number input itself (if editable) */
 .number-input {
     border: none;
     background: none;
     text-align: center;
-    font-size: 1.5em; /* Slightly smaller for consistency */
+    font-size: 1.5rem; /* Slightly smaller for consistency */
     width: 100%;
     height: 100%;
-    color: rosybrown;
+    color: #007ba7; /* Darker blue for text */
     cursor: default;
     outline: none;
     font-weight: bold;
@@ -41,37 +47,43 @@
     justify-content: space-between;
 }
 
+/* Up and down arrows */
 .arrow {
-    background-color: rosybrown;
+    background-color: #00a4d7; /* Playful blue for default */
     border: none;
     color: white;
     font-size: 1.25rem; /* Reduced font size for consistency */
     width: 3rem; /* Adjust width for balance */
-    height: 1.5rem; /* Adjust height for balance */
+    height: 1.75rem; /* Adjust height for balance */
     margin: 2px;
-    border-radius: 5px;
+    border-radius: 5px; /* Fully rounded corners for a playful look */
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .arrow:hover {
-    background-color: wheat;
-    color: rosybrown;
+    background-color: #007ba7; /* Darker blue on hover */
 }
 
 .arrow:active {
-    background-color: lightcoral;
+    background-color: #005f75; /* Even darker blue when active */
+    transform: translateY(1px); /* Slight pressed effect */
 }
 
-
+/* Mobile adjustments */
 @media (max-width: 768px) {
-    .number-display{
-        width: 3rem;
+    .number-display {
+        width: 2.75rem; /* Smaller width for mobile */
+        height: calc(1.25rem * 2 + 4px); /* Smaller height for mobile */
+        font-size: 1rem; /* Slightly smaller font */
+        border-radius: 30%;
     }
 
-    .arrow:hover {
-        background-color: rosybrown;
-        color: white;
+    .arrow {
+        width: 2.75rem; /* Smaller width for mobile */
+        height: 1.25rem; /* Adjust height for balance */
+        font-size: 1rem;
+        border-radius: 7px;
     }
 }

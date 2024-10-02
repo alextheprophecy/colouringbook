@@ -11,8 +11,7 @@ body, html {
     min-height: 100%;
     overscroll-behavior: none;
     touch-action: pan-y;
-    background: url('/public/assets/textures/paper-texture.jpg') repeat;
-    background-size: contain;
+    background: url('/public/assets/textures/paper-texture.jpg') repeat top center;
 }
 
 /* Page container */
@@ -68,3 +67,11 @@ img, video, canvas, svg {
 body {
     overflow-x: hidden;
 }
+
+@media (max-width: 768px) {
+    body{
+        background-size: contain;
+    }
+
+}
+
