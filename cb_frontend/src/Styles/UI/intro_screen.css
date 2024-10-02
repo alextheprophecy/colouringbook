@@ -15,7 +15,7 @@
 }
 
 .intro-title {
-    width: 50vw;
+    width: 60vw;
     text-align: center;
     position: relative;
 }
@@ -35,5 +35,3 @@
     /* Appear below "Colour my" */
     margin-top: 0;
 }
-
-/* Remove the old fadeIn and fadeOut keyframes since Framer Motion handles animations */

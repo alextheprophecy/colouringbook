@@ -1,28 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Shadows+Into+Light&family=Homemade+Apple&display=swap');
-
 /* Add a crayon-like background texture and animate font swap */
 .scribble-text-container {
     text-align: center; /* Center the SVG within the parent container */
-    padding: 20px; /* Add some padding */
-
-    font-size: 2rem;
-    color: transparent; /* Make the text color transparent */
-
-    background: url(/public/assets/textures/crayon-scribble-texture-1.png) repeat;
-    background-size: 50px 500px; /* Adjust depending on stroke size */
-    background-clip: text;
-    -webkit-background-clip: text;
-
-    /* Animate the font swap */
-    animation: scribbleFont 0.2s infinite;
-}
-
-/* Container for the scribble text */
-#rough-text-svg {
-    display: block;
-    margin: 0 auto; /* Center the SVG horizontally */
-    width: 100%; /* Make it responsive */
-    max-width: 500px; /* Set a maximum width */
-    height: auto; /* Keep aspect ratio */
-    background-color: white; /* Optional: Set background color */
+    color: #02779c;
+    font-family: Children;
+    font-weight: bold;
+    font-size: calc(1vw + 1.2rem); /* Responsive font size */
 }

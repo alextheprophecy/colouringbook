@@ -9,12 +9,13 @@
 
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
-    background: rosybrown;
+    background: #02779c; /* Light sky blue to match playful crayon aesthetic */
+    border-radius: 2px; /* Rounded edges for a softer look */
 }
 
-/* Color/shape of burger icon bars on hover*/
+/* Color/shape of burger icon bars on hover */
 .bm-burger-bars-hover {
-    background: darkred;
+    background: #FFB6C1; /* Light pink for a soft, playful hover effect */
 }
 
 /* Position and sizing of clickable cross button */
@@ -25,81 +26,63 @@
 
 /* Color/shape of close button cross */
 .bm-cross {
-    background: white;
+    background: #FF6347; /* Soft tomato red for a crayon-like feel */
 }
 
-/*
-Sidebar wrapper styles
-Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
-*/
+/* Sidebar wrapper styles */
 .bm-menu-wrap {
-    left: 0;
-    top:0;
     position: fixed;
-    z-index: 20;
-    height: 100vh;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
+    height: 100%;
 }
-
 
 /* General sidebar styles */
 .bm-menu {
-    background: #a26b6b;
-    width: 80%;
-    padding: 2.5em 1.5em 0;
+    padding: 2.5rem 1.5rem 0;
     font-size: 1.5em;
-    overflow: clip;
-}
+    width: 300px;
 
+}
 
 /* Morph shape necessary with bubble or elastic */
 .bm-morph-shape {
-    fill: #a26b6b;
+    fill: antiquewhite;
     overflow: clip;
 }
 
 /* Wrapper for item list */
 .bm-item-list {
-    color: #b8b7ad;
+    color: #3d3d3d; /* Darker color for text contrast */
     overflow: clip;
     line-height: 2rem;
     padding: 0 5px 0 5px;
 }
+
 /* Individual item */
 .bm-item {
     display: inline-block;
     color: white;
     text-decoration: none;
-    padding: 5px;
+    padding: 5px 15px 5px 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    font-family: "Lucida Console", sans-serif;
-    font-size: 1.2rem;
-    background-color: rosybrown;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    font-family: "Children";
+    font-weight: bold;
+    font-size: 1.8rem;
+    background-color: #00a4d7; /* Light sky blue background to match playful aesthetic */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Softer shadow for a playful touch */
     transition: color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
-    position: relative; /* Needed for the line positioning */
+    position: relative;
 }
 
-
-/* Adjust the width of the menu on mobile screens */
-@media (max-width: 768px) {
-    .bm-item {
-        padding: 10px;
-    }
-}
-
+/* Hover effect on menu items */
 .bm-item:hover {
-    background-color: #be9797;
-    box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.6);
+    background-color:  #87CEEB;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4); /* Slightly larger shadow on hover */
 }
 
+/* Active item */
 .bm-item:active {
-    background-color: darkred;
+    background-color: #02779c;
     box-shadow: inset 2px 2px 7px rgba(0, 0, 0, 0.5);
 }
 
@@ -121,8 +104,24 @@ Note: Beware of modifying this element as it can break the animations - you shou
     left: 0;
 }
 
+
+
+/* Adjust the width of the menu on mobile screens */
 @media (max-width: 768px) {
+    .bm-burger-button {
+        width: 32px;
+        height: 24px;
+        left: 26px;
+        top: 40px;
+    }
+
+
+    .bm-item {
+        padding: 10px;
+    }
+
     .bm-item::after {
         content: none;
     }
 }
+

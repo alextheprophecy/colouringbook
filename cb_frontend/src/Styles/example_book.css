@@ -3,14 +3,13 @@
     src: local('Bu-Wicked'), url(/public/assets/fonts/BuWicked/BuWicked-2dOW.ttf);
 }
 
-
 @font-face {
     font-family: Children;
     src: local('Children'), url(/public/assets/fonts/ChildrenRegular/Children.ttf);
 }
 
 .flex-container {
-    margin: auto;
+    margin: 10vh auto auto auto;
     width: 100vw;
     display: flex;
     row-gap: 15px;

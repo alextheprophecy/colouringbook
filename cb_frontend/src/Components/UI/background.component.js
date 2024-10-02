@@ -5,8 +5,10 @@ import '../../Styles/UI/background.css';
 const Background = ({ children }) => (
     <div className="background">
         <div className="background-middle">
-            <div className="background-top"></div>
-            {children}
+            <div className="background-top"/>
+            <div className="children-contents">
+                {children}
+            </div>
         </div>
 
     </div>

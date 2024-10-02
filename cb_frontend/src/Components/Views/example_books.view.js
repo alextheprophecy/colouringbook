@@ -15,12 +15,6 @@ const ExamplesView = () => {
     const OnlineBook =  {title: 'Online', pages_directory: "https://as1.ftcdn.net/v2/jpg/02/95/26/46/", pages: ['500_F_295264675_clwKZxogAhxLS9sD163Tgkz1WMHsq1RJ.jpg']}
 
     return <div className={"flex-container"}>
-        <div style={{width:'60%', textAlign:'center'}}>
-            <ScribbleText text={"Colour my "} roughness={1.5} fillColor={"#027a9f"} strokeColor={"#00a4d7"} />
-            <div />
-            <ScribbleText text={"Dreams"} roughness={1.5} fillColor={"#027a9f"} strokeColor={"#00a4d7"} />
-        </div>
-
         <span className={"flex-break"}/>
         <FlipBook {...BOOK1}/>
         <span className={"flex-break"}/>

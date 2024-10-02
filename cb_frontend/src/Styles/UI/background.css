@@ -1,26 +1,28 @@
 .background {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     min-width: 100vw;
-    min-height: 100vh; /* Ensure it covers at least the viewport height */
-    z-index: 0; /* Changed from -2 to 0 */
+    min-height: 100vh;
+    overflow-y: hidden;
+
+    z-index: 0;
 }
 
 
 .background-top::after,
-.background-middle::before,
-.background-bottom::after {
+.background-middle::before{
     filter: invert(44%) sepia(66%) saturate(2210%) hue-rotate(163deg) brightness(97%) contrast(101%);
 }
 
 .background-top {
-    top: 8vh;
-
-
     width: 100%;
     aspect-ratio: 16/9;
     position: absolute;
     z-index: -1;
     background: url('/public/assets/textures/paper-texture.jpg') repeat;
+
+    background-size: contain;
 }
 
 .background-top::after {
@@ -37,14 +39,12 @@
 
 .background-middle {
     position: relative;
-    background: url('/public/assets/textures/paper-texture.jpg') repeat;
-    z-index: -2; /* Ensure it's behind the ::before element and content */
+    /*background: url('/public/assets/textures/paper-texture.jpg') repeat*/;
+    z-index: -2;
+    overflow-y: visible;
 }
 
 .background-middle::before {
-    top: 8vh;
-
-
     content: '';
     position: absolute;
     left: 0;
@@ -53,17 +53,16 @@
     background: url('/public/assets/textures/V_2/background-middle.png') repeat-y center top;
     background-size: 100% auto;
     z-index: -1; /* Place it above the paper texture but below the content */
-    filter: invert(44%) sepia(66%) saturate(2210%) hue-rotate(163deg) brightness(97%) contrast(101%);
 }
 
 
 @media (max-width: 768px) {
     .background-top{
-        top: 18vh;
+        top: 10vh;
     }
 
     .background-middle::before{
-        top: 18vh;
+        top: 10vh;
     }
 
 }

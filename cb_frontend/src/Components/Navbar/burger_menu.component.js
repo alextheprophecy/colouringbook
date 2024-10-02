@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import LogoutComponent from "./logout.component";
 import {handleLogout} from "../../Hooks/LoginHandler";
+import ScribbleText from "../UI/ui_scribble_text.component";
 
 class BurgerMenu extends Component{
     constructor(props) {
@@ -31,7 +32,9 @@ class BurgerMenu extends Component{
     render () {
 
         return (
-            <div style={{overflow: 'hidden'}}>
+
+            <div style={{overflow: 'hidden', backgroundColor:'red'}}>
+
                 <Menu isOpen={this.state.isOpen} onOpen={this.toggleMenu} onClose={this.toggleMenu}>
                     {this.login_logout_button()}
                     <br/>
@@ -40,6 +43,7 @@ class BurgerMenu extends Component{
                     {isUserLoggedIn()?this.getMenuLink('/gallery', 'My Gallery'):''}
                     {isUserLoggedIn()?this.getMenuLink('/create', 'Generate'):''}
                 </Menu>
+
             </div>
         );
     }

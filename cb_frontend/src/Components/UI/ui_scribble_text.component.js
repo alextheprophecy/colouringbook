@@ -20,6 +20,7 @@ const ScribbleText = ({ text = "Error",
         opentype.load('/assets/fonts/ChildrenRegular/Children.ttf', (err, loadedFont) => {
             if (err) {
                 console.error('Could not load font:', err);
+
             } else {
                 setFont(loadedFont);
             }
@@ -140,9 +141,8 @@ const ScribbleText = ({ text = "Error",
         svgRef.current.appendChild(svgElements.current[currentSeedIndex]);
     }, [currentSeedIndex]);
 
-    return (
-        <svg ref={svgRef}></svg>
-    );
+    return font ? <svg ref={svgRef}></svg> : <span className={"scribble-text-container"}>{text}</span>
+
 };
 
 export default ScribbleText;

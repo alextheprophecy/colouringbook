@@ -22,23 +22,20 @@ import {
 import Background from "../UI/background.component";
 
 const PAGE_COUNT = 2
-const MAX_PAGE_COUNT = 6
 
 const CreationView = () => {
     const {t} = useTranslation()
     const [creationVisible, setCreationVisible] = useState(true)
     const [editionVisible, setEditionVisible] = useState(false)
-    const [tipsVisible, setTipsVisible] = useState(false)
 
     const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: false, option2: false})
-    const [creditCost, setCreditCost] = useState(0)
     const [pages, setPages] = useState([])
 
 
     useEffect(() => {
-        if(!isUserLoggedIn()){
+       /* if(!isUserLoggedIn()){ Todo: uncomment
             window.location.href = '/login'
-        }
+        }*/
     }, []);
 
     const createBook = () => {
@@ -56,20 +53,6 @@ const CreationView = () => {
             const {credits_updated, pages} = (r.data)
             setPages(pages)
             updateUserData({credits: credits_updated})
-        })/*
-        api.get('image/test').then(c => {
-            if(!c)return
-            console.log('SUCCESS:', c.data)
-            alert(c.data)
-        })*/
-    }
-
-    const testButton = () => {
-        api.post('image/test', {bookDescription: {imageCount: 3}, user_id: getUserId()}).then(r=>{
-            if(!r) return
-            console.log('gone through', r.data)
-
-            alert(r.data)
         })
     }
 
@@ -77,9 +60,6 @@ const CreationView = () => {
         if(e.target === e.currentTarget) setEditionVisible(true) //check whether it is this component triggering and not a child trigger bubbling up
     }
 
-    const showTips = () => {
-        setTipsVisible(!tipsVisible)
-    }
 
     const usedCredits = () => <div>Cost:
         {creationParams.pageCount*(creationParams.option1?10:1)} credits
@@ -99,14 +79,13 @@ const CreationView = () => {
     }
 
     const creationForm = () =><div className={'creation-container'}>
-{/*
-        <UI_Button button_text={t('creation.tips_button')} help_button={true} callbackFunction={showTips}/>
-*/}
-        <div className={`creation-form ${!creationVisible ? 'slide-up' : ''}`} onTransitionEnd={showEdition}>
+        <div className={`creation-form ${!creationVisible && 'slide-up'}`} onTransitionEnd={showEdition}>
             <InputField updateValue={updateParameter('description')} width={'40vw'} placeholder_text={t('creation.placeholder1')}/>
             <div className={"switches-container"}>
                 <div><UI_Switch updateValue={updateParameter('option1')}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
+                {/*
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
+*/}
                 <div className="number-input-container">
                     <NumberInput updateValue={updateParameter('pageCount')}/>
                     <div className="cost-container">
@@ -116,7 +95,6 @@ const CreationView = () => {
                 <UI_Button button_text={t('creation.create')} callbackFunction={createBook}/>
             </div>
         </div>
-        <CreationTips visible={tipsVisible} setVisible={setTipsVisible}/>
     </div>
 
     return editionVisible?editionForm():creationForm()
