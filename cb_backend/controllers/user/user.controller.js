@@ -12,7 +12,6 @@ const generateUserBook = (req, res) => {
     _checkCreditsSufficient(user, {greaterQuality: bookData.greaterQuality, imageCount: bookData.imageCount })
         .then((newCredits) => {
             console.log('has the credits')
-
             user.credits = newCredits
             generateColouringBook(bookData, user).then(pages =>
                 res.status(200).json({credits_updated: user.credits, pages: pages})
