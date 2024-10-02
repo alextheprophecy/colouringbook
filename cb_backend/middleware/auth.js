@@ -1,10 +1,15 @@
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+
 const verifyToken = (req,res,next) => {
     const authHeader = req.headers.authorization
+    console.log("verifying: ", authHeader)
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const access_token = authHeader.split(" ")[1];
+        console.log("access_token: ", access_token)
+        console.log("secret: ", process.env.JWT_ACCESS_SECRET)
+
         jwt.verify(access_token, process.env.JWT_ACCESS_SECRET, (err, user) => {
             if (err){ //access token expired
                 res.status(401).json("Expired Token!")
