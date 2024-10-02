@@ -41,5 +41,6 @@ app.use((req, res) => {
 //listen to the port
 app.listen(PORT, ()=> {
     console.log(`listening to port ${PORT}`);
+    console.log(`accepting requests from ${process.env.FRONTEND_CORS_ORIGIN}`);
 
 })
