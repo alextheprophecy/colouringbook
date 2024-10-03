@@ -69,9 +69,8 @@ const CreationView = () => {
 
     const editionForm = () => {
         const loadingPage = <>Loading <div className="loader"></div></>
-        const editionPage = <div style={{width:'100vw', height:'100vh'}}>
-            <FlipBook title={creationParams.description} pages_directory={''} pages={pages}/>
-        </div>
+        const editionPage = <FlipBook title={creationParams.description} pages_directory={''} pages={pages}/>
+
 
         return <div className={'edition-container'}>
             {pages.length===0 ? loadingPage : editionPage}
@@ -82,7 +81,7 @@ const CreationView = () => {
         <div className={`creation-form ${!creationVisible && 'slide-up'}`} onTransitionEnd={showEdition}>
             <InputField updateValue={updateParameter('description')} width={'40vw'} placeholder_text={t('creation.placeholder1')}/>
             <div className={"switches-container"}>
-                <div><UI_Switch updateValue={updateParameter('option1')}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
+                <div><UI_Switch updateValue={updateParameter('option1')} toggled={true}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
                 {/*
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
 */}
