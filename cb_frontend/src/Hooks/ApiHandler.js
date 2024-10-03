@@ -2,7 +2,7 @@ import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
 import {handleLogout} from "./LoginHandler";
 
-const BASE_URL = 'https://api.crayons.me/api/'
+const BASE_URL = process.env.REACT_APP_API_URL || 'https://api.crayons.me/api'
 
 const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
 

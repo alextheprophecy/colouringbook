@@ -20,34 +20,34 @@ const getUserId = () => getUserData()._id
  */
 const saveUserData = (data) => {
     setShouldShowIntro(true)
-    sessionStorage.setItem(USER_DATA, JSON.stringify(data))
+    localStorage.setItem(USER_DATA, JSON.stringify(data))
 }
 
 const updateUserData = (newData) => {
-    sessionStorage.setItem(USER_DATA, JSON.stringify({...getUserData(), ...newData}))
+    localStorage.setItem(USER_DATA, JSON.stringify({...getUserData(), ...newData}))
 }
 
 /**
  * Retrieves the user data from localStorage.
  * @return {UserData|null} The user data object if available, otherwise null.
  */
-const getUserData = () => JSON.parse(sessionStorage.getItem(USER_DATA))
+const getUserData = () => JSON.parse(localStorage.getItem(USER_DATA))
 const removeAllUserData = () => {
-    sessionStorage.removeItem(USER_DATA)
-    sessionStorage.removeItem(BOOK_DATA)
-    sessionStorage.removeItem(TOKEN_DATA)
-    sessionStorage.removeItem(SHOW_INTRO)
+    localStorage.removeItem(USER_DATA)
+    localStorage.removeItem(BOOK_DATA)
+    localStorage.removeItem(TOKEN_DATA)
+    localStorage.removeItem(SHOW_INTRO)
 }
 
 const isUserLoggedIn = () => getUserData()!==null
 
-const saveBookData = (books) => sessionStorage.setItem(BOOK_DATA, JSON.stringify(books))
+const saveBookData = (books) => localStorage.setItem(BOOK_DATA, JSON.stringify(books))
 
-const getBookData = () =>  JSON.parse(sessionStorage.getItem(BOOK_DATA))
+const getBookData = () =>  JSON.parse(localStorage.getItem(BOOK_DATA))
 
-const saveUserToken = (tokenData) => sessionStorage.setItem(TOKEN_DATA, JSON.stringify(tokenData))
+const saveUserToken = (tokenData) => localStorage.setItem(TOKEN_DATA, JSON.stringify(tokenData))
 
-const getUserToken = () => JSON.parse(sessionStorage.getItem(TOKEN_DATA))
+const getUserToken = () => JSON.parse(localStorage.getItem(TOKEN_DATA))
 
 export {
     getUserId,

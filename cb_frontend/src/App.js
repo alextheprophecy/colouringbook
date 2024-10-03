@@ -31,7 +31,6 @@ function App() {
 
 export default function TranslatedApp() {
     const [showIntro, setShowIntro] = useState(shouldShowIntro);
-
     useEffect(() => {
         if (showIntro) {
             const timer = setTimeout(() => {

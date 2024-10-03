@@ -27,6 +27,7 @@ const CreationView = () => {
     const {t} = useTranslation()
     const [creationVisible, setCreationVisible] = useState(true)
     const [editionVisible, setEditionVisible] = useState(false)
+    const [credits, setCredits] = useState(getUserData().credits)
 
     const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: true, option2: false})
     const [pages, setPages] = useState([])
@@ -53,6 +54,7 @@ const CreationView = () => {
             const {credits_updated, pages} = (r.data)
             setPages(pages)
             updateUserData({credits: credits_updated})
+            setCredits(credits_updated)
         })
     }
 
@@ -80,6 +82,7 @@ const CreationView = () => {
     const creationForm = () =><div className={'creation-container'}>
         <div className={`creation-form ${!creationVisible && 'slide-up'}`} onTransitionEnd={showEdition}>
             <InputField updateValue={updateParameter('description')} width={'40vw'} placeholder_text={t('creation.placeholder1')}/>
+            {'credits: '+credits}
             <div className={"switches-container"}>
                 <div><UI_Switch updateValue={updateParameter('option1')} toggled={true}/> <span className={'switch-caption'}>{t('creation.option1')}</span></div>
                 {/*
