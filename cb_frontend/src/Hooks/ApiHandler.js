@@ -2,7 +2,7 @@ import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
 import {handleLogout} from "./LoginHandler";
 
-const BASE_URL = 'https://colouring-book-35pe8.ondigitalocean.app/api/'
+const BASE_URL = 'https://api.crayons.me/api/'
 
 const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
 
