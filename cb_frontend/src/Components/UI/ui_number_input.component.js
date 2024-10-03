@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import '../../Styles/UI/number_input.css';
 
-const NumberInput = ({rangeMin = 1, rangeMax = 6, updateValue}) => {
+const NumberInput = ({rangeMin = 1, rangeMax = 6, updateValue, defaultValue}) => {
     // State to manage the number input
-    const [value, setValue] = useState(rangeMin)
+    const [value, setValue] = useState(defaultValue)
 
     // Increment the value
     const changeValue = (delta) => () => {

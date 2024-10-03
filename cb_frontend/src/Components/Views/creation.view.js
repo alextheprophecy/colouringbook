@@ -28,7 +28,7 @@ const CreationView = () => {
     const [creationVisible, setCreationVisible] = useState(true)
     const [editionVisible, setEditionVisible] = useState(false)
 
-    const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: false, option2: false})
+    const [creationParams, setCreationParams] = useState({description:'', pageCount: PAGE_COUNT, option1: true, option2: false})
     const [pages, setPages] = useState([])
 
 
@@ -86,7 +86,7 @@ const CreationView = () => {
                 <div><UI_Switch updateValue={updateParameter('option2')}/> <span className={'switch-caption'}>{t('creation.option2')}</span></div>
 */}
                 <div className="number-input-container">
-                    <NumberInput updateValue={updateParameter('pageCount')}/>
+                    <NumberInput updateValue={updateParameter('pageCount')} defaultValue={PAGE_COUNT}/>
                     <div className="cost-container">
                         <span className="cost-text">{usedCredits()}</span>
                     </div>
