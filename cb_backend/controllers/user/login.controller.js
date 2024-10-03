@@ -15,10 +15,11 @@ const gen_token = (access_t = true, user) => jwt.sign(
     { expiresIn: access_t?access_TTL:refresh_TTL})
 
 const add_cookie = (res, cookie_name, cookie) => {
-    const cookieOptions = { httpOnly: true}
+    const cookieOptions = { httpOnly: true,
+        secure: true,
+        sameSite:'None' }
 
     res.cookie(cookie_name, cookie, cookieOptions);
-    console.log("cookies added: ", res.cookie)
     return res
 }
 
@@ -26,9 +27,10 @@ const add_cookie = (res, cookie_name, cookie) => {
 class UserControllers {
 
     static Register = (req, res, next) => {
-        const { full_name, email, password } = req.body
+        let { full_name, email, password } = req.body
 
         if (!emailValidator(email)) return res.status(400).json('Enter a valid email');
+        email = email.toLowerCase()
 
         User.findOne({ email: email })
             .then(existingUser => {
@@ -44,9 +46,10 @@ class UserControllers {
         console.log('Loggin in')
         const { email, password } = req.body
 
+
         if (!email || !password) return res.status(400).json('Please provide email and password')
 
-        User.findOne({ email: email }).then(user => {
+        User.findOne({ email: email.toLowerCase() }).then(user => {
             if (!user) return res.status(404).json('No account under this email')
 
             return user.matchPassword(password).then(isMatch => {
