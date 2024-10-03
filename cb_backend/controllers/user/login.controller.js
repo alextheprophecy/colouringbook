@@ -15,11 +15,10 @@ const gen_token = (access_t = true, user) => jwt.sign(
     { expiresIn: access_t?access_TTL:refresh_TTL})
 
 const add_cookie = (res, cookie_name, cookie) => {
-    const cookieOptions = { httpOnly: true,
-        secure: true,
-        sameSite: 'None' }
+    const cookieOptions = { httpOnly: true}
 
     res.cookie(cookie_name, cookie, cookieOptions);
+    console.log("cookies added: ", res.cookie)
     return res
 }
 
@@ -68,6 +67,7 @@ class UserControllers {
 
     static RefreshToken = (req, res) => {
         const cookies = req.cookies
+        console.log('cookies: ', cookies)
         console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
             if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)

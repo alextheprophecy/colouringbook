@@ -52,8 +52,6 @@ const getUserBooks = (req, res) => {
                 }))
             )
         )
-
-        console.log(books_data)
         res.status(200).send(books_data)
     })
 }
@@ -80,7 +78,6 @@ const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
     return User.findOneAndUpdate(
         {_id: user.id, credits: {$gte: creditCost}}, {"$inc": {credits: -creditCost}}, {new: true}
     ).then((updatedUser) => {
-        console.log('user', updatedUser)
         if(!updatedUser){
             throw new Error('Insufficient funds!')
         }
