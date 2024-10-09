@@ -28,8 +28,10 @@ class UserControllers {
 
     static Register = (req, res, next) => {
         let { full_name, email, password } = req.body
+        let { full_name, email, password } = req.body
 
         if (!emailValidator(email)) return res.status(400).json('Enter a valid email');
+        email = email.toLowerCase()
         email = email.toLowerCase()
 
         User.findOne({ email: email })
@@ -47,8 +49,10 @@ class UserControllers {
         const { email, password } = req.body
 
 
+
         if (!email || !password) return res.status(400).json('Please provide email and password')
 
+        User.findOne({ email: email.toLowerCase() }).then(user => {
         User.findOne({ email: email.toLowerCase() }).then(user => {
             if (!user) return res.status(404).json('No account under this email')
 
@@ -70,6 +74,7 @@ class UserControllers {
 
     static RefreshToken = (req, res) => {
         const cookies = req.cookies
+        console.log('cookies: ', cookies)
         console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
             if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
