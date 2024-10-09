@@ -1,0 +1,26 @@
+File Reference: explainer03.txt
+
+Feature Focus: Story Mode in Creation Chat Screen
+
+Objective:
+Implement the step-by-step interaction logic for the story-based coloring book creation process, starting with character creation and leading into story scenes.
+
+Requirements:
+1. **Character Creation:**
+   - Prompt the user to describe their characters for the story, with example suggestions (e.g., "a tennis-playing princess" or "a dog chess master").
+   - Allow custom character input with the ability to add multiple characters before proceeding.
+   - Offer the option to add characters later in the story creation process.
+
+2. **Story Creation Options:**
+   - Provide the choice to create the story one scene at a time or to input a full story outline.
+   - For scene-by-scene creation, guide the user through describing what happens in each scene with their characters.
+   - If the user provides a full story outline, break it down into scenes automatically.
+
+3. **Dynamic Scene Generation:**
+   - Generate each scene based on the user's input using the AI model (triggered via the existing backend).
+   - After generating each scene, present the user with options to approve, modify, or regenerate the scene.
+
+4. **Feedback and Modification:**
+   - Allow users to provide specific feedback on what they’d like to change about the scene.
+   - Include a regeneration feature that updates the scene based on user feedback.
+

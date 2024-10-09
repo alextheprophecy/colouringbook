@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import CreationView from "./Components/Views/creation.view";
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
 import PlaygroundView from "./Components/Views/playground.view";
@@ -13,12 +12,13 @@ import MainView from "./Components/Views/main.view";
 import { AnimatePresence } from "framer-motion";
 import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
+import CreationChat from "./Components/CreationChat/CreationChat";
 
 function App() {
     const routes = (
         <Routes>
             <Route exact path='/' element={<MainView />} />
-            <Route exact path='/create' element={<CreationView />} />
+            <Route exact path='/create' element={<CreationChat />} />
             <Route exact path='/login' element={<LoginView />} />
             <Route exact path='/gallery' element={<GalleryView />} />
             <Route exact path='/playground' element={<PlaygroundView />} />

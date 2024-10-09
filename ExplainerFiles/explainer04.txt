@@ -1,0 +1,23 @@
+File Reference: explainer04.txt
+
+Feature Focus: Theme Mode in Creation Chat Screen
+
+Objective:
+Guide users through the process of creating a coloring book based on a specific theme in the creation chat screen.
+
+Requirements:
+1. **Theme Selection:**
+   - Present multiple theme options like "Animals," "Superheroes," "Fantasy Adventures," and an input for custom themes.
+   - Allow users to choose a theme or enter their own if they have a unique idea.
+
+2. **Style and Theme Validation:**
+   - After selecting a theme, generate a sample page in that style to give the user an idea of what their coloring book will look like.
+   - Ask the user if the theme suits their vision or if they’d like to modify it.
+
+3. **Modify and Regenerate:**
+   - Provide options to modify the theme or regenerate a new sample based on the user’s preferences.
+   - Ensure that each new page generated maintains consistency with the chosen theme.
+
+4. **Page Generation Flow:**
+   - Once the theme is confirmed, proceed to generate subsequent pages based on the chosen theme, with each page allowing user input for minor tweaks.
+

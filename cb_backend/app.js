@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 // Allow CORS for a specific origin with credentials //TODO: change!!!!!
 const corsOptions = {
-    origin: process.env.FRONTEND_CORS_ORIGIN, // Set the frontend origin here
+    origin: true,//process.env.FRONTEND_CORS_ORIGIN, // Set the frontend origin here
     credentials: true, // Allow credentials (cookies, authorization headers)
 }
 app.use(cors(corsOptions));
