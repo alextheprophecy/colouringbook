@@ -28,7 +28,6 @@ class UserControllers {
 
     static Register = (req, res, next) => {
         let { full_name, email, password } = req.body
-        let { full_name, email, password } = req.body
 
         if (!emailValidator(email)) return res.status(400).json('Enter a valid email');
         email = email.toLowerCase()
@@ -52,7 +51,6 @@ class UserControllers {
 
         if (!email || !password) return res.status(400).json('Please provide email and password')
 
-        User.findOne({ email: email.toLowerCase() }).then(user => {
         User.findOne({ email: email.toLowerCase() }).then(user => {
             if (!user) return res.status(404).json('No account under this email')
 

@@ -1,5 +1,4 @@
 import '../../Styles/example_book.css'
-import GenerateBook from "../Creation/generate_book.component";
 import {useTranslation} from "react-i18next";
 import FlipBook from "../flip_book.component";
 import ScribbleText from "../UI/ui_scribble_text.component";

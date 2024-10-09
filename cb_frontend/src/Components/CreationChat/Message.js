@@ -1,9 +1,8 @@
 import React from 'react';
 import useTypewriterEffect from '../../Hooks/CreationChat/useTypewriterEffect';
 
-const Greeting = () => {
-  const greetingText = "Hi there! What kind of coloring book do you want to create?";
-  const displayedText = useTypewriterEffect(greetingText);
+const Message = ({ text }) => {
+  const displayedText = useTypewriterEffect(text);
 
   return (
     <div className="text-xl font-bold">
@@ -12,4 +11,4 @@ const Greeting = () => {
   );
 };
 
-export default Greeting;
+export default Message;
