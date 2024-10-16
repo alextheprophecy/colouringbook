@@ -17,12 +17,13 @@ import CreationChat from "./Components/CreationChat/CreationChat";
 function App() {
     const routes = (
         <Routes>
-            <Route exact path='/' element={<MainView />} />
+            
+            <Route exact path='/' element={<><Navbar /><MainView /></>} />
             <Route exact path='/create' element={<CreationChat />} />
-            <Route exact path='/login' element={<LoginView />} />
-            <Route exact path='/gallery' element={<GalleryView />} />
-            <Route exact path='/playground' element={<PlaygroundView />} />
-            <Route exact path='/test' element={<ScribbleText />} />
+            <Route exact path='/login' element={<><Navbar /><LoginView /></>} />
+            <Route exact path='/gallery' element={<><Navbar /><GalleryView /></>} />
+            <Route exact path='/playground' element={<><Navbar /><PlaygroundView /></>} />
+            <Route exact path='/test' element={<><Navbar /><ScribbleText /></>} />
         </Routes>
     );
 
@@ -44,10 +45,9 @@ export default function TranslatedApp() {
     const website = (
         <>
             <BurgerMenu />
-            <Navbar />
             <Background>
                 <div className="page-container">
-                    <main className="main-content">
+                    <main className="main-content">                        
                         <App />
                     </main>
                 </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 
 const useTypewriterEffect = (text) => {
+    const TYPEWRITER_SPEED = 35;
   const [currentMessage, setCurrentMessage] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -22,7 +23,7 @@ const useTypewriterEffect = (text) => {
           }
         });
         setCurrentIndex(prev => prev + 1);
-      }, 50);
+      }, TYPEWRITER_SPEED);
       return () => clearTimeout(timer);
     }
   }, [currentIndex, text]);

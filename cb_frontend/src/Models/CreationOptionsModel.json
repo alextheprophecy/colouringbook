@@ -1,0 +1,108 @@
+{
+    "initial_0": {
+        "message": "Hi! \n What kind of colouring book should we create?",
+        "categoryId": "initial"
+    },
+    "story_0": {
+        "type": "inputField",
+        "input_placeholder": "Enter a character name",
+        "input_nextStageId": "story_1",
+        "message": "Choose a character for your story!",
+        "categoryId": "characters"
+    },
+    "story_1": {
+        "message": "Do you want to add another character or start the story?",        
+        "categoryId": "story_progress"
+    },
+    "story_2": {
+        "type": "inputField",
+        "input_placeholder": "Describe the scene",
+        "input_nextStageId": "story_3",
+        "message": "Let's create the first scene. What's happening with your character(s)?",
+        "categoryId": "scene_description"
+    },
+    "story_3": {
+        "message": "Here's your scene! What would you like to do?",
+        "categoryId": "scene_action"
+    },
+    "story_4": {
+        "message": "Do you want to create another scene or finish your story?",
+        "categoryId": "story_progress"
+    },
+    "story_5": {
+        "message": "Congratulations! You've finished creating your story. Would you like to add a title to your coloring book?",
+        "type": "inputField",
+        "input_placeholder": "Enter a title for your coloring book",
+        "categoryId": "book_title"
+    },
+    "categories": [
+        {
+            "id": "initial",
+            "randomize": false,
+            "options": [
+                { "id": "choose_story", "label": "A story", "image": "/initial/story.png", "nextStageId": "story_0" },
+                { "id": "choose_theme", "label": "A certain theme", "image": "/initial/theme.png", "nextStageId": "theme_0"}
+            ]
+        },
+        {
+            "id": "theme",
+            "randomize": true,
+            "options": [
+                { "id": "fantasy", "label": "Fantasy", "bgColor": "bg-purple-500", "nextStageId": "story_0" },
+                { "id": "scifi", "label": "Science Fiction", "bgColor": "bg-blue-500", "nextStageId": "story_0" },
+                { "id": "nature", "label": "Nature", "bgColor": "bg-green-500", "nextStageId": "story_0" },
+                { "id": "historical", "label": "Historical", "bgColor": "bg-yellow-500", "nextStageId": "story_0" },
+                { "id": "urban", "label": "Urban", "bgColor": "bg-gray-500", "nextStageId": "story_0" },
+                { "id": "underwater", "label": "Underwater", "bgColor": "bg-cyan-500", "nextStageId": "story_0" }
+            ]
+        },
+        {
+            "id": "characters",
+            "randomize": true,
+            "options": [
+                { "id": "knight", "label": "a brave knight", "image": "/characters/knight.png", "nextStageId": "story_1", "saveData": { "name": "Knight", "description": "A brave knight" } },
+                { "id": "carrot", "label": "a happy carrot", "image": "/characters/carrot.png", "nextStageId": "story_1", "saveData": { "name": "Carrot", "description": "A friendly carrot" } },
+                { "id": "fairy", "label": "a Fairy", "image": "/characters/fairy.png", "nextStageId": "story_1", "saveData": { "name": "Fairy", "description": "A magical fairy" } },
+                { "id": "frog", "label": "a frog", "image": "/characters/frog.png", "nextStageId": "story_1", "saveData": { "name": "Frog", "description": "A jumpy frog" } },
+                { "id": "jetplane", "label": "a jet plane", "image": "/characters/jetplane.png", "nextStageId": "story_1", "saveData": { "name": "Jetplane", "description": "A fast jetplane" } },
+                { "id": "monkey", "label": "monkey", "image": "/characters/monkey.png", "nextStageId": "story_1", "saveData": { "name": "Monkey", "description": "A playful monkey" } },
+                { "id": "ogres", "label": "an ogre", "image": "/characters/ogres.png", "nextStageId": "story_1", "saveData": { "name": "Ogres", "description": "A group of ogres" } },
+                { "id": "oldman", "label": "a wise old man", "image": "/characters/oldman.png", "nextStageId": "story_1", "saveData": { "name": "Oldman", "description": "A wise old man" } },
+                { "id": "pizza", "label": "a happy pizza", "image": "/characters/pizza.png", "nextStageId": "story_1", "saveData": { "name": "Pizza", "description": "A delicious pizza" } },
+                { "id": "princess", "label": "a princess", "image": "/characters/princess.png", "nextStageId": "story_1", "saveData": { "name": "Princess", "description": "A beautiful princess" } },
+                { "id": "racecar", "label": "a race car", "image": "/characters/racecar.png", "nextStageId": "story_1", "saveData": { "name": "Racecar", "description": "A speedy racecar" } },
+                { "id": "strongman", "label": "a strong man", "image": "/characters/strongman.png", "nextStageId": "story_1", "saveData": { "name": "Strongman", "description": "A powerful strongman" } },
+                { "id": "surfingboy", "label": "a surfer", "image": "/characters/surfingboy.png", "nextStageId": "story_1", "saveData": { "name": "Surfing Boy", "description": "A cool surfing boy" } },
+                { "id": "donaldduck", "label": "Donald Duck", "image": "/characters/donaldduck.png", "nextStageId": "story_1", "saveData": { "name": "Donald Duck", "description": "A famous duck" } }
+            ]
+        },
+        {
+            "id": "story_progress",
+            "randomize": false,
+            "options": [
+                { "id": "add_character", "label": "Add another character", "bgColor": "bg-grey-500", "nextStageId": "story_0" },
+                { "id": "start_story", "label": "Start the story", "bgColor": "bg-purple-500", "nextStageId": "story_2" }
+            ]
+        },
+        {
+            "id": "scene_action",
+            "randomize": false,
+            "options": [
+                { "id": "modify_scene", "label": "Modify the scene", "bgColor": "bg-red-500", "nextStageId": "story_2" },
+                { "id": "keep_scene", "label": "Next step", "bgColor": "bg-green-500", "nextStageId": "story_4" }
+            ]
+        },
+        {
+            "id": "environment",
+            "randomize": true,
+            "options": [
+                { "id": "forest", "label": "Forest", "bgColor": "bg-green-700", "nextStageId": "story_2" },
+                { "id": "desert", "label": "Desert", "bgColor": "bg-yellow-600", "nextStageId": "story_2" },
+                { "id": "mountains", "label": "Mountains", "bgColor": "bg-gray-600", "nextStageId": "story_2" },
+                { "id": "ocean", "label": "Ocean", "bgColor": "bg-blue-600", "nextStageId": "story_2" },
+                { "id": "city", "label": "City", "bgColor": "bg-gray-500", "nextStageId": "story_2" },
+                { "id": "space", "label": "Space", "bgColor": "bg-indigo-900", "nextStageId": "story_2" }
+            ]
+        }
+    ]
+}

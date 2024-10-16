@@ -9,8 +9,8 @@
 
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
-    background: #02779c; /* Light sky blue to match playful crayon aesthetic */
-    border-radius: 2px; /* Rounded edges for a softer look */
+    background: #1E3A8A; /* Light sky blue to match playful crayon aesthetic */
+    border-radius: 3px; /* Rounded edges for a softer look */
 }
 
 /* Color/shape of burger icon bars on hover */
@@ -110,9 +110,9 @@
 @media (max-width: 768px) {
     .bm-burger-button {
         width: 32px;
-        height: 24px;
-        left: 26px;
-        top: 40px;
+        height: 28px;
+        left: 10px;
+        top: 20px;
     }
 
 

@@ -1,29 +1,51 @@
-import React from "react";
+import React, { useMemo } from "react";
+import creationOptions from '../../Models/CreationOptionsModel.json';
 
-const ChoiceSelector = ({ choices, onChoice, onBack, title}) => (
-  <div className="relative flex flex-wrap items-center justify-center gap-4 p-4">
-    {onBack && (
-      <button
-        onClick={onBack}
-        className="absolute left-[6px] top-1/2 transform -translate-y-1/2 bg-[#FF9999] text-gray-600 hover:bg-[#FF6666] active:bg-[#FF3333] transition duration-300 rounded-full p-2 shadow-md"
-        aria-label="Go back"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" stroke="white" />
-        </svg>
-      </button>
-    )}
-    {title && <h2 className="text-2xl font-bold">{title}</h2>}
-    {choices.map((choice, index) => (
-      <button 
-        key={index}
-        onClick={onChoice(choice)}
-        className={`px-5 py-3 ${choice.bgColor} ${choice.textColor} font-bold rounded-full hover:${choice.hoverBgColor} transition duration-300 transform hover:scale-105`}
-      >
-        {choice.label}
-      </button>
-    ))}
-  </div>
-);
+const ChoiceSelector = ({ categoryId, onChoice, onBack, title }) => {
+  const BANNER_DIR = 'assets/images/banners';
+  const MAX_OPTIONS = 4;
+
+  const randomOptions = useMemo(() => {
+    const category = creationOptions.categories.find(cat => cat.id === categoryId);
+    if (!category) return [];
+    const options = category.options;
+
+    return category.randomize ? options.sort(() => 0.5 - Math.random()).slice(0, MAX_OPTIONS) : options;
+  }, [categoryId]);
+
+  return (
+    <div className="relative flex flex-col items-center justify-center gap-4 p-4 w-full">
+      {title && <h2 className="text-2xl font-bold mb-4">{title}</h2>}
+      <div className="flex flex-col w-full gap-4">
+        {randomOptions.map((option) => (
+          <button 
+            key={option.id}
+            onClick={() => onChoice(option)}
+            className="w-full h-24 relative overflow-hidden rounded-2xl"
+            style={{
+              backgroundImage: option.image ? `url(${BANNER_DIR}${option.image})` : 'none',
+              backgroundColor: !option.image ? option.bgColor || 'bg-gray-500' : 'none',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              boxShadow: '4px 6px 15px rgba(0, 0, 0, 0.3)',
+              border: '3px solid white',
+            }}
+          >
+            <div className={`absolute inset-0 bg-[#AEC6CF] ${option.image ? 'opacity-30' : ''}`}></div>
+            <div 
+              className="absolute inset-0" 
+              style={{
+                background: 'linear-gradient(to bottom right, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)'
+              }}
+            ></div>
+            <span className="absolute inset-0 flex items-center justify-center text-white text-3xl font-bold z-1 text-shadow-lg font-['Children'] tracking-wider">
+              {option.label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default ChoiceSelector;

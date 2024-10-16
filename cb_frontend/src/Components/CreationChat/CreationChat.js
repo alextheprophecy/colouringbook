@@ -1,198 +1,207 @@
 import React, { useState, useEffect } from "react";
 import ChoiceSelector from "./ChoiceSelector";
 import Message from "./Message";
-import usePersistentState from "../../Hooks/CreationChat/usePersistentState"
+import useGeneratePage from "../../Hooks/CreationChat/useGeneratePage"; // Import the hook
+import BookCreationModel from '../../Models/BookCreationModel';
+import creationOptions from '../../Models/CreationOptionsModel.json';
 
 const CreationChat = () => {
     const SKETCHY_MASCOT = '/assets/textures/sketchy_mascot.png';
-    const [stageNumber, setStageNumber] = usePersistentState('stageNumber', 0);
-    const [currentStageType, setCurrentStageType] = usePersistentState('currentStageCode', 'initial');
+    const [currentStageId, setCurrentStageId] = useState('initial_0');
     const [showChoices, setShowChoices] = useState(false);
-    const [userChoices, setUserChoices] = usePersistentState('userChoices', []);
+    
+    const [bookCreationModel] = useState(new BookCreationModel());
+    const [stageHistory, setStageHistory] = useState([]);
+    const [inputValue, setInputValue] = useState('');
 
     const goBack = () => {
-        if (stageNumber === 0) {
-            setCurrentStageType('initial');
-        } else {
-            setStageNumber(stageNumber - 1);
+        if (stageHistory.length > 0) {
+            const previousStageId = stageHistory.pop();
+            setStageHistory([...stageHistory]);
+            setCurrentStageId(previousStageId);
         }
     };
 
-    const goForward = () => {
-        if (stageNumber < stages[currentStageType].length - 1)
-            setStageNumber(stageNumber + 1);
+    const goForward = (nextStageId) => {
+        if (nextStageId) {
+            setStageHistory([...stageHistory, currentStageId]);
+            setCurrentStageId(nextStageId);
+        }
     }
 
-
     const stages = {
-        initial: [{
-            message: "Hi there! \n What coloring book do you want to create?",
+        initial_0: {
+            ...creationOptions.initial_0,
+            onChoice: (choice) => {
+                goForward(choice.nextStageId);
+            },
+        },
+        story_0: {
+            ...creationOptions.story_0,
+            onChoice: (choice) => {
+                if (choice.saveData) {
+                    bookCreationModel.addCharacter(choice.saveData.name, choice.saveData.description);
+                } else {
+                    bookCreationModel.addCharacter("", choice.value); // Save input as both name and description
+                }
+                bookCreationModel.addUserChoice(choice);
+                goForward(choice.nextStageId);
+            },
+        },
+        story_1: {
+            ...creationOptions.story_1,
+            onChoice: (choice) => {
+                bookCreationModel.addUserChoice(choice);
+                goForward(choice.nextStageId);
+            },
+        },
+        story_2: {
+            ...creationOptions.story_2,
+            onChoice: (choice) => {
+                bookCreationModel.addScene(choice.value);
+                goForward('story_3');
+            },
+        },
+        story_3: {
+            ...creationOptions.story_3,
+            onChoice: (choice) => {
+                if (choice.id === 'modify_scene') {
+                    // logic to modify or regenerate the scene
+                }
+                goForward(choice.nextStageId);
+            },
+        },
+        story_4: {
+           ...creationOptions.story_4,
+            onChoice: (choice) => {
+                goForward(choice.nextStageId);
+            },
+        },
+        story_5: {
+            ...creationOptions.story_5,   
+            onChoice: (choice) => {
+                bookCreationModel.addUserChoice(choice);
+                // No next stage, end of story
+            },
+        },
+        theme_0: {
+            type: 'inputField',
+            input_placeholder: 'Enter a theme name',
+            message: "Choose a theme for your coloring book!",
             choices: [
-                { id: 'story', label: 'A story', bgColor: 'bg-blue-500', textColor: 'text-white', hoverBgColor: 'bg-blue-400' },
-                { id: 'theme', label: 'A theme', bgColor: 'bg-green-500', textColor: 'text-white', hoverBgColor: 'bg-green-400' },
+                // Add theme choices here
             ],
             onChoice: (choice) => {
-                setUserChoices(prevChoices => [...prevChoices, choice.id]);
-                setCurrentStageType(choice.id);
+                bookCreationModel.addUserChoice(choice);
+                // Add logic to go to the next stage if needed
             },
-        }],
-        story: [
-            {
-                type: 'inputField',
-                input_placeholder: 'Enter a character name',
-                message: "Choose a character for your story!",
-                choices: [
-                    { id: 'knight', label: 'A brave knight', bgColor: 'bg-red-500', textColor: 'text-white', hoverBgColor: 'bg-red-400' },
-                    { id: 'wizard', label: 'A wise wizard', bgColor: 'bg-blue-500', textColor: 'text-white', hoverBgColor: 'bg-blue-400' },
-                    { id: 'rogue', label: 'A cunning rogue', bgColor: 'bg-green-500', textColor: 'text-white', hoverBgColor: 'bg-green-400' },
-                ],
-                onChoice: (choice) => {
-                    setUserChoices(prevChoices => [...prevChoices, choice]);
-                    goForward();
-                },
-            },
-            {
-                message: "Do you want to add another character or start the story?",
-                choices: [
-                    { id: 'add_character', label: 'Add another character', bgColor: 'bg-yellow-500', textColor: 'text-white', hoverBgColor: 'bg-yellow-400' },
-                    { id: 'start_story', label: 'Start the story', bgColor: 'bg-purple-500', textColor: 'text-white', hoverBgColor: 'bg-purple-400' },
-                ],
-                onChoice: (choice) => {
-                    if (choice.id !== 'add_character') 
-                        goForward();
-                    setUserChoices(prevChoices => [...prevChoices, choice]);
-                },
-            },
-            {
-                type: 'inputField',
-                input_placeholder: 'Describe the first scene of your story',
-                message: "Let's create the first scene. What's happening with your character(s)?",
-                choices: [],
-                onChoice: (choice) => {
-                    setUserChoices(prevChoices => [...prevChoices, choice]);
-                    goForward();
-                },
-            },
-            {
-                message: "Here's your scene! What would you like to do?",
-                choices: [
-                    { id: 'keep_scene', label: 'Keep this scene', bgColor: 'bg-green-500', textColor: 'text-white', hoverBgColor: 'bg-green-400' },
-                    { id: 'modify_scene', label: 'Modify the scene', bgColor: 'bg-red-500', textColor: 'text-white', hoverBgColor: 'bg-red-400' },
-                    { id: 'regenerate_scene', label: 'Regenerate scene', bgColor: 'bg-blue-500', textColor: 'text-white', hoverBgColor: 'bg-blue-400' },
-                ],
-                onChoice: (choice) => {
-                    if (choice.id === 'modify_scene') {
-                        //modify scene
-
-                    } else if (choice.id === 'regenerate_scene') {
-                        // logic to regenerate the scene
-                        goForward();
-                    } else {
-                        goForward();
-                    }
-                },
-            },
-            {
-                message: "Do you want to create another scene or finish your story?",
-                choices: [
-                    { id: 'create_scene', label: 'Create another scene', bgColor: 'bg-orange-500', textColor: 'text-white', hoverBgColor: 'bg-orange-400' },
-                    { id: 'finish_story', label: 'Finish the story', bgColor: 'bg-purple-500', textColor: 'text-white', hoverBgColor: 'bg-purple-400' },
-                ],
-                onChoice: (choice) => {
-                    if (choice.id === 'create_scene') {
-                        goForward();
-                    }
-                },
-            },
-            {
-                message: "Congratulations! You've finished creating your story. Would you like to add a title to your coloring book?",
-                type: 'inputField',
-                input_placeholder: 'Enter a title for your coloring book',
-                choices: [],
-                onChoice: (choice) => {
-                    setUserChoices(prevChoices => [...prevChoices, choice]);
-                    goForward();
-                },
-            },
-        ],
-        theme: [
-            {
-                type: 'inputField',
-                input_placeholder: 'Enter a theme name',
-                message: "Choose a theme for your coloring book!",
-                choices: [
-                    // Add theme choices here
-                ],
-                onChoice: (choice) => {
-                    setUserChoices(prevChoices => [...prevChoices, choice]);
-                    goForward();
-                },
-            },
-            // Add more theme stages as needed
-        ]
+        },
+        // Add more theme stages as needed
     };
 
     const getCurrentStage = () => {
-        const currentStages = stages[currentStageType];
-        return currentStages[Math.min(stageNumber, currentStages.length - 1)];
+        return stages[currentStageId];
     };
+
+    // Pass bookCreationModel to the hook
+    const { pageDescription, generatePage } = useGeneratePage(bookCreationModel);
 
     useEffect(() => {
         const timer = setTimeout(() => setShowChoices(true), 1000);
         return () => clearTimeout(timer);
-    }, [stageNumber]);
+    }, [currentStageId]);
+
+    useEffect(() => {
+        if (currentStageId === 'story_3' || currentStageId === 'story_5') { // Generate page for 'story_3' and 'story_5'
+            generatePage();
+        }
+    }, [currentStageId, generatePage]);
 
     const currentStage = getCurrentStage();
 
     return (
-        <div className="w-[95vw] max-w-3xl mx-auto mt-[15vh]">
-            <div className="flex items-center mb-6 bg-[#FFF5E6] bg-opacity-75 rounded-lg shadow-lg p-4 font-['Children']">
-                <img 
-                    src={SKETCHY_MASCOT} 
-                    alt="Sketchy Mascot" 
-                    className="w-24 h-24 object-contain"
-                />
-                <div className="flex-grow">
-                    <div className="mt-4 text-lg font-semibold">
-                        <Message text={currentStage.message} key={stageNumber} />
+        <div className="w-full max-w-3xl mx-auto relative">
+            {/* Fixed Sketchy container */}
+            <div className="fixed top-0 left-0 right-0 pl-[10px] z-[5] bg-[#FFF5E6]  bg-opacity-100 rounded-b-lg shadow-lg">
+                <div className="max-w-3xl mx-auto flex items-center p-4 font-['Children']">
+                    <img 
+                        src={SKETCHY_MASCOT} 
+                        alt="Sketchy Mascot" 
+                        className="w-24 h-24 object-contain"
+                    />
+                    <div className="flex-grow">
+                        <div className="text-lg font-semibold">
+                            <Message text={currentStage.message} key={currentStageId} />
+                        </div>
                     </div>
                 </div>
+                
+                {/* Back button placed under Sketchy */}
+                {stageHistory.length > 0 && (
+                    <div className="absolute left-6 bottom-0 transform translate-y-1/2">
+                        <button
+                            onClick={goBack}
+                            className="bg-[#1E3A8A] text-white hover:bg-[#1E40AF] active:bg-[#1E4620] transition duration-300 rounded-full p-2 shadow-md h-12 w-12 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
             </div>
-            <div className="mt-[10vh] flex flex-col justify-between bg-[#FFF5E6] bg-opacity-75 rounded-lg shadow-lg">
-                <div className="flex-grow">
+
+            {/* Options container - moved up closer to Sketchy's container */}
+            <div className="mt-[calc(5vh+6rem)] p-4">
+                {(currentStageId === 'story_3' || currentStageId === 'story_5') && (
+                    <div className="mb-4 bg-red-200 p-4 rounded-lg shadow-md text-center">
+                        <p>{pageDescription}</p>
+                    </div>
+                )}
+                <div className="rounded-lg">
                     {showChoices && (
                         <div>
-                            <ChoiceSelector 
-                                choices={currentStage.choices}
-                                onChoice={(choice) => () => currentStage.onChoice(choice)}
-                                onBack={currentStageType === 'initial' ? null : goBack}
-                                title={currentStage.title}
-                            />
+                            
                             {currentStage.type === 'inputField' && (
-                                <div className="w-full p-4 flex items-center">
-                                    <textarea 
-                                        className="flex-grow p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out shadow-sm mr-2 resize-none overflow-y-auto"
-                                        placeholder={currentStage.input_placeholder}
-                                        rows="1"
-                                        style={{ minHeight: '48px', maxHeight: '192px' }}
-                                        onInput={(e) => {
-                                            e.target.style.height = 'auto';
-                                            e.target.style.height = `${Math.min(e.target.scrollHeight, 192)}px`;
-                                        }}
-                                    ></textarea>
-                                    <button
-                                        onClick={() => {
-                                            const inputValue = document.querySelector('textarea').value;
-                                            currentStage.onChoice({id: inputValue});
-                                        }}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-full transition duration-300 ease-in-out shadow-md"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                        </svg>
-                                    </button>
+                                <div className="w-[calc(100%-2rem)] mt-4 flex gap-2 mx-auto justify-center items-center">
+                                    <div className="flex-grow h-24 relative overflow-hidden rounded-2xl" style={{
+                                        backgroundColor: '#FFF5E6', // Light blue background
+                                        boxShadow: '4px 6px 15px rgba(0, 0, 0, 0.3)',
+                                        border: '3px solid white',
+                                    }}>                                        
+                                        <textarea 
+                                            className="absolute inset-0 w-full h-full bg-transparent text-xl font-bold z-[3] font-['Children'] tracking-wider p-4 resize-none scrollbar-hide placeholder-gray-300"
+                                            placeholder="A funny rabbit with&#10;a big hat"
+                                            value={inputValue}
+                                            onChange={(e) => setInputValue(e.target.value)}
+                                            style={{
+                                                outline: 'none',
+                                                height: '6rem', // Match the height of buttons in ChoiceSelector
+                                                boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.8)', // Inside shadow for concave effect
+                                                color: '#1E3A8A', // Set text color to a darker blue
+                                            }}
+                                        ></textarea>
+                                        <div className="absolute inset-0 flex items-center justify-end pr-2">
+                                            <button
+                                                onClick={() => {
+                                                    if (inputValue.trim())currentStage.onChoice({value: inputValue, nextStageId: currentStage.input_nextStageId});
+                                                }}
+                                                className=" z-[4] bg-[#1E3A8A] hover:bg-blue-600 text-white font-bold p-2 rounded-full transition duration-300 ease-in-out shadow-md h-10 w-10 flex items-center justify-center"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
+
+                            <ChoiceSelector 
+                                categoryId={currentStage.categoryId}
+                                onChoice={(choice) => currentStage.onChoice(choice)}
+                                onBack={stageHistory.length > 0 ? goBack : null}
+                                title={currentStage.title}
+                            />
                         </div>
                     )}
                 </div>
