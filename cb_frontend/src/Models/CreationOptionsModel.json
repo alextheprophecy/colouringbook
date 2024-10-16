@@ -61,19 +61,19 @@
             "randomize": true,
             "options": [
                 { "id": "knight", "label": "a brave knight", "image": "/characters/knight.png", "nextStageId": "story_1", "saveData": { "name": "Knight", "description": "A brave knight" } },
-                { "id": "carrot", "label": "a happy carrot", "image": "/characters/carrot.png", "nextStageId": "story_1", "saveData": { "name": "Carrot", "description": "A friendly carrot" } },
+                { "id": "carrot", "label": "a happy carrot", "image": "/characters/carrot.png", "nextStageId": "story_1", "saveData": { "name": "Carrot", "description": "A happy carrot" } },
                 { "id": "fairy", "label": "a Fairy", "image": "/characters/fairy.png", "nextStageId": "story_1", "saveData": { "name": "Fairy", "description": "A magical fairy" } },
-                { "id": "frog", "label": "a frog", "image": "/characters/frog.png", "nextStageId": "story_1", "saveData": { "name": "Frog", "description": "A jumpy frog" } },
-                { "id": "jetplane", "label": "a jet plane", "image": "/characters/jetplane.png", "nextStageId": "story_1", "saveData": { "name": "Jetplane", "description": "A fast jetplane" } },
-                { "id": "monkey", "label": "monkey", "image": "/characters/monkey.png", "nextStageId": "story_1", "saveData": { "name": "Monkey", "description": "A playful monkey" } },
-                { "id": "ogres", "label": "an ogre", "image": "/characters/ogres.png", "nextStageId": "story_1", "saveData": { "name": "Ogres", "description": "A group of ogres" } },
+                { "id": "frog", "label": "a frog", "image": "/characters/frog.png", "nextStageId": "story_1", "saveData": { "name": "Frog", "description": "A excited frog" } },
+                { "id": "jetplane", "label": "a jet plane", "image": "/characters/jetplane.png", "nextStageId": "story_1", "saveData": { "name": "Jetplane", "description": "A fast jetplane with a smile" } },
+                { "id": "monkey", "label": "monkey", "image": "/characters/monkey.png", "nextStageId": "story_1", "saveData": { "name": "Monkey", "description": "A curious monkey" } },
+                { "id": "ogres", "label": "an ogre", "image": "/characters/ogres.png", "nextStageId": "story_1", "saveData": { "name": "Ogres", "description": "A big ugly ogre" } },
                 { "id": "oldman", "label": "a wise old man", "image": "/characters/oldman.png", "nextStageId": "story_1", "saveData": { "name": "Oldman", "description": "A wise old man" } },
-                { "id": "pizza", "label": "a happy pizza", "image": "/characters/pizza.png", "nextStageId": "story_1", "saveData": { "name": "Pizza", "description": "A delicious pizza" } },
+                { "id": "pizza", "label": "a happy pizza", "image": "/characters/pizza.png", "nextStageId": "story_1", "saveData": { "name": "Pizza", "description": "A happy pizza" } },
                 { "id": "princess", "label": "a princess", "image": "/characters/princess.png", "nextStageId": "story_1", "saveData": { "name": "Princess", "description": "A beautiful princess" } },
-                { "id": "racecar", "label": "a race car", "image": "/characters/racecar.png", "nextStageId": "story_1", "saveData": { "name": "Racecar", "description": "A speedy racecar" } },
+                { "id": "racecar", "label": "a race car", "image": "/characters/racecar.png", "nextStageId": "story_1", "saveData": { "name": "Racecar", "description": "A fast racecar" } },
                 { "id": "strongman", "label": "a strong man", "image": "/characters/strongman.png", "nextStageId": "story_1", "saveData": { "name": "Strongman", "description": "A powerful strongman" } },
                 { "id": "surfingboy", "label": "a surfer", "image": "/characters/surfingboy.png", "nextStageId": "story_1", "saveData": { "name": "Surfing Boy", "description": "A cool surfing boy" } },
-                { "id": "donaldduck", "label": "Donald Duck", "image": "/characters/donaldduck.png", "nextStageId": "story_1", "saveData": { "name": "Donald Duck", "description": "A famous duck" } }
+                { "id": "donaldduck", "label": "Donald Duck", "image": "/characters/donaldduck.png", "nextStageId": "story_1", "saveData": { "name": "Donald Duck", "description": "Donald duck" } }
             ]
         },
         {

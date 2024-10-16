@@ -17,9 +17,9 @@ const gen_token = (access_t = true, user) => jwt.sign(
 const add_cookie = (res, cookie_name, cookie) => {
     const cookieOptions = { httpOnly: true,
         secure: true,
-        sameSite: 'Strict' }
+        sameSite: 'None' }
 
-    res.cookie(cookie_name, cookie, cookieOptions);
+    res.cookie(cookie_name, cookie, );
     return res
 }
 

@@ -1,7 +1,7 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed} = require("../external_apis/replicate.controller");
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
-const {pagesSimpleStory, AdvancedGenerator} = require("./book_description.controller");
+const {pagesSimpleStory, AdvancedGenerator, generateScenePageDescription} = require("./book_description.controller");
 
 const MAX_PAGE_COUNT = 6
 
@@ -48,16 +48,33 @@ const test = (req, res) => {
     res.status(200).json('RESULT')
 }
 
-
 const genBookPDF = (user, book) =>
     Promise.all(Array.from({length: book.pages}, (_, i) => getImageData(user, book, i))).then(imageBuffers =>
         saveBookPDF(imageBuffers, user, book)
     )
 
+const generateSingleScenePage = async (req, res) => {
+    const user = req.user;
+    const { sceneDescription, characters, options } = req.body;
 
+    try {
+        const imageModel = queryFluxSchnell /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
+        const gen_seed = randomSavedSeed();
+
+        const description = await generateScenePageDescription(sceneDescription, characters)
+        const prompt = options.forAdult ? ADULT_PROMPT(description) : CHILD_PROMPT(description);
+        const image = await imageModel(prompt, gen_seed);
+        res.status(200).json({ image });    
+        
+    } catch (error) {
+        console.error('Error generating single scene page:', error);
+        res.status(500).json({ error: 'Failed to generate scene page' });
+    }
+};
 
 module.exports = {
     generateColouringBook,
     genBookPDF,
-    test
+    test,
+    generateSingleScenePage
 }
