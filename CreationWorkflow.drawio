@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Coloring Book Creation Workflow">
+    <mxGraphModel dx="1020" dy="705" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Start Node -->
+        <mxCell id="2" value="User Enters Creation Screen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#00FF00;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="140" y="60" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Greeting Node -->
+        <mxCell id="3" value="Sketchy Greets the User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="140" y="160" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Decision Node: Story or Theme -->
+        <mxCell id="4" value="Choose Story or Theme" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFF00;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="140" y="260" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Story Mode Node -->
+        <mxCell id="5" value="Story Mode Path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00BFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Theme Mode Node -->
+        <mxCell id="6" value="Theme Mode Path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF6347;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="240" y="360" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Scene Generation Node (for Story Mode) -->
+        <mxCell id="7" value="Scene Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6FA;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="460" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Page Generation Node (for Theme Mode) -->
+        <mxCell id="8" value="Page Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE4B5;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="240" y="460" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Finalization Node -->
+        <mxCell id="9" value="Create Book Cover and Finalize" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ADFF2F;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="140" y="560" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Arrows -->
+        <mxCell id="10" edge="1" source="2" target="3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11" edge="1" source="3" target="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" edge="1" source="4" target="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="13" edge="1" source="4" target="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="14" edge="1" source="5" target="7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="15" edge="1" source="6" target="8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="16" edge="1" source="7" target="9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="17" edge="1" source="8" target="9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
