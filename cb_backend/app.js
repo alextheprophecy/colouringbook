@@ -22,9 +22,21 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
+const allowedOrigins = [
+    "http://localhost:3000", // Development environment
+    "https://crayons.me", // Production environment
+  ];
+
 // Allow CORS for a specific origin with credentials //TODO: change!!!!!
 const corsOptions = {
-    origin: true,//process.env.FRONTEND_CORS_ORIGIN, // Set the frontend origin here
+    origin: function (origin, callback) {
+        // If no origin or origin is in the allowed list, allow the request
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },    
     credentials: true, // Allow credentials (cookies, authorization headers)
 }
 app.use(cors(corsOptions));
