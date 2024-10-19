@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 // Allow CORS for a specific origin with credentials //TODO: change!!!!!
 const corsOptions = {
-    origin: process.env.FRONTEND_CORS_ORIGIN, // Set the frontend origin here
+    origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_CORS_ORIGIN : 'http://localhost:3000', // Set the frontend origin here
     credentials: true, // Allow credentials (cookies, authorization headers)
 }
 app.use(cors(corsOptions));
@@ -37,6 +37,7 @@ app.use("/api/user", UserRoute);
 app.use((req, res) => {
     res.status(404).send('404: Page not Found');
 });
+
 
 //listen to the port
 app.listen(PORT, ()=> {

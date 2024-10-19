@@ -8,8 +8,6 @@ const testAuth = (req, res) => {
     res.status(200).send('OK! Good Job')
 }
 
-
-
 router.get('/registerForm', RegisterForm);
 router.post('/register', Register);
 router.post('/login', Login);
