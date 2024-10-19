@@ -1,75 +1,155 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net">
-  <diagram name="Coloring Book Creation Workflow">
-    <mxGraphModel dx="1020" dy="705" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.7.17">
+  <diagram name="Coloring Book Creation Workflow" id="0">
+    <mxGraphModel dx="1728" dy="915" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        
-        <!-- Start Node -->
-        <mxCell id="2" value="User Enters Creation Screen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#00FF00;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="140" y="60" width="160" height="60" as="geometry" />
-        </mxCell>
-        
-        <!-- Greeting Node -->
-        <mxCell id="3" value="Sketchy Greets the User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="140" y="160" width="160" height="60" as="geometry" />
-        </mxCell>
-        
-        <!-- Decision Node: Story or Theme -->
-        <mxCell id="4" value="Choose Story or Theme" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFF00;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="140" y="260" width="160" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Story Mode Node -->
-        <mxCell id="5" value="Story Mode Path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00BFFF;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="60" y="360" width="160" height="60" as="geometry" />
-        </mxCell>
-        
-        <!-- Theme Mode Node -->
-        <mxCell id="6" value="Theme Mode Path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF6347;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="240" y="360" width="160" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Scene Generation Node (for Story Mode) -->
-        <mxCell id="7" value="Scene Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6FA;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="60" y="460" width="160" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Page Generation Node (for Theme Mode) -->
-        <mxCell id="8" value="Page Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE4B5;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="240" y="460" width="160" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Finalization Node -->
-        <mxCell id="9" value="Create Book Cover and Finalize" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ADFF2F;strokeColor=#000000;" vertex="1" parent="1">
-          <mxGeometry x="140" y="560" width="160" height="60" as="geometry" />
-        </mxCell>
-
-        <!-- Connecting Arrows -->
-        <mxCell id="10" edge="1" source="2" target="3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-17" target="cTLB7C6G67LyuJ4N8gNC-18">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="11" edge="1" source="3" target="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-17" target="cTLB7C6G67LyuJ4N8gNC-20">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="12" edge="1" source="4" target="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-17" target="cTLB7C6G67LyuJ4N8gNC-22">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="13" edge="1" source="4" target="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-17" value="Create Book" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-18" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Write your own Story&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="212.5" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-20" value="Create story together" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="212.5" y="290" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-22" target="cTLB7C6G67LyuJ4N8gNC-39">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-22" value="Chose a theme" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="212.5" y="550" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-32" value="Stories" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="240" y="70" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-34" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Story description&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Page count n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="212.5" y="180" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-37" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Theme descr./type&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="212.5" y="620" width="137.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-39" target="cTLB7C6G67LyuJ4N8gNC-44">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="690" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-39" value="Page Prototype" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="550" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-39" target="cTLB7C6G67LyuJ4N8gNC-39">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="580" />
+              <mxPoint x="570" y="620" />
+              <mxPoint x="470" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-42" value="MODIFY THEME" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="cTLB7C6G67LyuJ4N8gNC-41">
+          <mxGeometry x="0.0921" relative="1" as="geometry">
+            <mxPoint x="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-44" target="cTLB7C6G67LyuJ4N8gNC-48">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="14" edge="1" source="5" target="7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-44" value="Generate book" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="550" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="15" edge="1" source="6" target="8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-45" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Theme descr.&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="470" y="630" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="16" edge="1" source="7" target="9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-47" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Page count n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="630" y="620" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="17" edge="1" source="8" target="9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;" parent="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-48" target="cTLB7C6G67LyuJ4N8gNC-54">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1080" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-48" value="View n Pages" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="550" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cTLB7C6G67LyuJ4N8gNC-48" target="cTLB7C6G67LyuJ4N8gNC-48">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="580" />
+              <mxPoint x="990" y="620" />
+              <mxPoint x="880" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-51" value="REGENERATE p.#n" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="cTLB7C6G67LyuJ4N8gNC-50">
+          <mxGeometry x="0.3294" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-52" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Modify descr. #n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="880" y="630" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-54" value="DONE" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-57" value="Story Prototype (n_Scenes)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="cTLB7C6G67LyuJ4N8gNC-57" target="cTLB7C6G67LyuJ4N8gNC-57" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="380" />
+              <mxPoint x="550" y="420" />
+              <mxPoint x="450" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-59" value="MODIFY SCENE" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="cTLB7C6G67LyuJ4N8gNC-58">
+          <mxGeometry x="0.0921" relative="1" as="geometry">
+            <mxPoint x="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-60" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Scene Descr.&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="450" y="430" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" source="cTLB7C6G67LyuJ4N8gNC-18" target="cTLB7C6G67LyuJ4N8gNC-65" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-71" value="GENERATE BOOK" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="cTLB7C6G67LyuJ4N8gNC-62">
+          <mxGeometry x="-0.312" y="1" relative="1" as="geometry">
+            <mxPoint x="23" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-65" value="View n Pages" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="cTLB7C6G67LyuJ4N8gNC-65" target="cTLB7C6G67LyuJ4N8gNC-65" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="140" />
+              <mxPoint x="690" y="180" />
+              <mxPoint x="580" y="180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-67" value="REGENERATE p.#n" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="cTLB7C6G67LyuJ4N8gNC-66">
+          <mxGeometry x="0.3294" y="2" relative="1" as="geometry">
+            <mxPoint y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cTLB7C6G67LyuJ4N8gNC-68" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Modify descr. #n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="570" y="190" width="130" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
