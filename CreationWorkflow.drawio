@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.8.0" pages="2">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.8.0" pages="3">
   <diagram name="Coloring Book Creation Workflow" id="0">
     <mxGraphModel dx="1434" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -352,8 +352,8 @@
         <mxCell id="GAlETIPJPWhJtXO2Fb-T-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GAlETIPJPWhJtXO2Fb-T-44" target="GAlETIPJPWhJtXO2Fb-T-40">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="800" y="320" />
-              <mxPoint x="800" y="270" />
+              <mxPoint x="770" y="320" />
+              <mxPoint x="770" y="270" />
               <mxPoint x="470" y="270" />
             </Array>
           </mxGeometry>
@@ -433,7 +433,46 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="GAlETIPJPWhJtXO2Fb-T-61" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;View current book&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontColor=#FF0000;strokeColor=#FF0000;" vertex="1" parent="1">
-          <mxGeometry x="870" y="290" width="120" height="60" as="geometry" />
+          <mxGeometry x="820" y="290" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="W2kCNirfcLebo3ub0zL8" name="Page-3">
+    <mxGraphModel dx="819" dy="422" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9MaholcK3v-ido-z3QbE-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" parent="1" source="9MaholcK3v-ido-z3QbE-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="334" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-1" value="&lt;div style=&quot;&quot;&gt;Write story description&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="100" y="304" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-3" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 35px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Story description&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Page count n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="230" y="314" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" target="9MaholcK3v-ido-z3QbE-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="455" y="170" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-5" value="&lt;div style=&quot;&quot;&gt;Story line scene by scene&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="410" y="304" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-12" value="&lt;div&gt;&lt;ul style=&quot;padding-left: 15px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Story description&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Page count n&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;direction=south;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="400" y="190" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="9MaholcK3v-ido-z3QbE-5" target="9MaholcK3v-ido-z3QbE-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="334" />
+              <mxPoint x="520" y="384" />
+              <mxPoint x="455" y="384" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
