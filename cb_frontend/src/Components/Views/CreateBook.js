@@ -4,39 +4,30 @@ import CreatePage from "../CreateBook/CreatePage";
 import PagePreview from "../CreateBook/PagePreview";
 import ModifyBook from "../CreateBook/ModifyBook";
 import EditPage from "../CreateBook/EditPage";
-import { setCurrentPage, setIsEditing, setIsModifyingBook } from '../../redux/bookSlice';
+import { setCurrentPage, setIsModifyingBook } from '../../redux/bookSlice';
 
 const CreateBook = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing, isModifyingBook } = useSelector(state => state.book);
+    const { pages, currentPage, isModifyingBook, isEditing } = useSelector(state => state.book);
 
     const handleNext = () => {
-        if (currentPage < pages.length - 1) {
-            dispatch(setCurrentPage(currentPage + 1));
-        } else {
-            dispatch(setCurrentPage(pages.length));
-        }
+        if (currentPage < pages.length - 1) dispatch(setCurrentPage(currentPage + 1));
+        else dispatch(setCurrentPage(pages.length));        
     };
 
-    const handleModifyBook = () => {
-        dispatch(setIsModifyingBook(true));
-    };
+    const handleModifyBook = () => dispatch(setIsModifyingBook(true));
 
-    const getCurrentPageData = () => {
-        if (pages[currentPage]) {
-            return {
+    const getCurrentPageData = () =>
+       pages[currentPage] ?
+            {
                 imageSrc: pages[currentPage].image,
                 description: pages[currentPage].description
-            };
-        }
-        return { imageSrc: null, description: '' };
-    };
+            } :
+            { imageSrc: null, description: '' }    
 
-    if (isModifyingBook) {
-        return <ModifyBook />;
-    }
+    if (isModifyingBook) return <ModifyBook />;
 
-    const { imageSrc, description } = getCurrentPageData();
+    const { imageSrc, description } = getCurrentPageData()
 
     return (
         <div className="w-[90vw] mt-[10vh] ml-[5vw] mr-[5vw] bg-white">
@@ -52,7 +43,7 @@ const CreateBook = () => {
                     onModifyBook={handleModifyBook}
                 />
             )}
-            <EditPage />
+            {isEditing && <EditPage />}
         </div>
     );
 };
