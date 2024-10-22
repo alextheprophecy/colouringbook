@@ -439,7 +439,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="W2kCNirfcLebo3ub0zL8" name="Page-3">
-    <mxGraphModel dx="819" dy="422" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="989" dy="509" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -459,6 +459,12 @@
             <mxPoint x="455" y="170" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9MaholcK3v-ido-z3QbE-5" target="9MaholcK3v-ido-z3QbE-16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="334" as="targetPoint" />
+            <mxPoint x="510" y="334" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="9MaholcK3v-ido-z3QbE-5" value="&lt;div style=&quot;&quot;&gt;Story line scene by scene&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
           <mxGeometry x="410" y="304" width="90" height="60" as="geometry" />
         </mxCell>
@@ -473,6 +479,23 @@
               <mxPoint x="455" y="384" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-14" value="Modify scene" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="9MaholcK3v-ido-z3QbE-13">
+          <mxGeometry x="0.274" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-16" value="&lt;div style=&quot;&quot;&gt;Story&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="560" y="304" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="605" y="304" as="targetPoint" />
+            <mxPoint x="605" y="170" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9MaholcK3v-ido-z3QbE-18" value="&lt;ul style=&quot;padding-left: 15px;&quot;&gt;&lt;li&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;Fill in story details and context&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;direction=south;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="550" y="190" width="110" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
