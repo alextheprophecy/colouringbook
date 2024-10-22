@@ -102,9 +102,6 @@
     margin: auto;
 }
 
-.flipbook-wrapper {
-    position: relative;
-}
 
 .page-button {
     padding: 1rem 0.2rem;
@@ -176,7 +173,6 @@
     width: 2.5rem;
     height: 2.5rem;
 
-    &:hover
 }
 
 .download-icon {

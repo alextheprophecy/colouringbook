@@ -5,13 +5,12 @@ const DEFAULT_SCHNELL_SEEDS = [19129, 34895, 34135] //19129 good
 const DEFAULT_DEV_SEEDS = [19129, 34895, 34135] //19129 good
 const SAFETY_CHECKER = false
 
-
 const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {
     return seed_list[Math.floor(Math.random()*seed_list.length)]
 }
 
 const _runModel = (input, model) =>
-    replicate.run(model, {input: input}).then(o => o[0])
+    replicate.run(model, {input: input}).then(o => o[0].url())
 
 const queryFluxSchnell = (prompt, seed= randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) => {
     const input = {
@@ -27,6 +26,7 @@ const queryFluxSchnell = (prompt, seed= randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) 
 
 const queryFluxBetter = (prompt, seed = randomSavedSeed(DEFAULT_DEV_SEEDS)) => {
     const input = {
+        go_fast: false,
         prompt: prompt,
         seed: seed,
         guidance: 3.5,

@@ -12,14 +12,13 @@ import MainView from "./Components/Views/main.view";
 import { AnimatePresence } from "framer-motion";
 import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
-import CreationChat from "./Components/CreationChat/CreationChat";
+import CreateBook from "./Components/Views/CreateBook";
 
 function App() {
     const routes = (
-        <Routes>
-            
+        <Routes>            
             <Route exact path='/' element={<><Navbar /><MainView /></>} />
-            <Route exact path='/create' element={<CreationChat />} />
+            <Route exact path='/create' element={<><CreateBook/></>} />
             <Route exact path='/login' element={<><Navbar /><LoginView /></>} />
             <Route exact path='/gallery' element={<><Navbar /><GalleryView /></>} />
             <Route exact path='/playground' element={<><Navbar /><PlaygroundView /></>} />
