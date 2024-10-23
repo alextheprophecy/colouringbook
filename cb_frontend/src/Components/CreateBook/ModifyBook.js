@@ -1,32 +1,71 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
 import { setCurrentPage, setIsEditing, setIsModifyingBook } from '../../redux/bookSlice';
 
 const ModifyBook = () => {
+    const USER_FLIP_TIME = 600;
+    const ANIMATION_FLIP_TIME = 350;
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing } = useSelector(state => state.book);
+    const { pages, currentPage, isEditing, isModifyingBook } = useSelector(state => state.book);
     const flipBookRef = useRef(null);
+    const [isFlipping, setIsFlipping] = useState(false);
+    const [flipTime, setFlipTime] = useState(ANIMATION_FLIP_TIME);
+
+   
+    const startAnimation = useCallback(() => {
+        if (flipBookRef.current?.pageFlip() && !isFlipping) {
+            setIsFlipping(true);
+            console.log(flipBookRef.current.pageFlip().getUI());
+            console.log(flipBookRef.current.pageFlip().getSettings().flippingTime);
+
+            let currentPageIndex = 0;
+            const flipThroughPages = () => {
+                console.log("animatin");
+
+                if (currentPageIndex < pages.length - 1) {                    
+                    flipBookRef.current.pageFlip().flipNext('top');
+                    currentPageIndex++;     
+
+                    setTimeout(() => {     
+                        dispatch(setCurrentPage(currentPageIndex));
+                        flipThroughPages();
+                    }, currentPageIndex===1?450:ANIMATION_FLIP_TIME);
+                } else {
+                    setTimeout(() => {
+                        setIsFlipping(false);
+                        setFlipTime(USER_FLIP_TIME);
+                    }, USER_FLIP_TIME);
+                }
+            };
+            // Start flipping after a short delay
+            setTimeout(flipThroughPages, 550);
+        }
+    }, [dispatch, isFlipping]);
 
     const onFlip = useCallback((e) => {
-        dispatch(setCurrentPage(e.data));
-    }, [dispatch]);
+        if (!isFlipping) {
+            dispatch(setCurrentPage(e.data));
+        }
+    }, [dispatch, isFlipping]);
 
     const handleNextPage = () => {
-        if (flipBookRef.current && currentPage < pages.length - 1) {
-            flipBookRef.current.pageFlip().flipNext();
+        if (!isFlipping && flipBookRef.current && currentPage < pages.length - 1) {
+            flipBookRef.current.pageFlip().flipNext('top');
         }
     };
 
     const handlePreviousPage = () => {
-        if (flipBookRef.current && currentPage > 0) {
-            flipBookRef.current.pageFlip().flipPrev();
+        if (!isFlipping && flipBookRef.current && currentPage > 0) {
+            flipBookRef.current.pageFlip().flipPrev('top');
         }
     };
 
     const toggleEdit = () => {
-        dispatch(setIsEditing(!isEditing));
+        if (!isFlipping) {
+            dispatch(setIsEditing(!isEditing));
+        }
     };
 
     const handleSubmit = (text, newImage) => {
@@ -38,19 +77,22 @@ const ModifyBook = () => {
     };
 
     const handleBackToCreation = () => {
-        dispatch(setCurrentPage(pages.length));
         dispatch(setIsModifyingBook(false));
+        dispatch(setCurrentPage(pages.length));
     };
 
     return (
         <div className="p-4 bg-blue-100 rounded-[15px] max-w-[900px] mx-auto">
             <div>
-                {pages.length > 0 && <button 
-                    className="absolute top-2 right-2 bg-[#87CEFA] text-white py-1 px-2 rounded-md cursor-pointer z-10"
-                    onClick={toggleEdit}
-                >
-                    Edit
-                </button>}
+                {pages.length > 0 && (
+                    <button 
+                        className={`absolute top-2 right-2 bg-[#87CEFA] text-white py-1 px-2 rounded-md cursor-pointer z-10 ${isFlipping ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={toggleEdit}
+                        disabled={isFlipping}
+                    >
+                        Edit
+                    </button>
+                )}
                 
                 <HTMLFlipBook
                     width={300}
@@ -63,15 +105,19 @@ const ModifyBook = () => {
                     maxShadowOpacity={0.5}
                     mobileScrollSupport={true}
                     ref={flipBookRef}
-                    onFlip={onFlip}
+                    onFlip={onFlip} //
                     className="demo-book"
-                    showCover={false}
-                    useMouseEvents={!isEditing}
+                    showCover={true}
+                    useMouseEvents={!isEditing && !isFlipping}
+                    flippingTime={flipTime}
+                    startPage={0}
+                    onInit={startAnimation}   
+                    key={flipTime}   
                 >               
                     {pages.map((page, index) => (
                         <div key={index} className="demoPage bg-[red] rounded-l-lg">
                             <img 
-                                src={`https://placehold.co/400x600?text=Page+${page}`} 
+                                src={page.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`} 
                                 alt={`Page ${page}`} 
                                 className="rounded-[15px] mx-auto w-full h-full object-cover"
                             />
@@ -83,16 +129,18 @@ const ModifyBook = () => {
             <div className="flex justify-between mt-4">
                 {currentPage > 0 && (
                     <button 
-                        className="bg-[#87CEFA] text-white py-2 px-4 rounded-md cursor-pointer z-10"
+                        className={`bg-[#87CEFA] text-white py-2 px-4 rounded-md cursor-pointer z-10 ${isFlipping ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={handlePreviousPage}
+                        disabled={isFlipping}
                     >
                         Previous
                     </button>
                 )}
                 {currentPage < pages.length - 1 && (
                     <button 
-                        className="bg-[#87CEFA] text-white py-2 px-4 rounded-md cursor-pointer z-10 ml-auto"
+                        className={`bg-[#87CEFA] text-white py-2 px-4 rounded-md cursor-pointer z-10 ml-auto ${isFlipping ? 'opacity-50 cursor-not-allowed' : ''}`}
                         onClick={handleNextPage}
+                        disabled={isFlipping}
                     >
                         Next
                     </button>
@@ -101,7 +149,7 @@ const ModifyBook = () => {
 
             <div className="mt-4 flex justify-center">
                 <button 
-                    className="bg-[green] text-white py-2 px-4 rounded-md cursor-pointer z-10"
+                    className="bg-[green] text-white py-2 px-4 rounded-md cursor-pointer z-10 mr-4"
                     onClick={handleBackToCreation}
                 >
                     Back to Book Creation!

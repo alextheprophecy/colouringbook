@@ -1,10 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const pagesExample = [
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=1`, description: "Page 1"},
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=2`, description: "Page 1"},
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=3`, description: "Page 1"},
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=4`, description: "Page 1"},
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=5`, description: "Page 1"},
+
+];
 const initialState = {
-  pages: [],
+  pages: pagesExample,
   currentPage: 0,
   isEditing: false,
   isModifyingBook: false,
+  isAnimating: false,
 };
 
 const bookSlice = createSlice({
@@ -26,10 +35,14 @@ const bookSlice = createSlice({
     },
     setIsModifyingBook: (state, action) => {
       state.isModifyingBook = action.payload;
+      if(action.payload) state.isAnimating = true
+    },
+    finishAnimation: (state) => {
+      state.isAnimating = false;
     },
   },
 });
 
-export const { addPage, updatePage, setCurrentPage, setIsEditing, setIsModifyingBook } = bookSlice.actions;
+export const { addPage, updatePage, setCurrentPage, setIsEditing, setIsModifyingBook, finishAnimation } = bookSlice.actions;
 
 export default bookSlice.reducer;

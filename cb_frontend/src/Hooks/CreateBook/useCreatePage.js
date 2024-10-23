@@ -16,7 +16,7 @@ const useCreatePage = () => {
             try {
                 // Replace this with your actual API call
                 const response = await new Promise(resolve => 
-                    setTimeout(() => resolve({ newImage:`https://placehold.co/400x600?text=${description}`}), 1500)
+                    setTimeout(() => resolve({ newImage: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=${description}` }), 1500)
                 );
                 
                 dispatch(addPage({ image: response.newImage, description }));
