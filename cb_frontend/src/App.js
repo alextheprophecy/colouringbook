@@ -44,13 +44,11 @@ export default function TranslatedApp() {
     const website = (
         <>
             <BurgerMenu />
-            <Background>
                 <div className="page-container">
                     <main className="main-content">                        
                         <App />
                     </main>
                 </div>
-            </Background>
         </>
     );
 

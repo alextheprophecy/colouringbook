@@ -24,7 +24,7 @@ const useGeneratePage = (bookCreationModel) => {
         }
     }, [bookCreationModel]);
 
-    return { imageUrl, generatePage, loading };
+ 
 };
 
 export default useGeneratePage;

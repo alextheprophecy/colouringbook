@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePage, setIsEditing } from '../../redux/bookSlice';
+import useImageGeneration from './useImageGeneration';
+import { EditOptions } from '../../constants/editOptions';
+import useLoadRequest from './useLoadRequest';
 
 const useEditPage = () => {
     const dispatch = useDispatch();
@@ -9,19 +12,20 @@ const useEditPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const [showDescription, setShowDescription] = useState(false);
     const [sceneDescription, setSceneDescription] = useState('');
     const [showEditOptions, setShowEditOptions] = useState(true);
     const [editMode, setEditMode] = useState('');
+    const { generateImage, enhanceImage } = useImageGeneration();
+    const [isLoading, setIsLoading] = useState(false);
+    const { loadRequest} = useLoadRequest();
 
     useEffect(() => {
         if (isEditing && !isClosing) {
-            // on open
             setShowDescription(false);
             setSceneDescription(pages[currentPage]?.description || '');
             setCurrentImage(pages[currentPage]?.image || '');
-            setTimeout(() => setIsVisible(true), 50); // Slight delay before showing
+            setTimeout(() => setIsVisible(true), 50);
         } else if (!isEditing && !isClosing) {
             handleClose();
         }
@@ -30,22 +34,19 @@ const useEditPage = () => {
     const handleEditOption = (mode) => {
         setEditMode(mode);
         setShowEditOptions(false);
-        if (mode === 'modify') {
-            setEditText(sceneDescription);
-        } else {
-            setEditText('');
-        }
+        if (mode === EditOptions.MODIFY) setEditText('');
+        else setEditText(sceneDescription);
     };
 
     const handleClose = useCallback(() => {
         if (!isClosing) {
             setIsClosing(true);
             setIsVisible(false);
-            setShowEditOptions(true); // Reset to show options
+            setShowEditOptions(true);
             setTimeout(() => {
                 dispatch(setIsEditing(false));
                 setIsClosing(false);
-            }, 300); // Match this with the CSS transition duration
+            }, 300);
         }
     }, [dispatch, isClosing]);
 
@@ -53,28 +54,29 @@ const useEditPage = () => {
         if (editText.trim() !== '') {
             setIsLoading(true);
             try {
-                // Replace this with your actual API call
-                const response = await new Promise(resolve => 
-                    setTimeout(() => resolve({ newImage: `https://placehold.co/400x600?text=${editText}` }), 1500)
-                );
-                
+                let newImage, detailedDescription;
+                if (editMode === EditOptions.MODIFY) 
+                    ({ newImage, detailedDescription } = await loadRequest(() => enhanceImage(sceneDescription, editText), "Enhancing image..."));
+                else 
+                    ({ newImage, detailedDescription } = await loadRequest(() => generateImage(editText), "Creating a new scene for page " + (currentPage)));            
+
                 dispatch(updatePage({ 
                     index: currentPage, 
                     data: { 
-                        image: response.newImage, 
-                        description: editText 
+                        image: newImage, 
+                        description: editText,
+                        detailed_description: detailedDescription
                     } 
                 }));
                 dispatch(setIsEditing(false));
-                setShowEditOptions(true); // Reset to show options
+                setShowEditOptions(true);
             } catch (error) {
                 console.error('Error generating image:', error);
-                // Handle error (e.g., show error message to user)
             } finally {
                 setIsLoading(false);
             }
         }
-    }, [editText, currentPage, dispatch]);
+    }, [editText, currentPage, dispatch, generateImage, enhanceImage, editMode, sceneDescription]);
 
     return {
         editText,

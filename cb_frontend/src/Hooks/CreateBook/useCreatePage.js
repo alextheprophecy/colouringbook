@@ -1,41 +1,33 @@
-import { useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import useLoadRequest from './useLoadRequest';
 import { addPage } from '../../redux/bookSlice';
+import useImageGeneration from './useImageGeneration';
 
 const useCreatePage = () => {
     const dispatch = useDispatch();
-    const pages = useSelector(state => state.book.pages);
     const [description, setDescription] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const { generateImage } = useImageGeneration();
+    const { loadRequest} = useLoadRequest();
 
     const handleDescriptionChange = (event) => setDescription(event.target.value);
 
-    const handleSubmit = useCallback(async () => {
+    const createImage = async () => {
         if (description.trim() !== '') {
-            setIsLoading(true);
             try {
-                // Replace this with your actual API call
-                const response = await new Promise(resolve => 
-                    setTimeout(() => resolve({ newImage: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=${description}` }), 1500)
-                );
-                
-                dispatch(addPage({ image: response.newImage, description }));
+                const { newImage, detailedDescription } = await loadRequest(() => generateImage(description), "Creating image...");
+                dispatch(addPage({ image: newImage, user_description: description, detailed_description: detailedDescription }));
             } catch (error) {
                 console.error('Error generating image:', error);
-                // Handle error (e.g., show error message to user)
-            } finally {
-                setIsLoading(false);
             }
         }
-    }, [description, dispatch, pages.length]);
+    };
 
     return {
         description,
-        isLoading,
         handleDescriptionChange,
-        handleSubmit
+        createImage,
     };
 };
 
 export default useCreatePage;
-
