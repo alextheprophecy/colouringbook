@@ -19,7 +19,7 @@ const firstPage = () => {
 
 const initialState = {
   pages: [firstPage(), ...pagesExample],
-  currentPage: 1,
+  currentPage: 0,
   isEditing: false,
   isModifyingBook: false,
   isLoading: false,

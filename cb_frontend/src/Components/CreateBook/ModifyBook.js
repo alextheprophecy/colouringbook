@@ -34,9 +34,10 @@ const ModifyBook = () => {
 
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
-    const startAnimation = useCallback((lastPageIndex=pages.length) => {
+    const startAnimation = useCallback((lastPageIndex=pages.length-1) => {
         const book = getBookInstance();
-        if (!book || isFlipping) return;
+
+        if (currentPage===lastPageIndex || !book || isFlipping) return;
 
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
@@ -156,50 +157,50 @@ const ModifyBook = () => {
     };
 
     return (
-        <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
-            {renderNavigationButtons()}
+            <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
+                {renderNavigationButtons()}
                         
-            <div className="flex justify-center items-center relative">
-                <HTMLFlipBook
-                    width={300}
-                    height={450}    
-                    size="stretch"
-                    minWidth={315}
-                    maxWidth={1000}
-                    minHeight={400}
-                    maxHeight={1533}
-                    maxShadowOpacity={0.5}
-                    mobileScrollSupport={true}
-                    ref={flipBookRef}
-                    onFlip={onFlip}
-                    className="demo-book"
-                    showCover={true}
-                    flippingTime={FLIP_TIMES.USER}
-                    startPage={0}
-                    onInit={() => startAnimation()}
-                >               
-                    {pages.map((page, index) => (
-                        <div key={index}>
-                            <img 
-                                src={page.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`} 
-                                alt={`Page ${index + 1}`}
-                                className={pageClassname(index)}
+                <div className="flex justify-center items-center relative">
+                    <HTMLFlipBook
+                        key={pages.length} // Force re-initialization when pages change
+                        width={300}
+                        height={450}
+                        size="stretch"
+                        minWidth={315}
+                        maxWidth={1000}
+                        minHeight={400}
+                        maxHeight={1533}
+                        maxShadowOpacity={0.5}
+                        mobileScrollSupport={true}
+                        ref={flipBookRef}
+                        onFlip={onFlip}
+                        className="demo-book"
+                        showCover={true}
+                        flippingTime={FLIP_TIMES.USER}
+                        startPage={currentPage}
+                        onInit={() => startAnimation()}
+                    >
+                        {pages.map((page, index) => (
+                            <div key={index} className="page-element">
+                                <img 
+                                    src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
+                                    alt={`Page ${index + 1}`}
+                                    className={pageClassname(index)}
+                                />
+                            </div>
+                        ))}                  
+                        <div className={`bg-[#f1e6cf] ${pageClassname(1)} flex items-center justify-center page-element`}>
+                            
+                            <CirclePlus 
+                                className="w-16 h-16 text-black hover:text-gray-700 cursor-pointer transition-colors absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                onClick={createImage}
                             />
                         </div>
-                    ))}                  
-                    <div className={`bg-[#f1e6cf] ${pageClassname(1)} flex items-center justify-center`}>
-                        <CirclePlus 
-                            className="w-16 h-16 text-black hover:text-gray-700 cursor-pointer transition-colors absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                createImage()
-                            }}
-                        />
-                    </div>
 
-                </HTMLFlipBook>
-                {/* Creation page content */}
-                 {/* <textarea
+                    </HTMLFlipBook>
+
+                    {/* Creation page content */}
+                    {/* <textarea
                             value={description}
                             onChange={handleDescriptionChange}
                             placeholder="Write a description for a new page"
@@ -218,37 +219,37 @@ const ModifyBook = () => {
                         </button>} */}
                 </div>
 
-            <div className="mt-8 flex flex-col gap-4 items-center">
-                {pages.length > 0 && (
+                <div className="mt-8 flex flex-col gap-4 items-center">
+                    {pages.length > 0 && (
+                        <button 
+                            className={`w-full max-w-md  text-white ${
+                                currentPage === 0 ? 'opacity-50 bg-gray-300 cursor-not-allowed' : 'bg-[#87CEFA] hover:bg-blue-400'
+                            } py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 ${
+                                isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer shadow-md hover:shadow-lg'
+                            }`}
+                            onClick={toggleModifyingBook}
+                            disabled={isFlipping || currentPage === 0}
+                        >
+                            {currentPage===0? 'Book Cover' : `Edit page ${currentPage}`}
+                        </button>
+                    )}
+                    
                     <button 
-                        className={`w-full max-w-md  text-white ${
-                            currentPage === 0 ? 'opacity-50 bg-gray-300 cursor-not-allowed' : 'bg-[#87CEFA] hover:bg-blue-400'
-                        } py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 ${
-                            isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer shadow-md hover:shadow-lg'
-                        }`}
-                        onClick={toggleModifyingBook}
-                        disabled={isFlipping || currentPage === 0}
+                        className="w-full max-w-md bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 shadow-md hover:shadow-lg"
+                        onClick={handleBackToCreation}
                     >
-                        {currentPage===0? 'Book Cover' : `Edit page ${currentPage}`}
+                        Continue Creating
                     </button>
-                )}
-                
-                <button 
-                    className="w-full max-w-md bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 shadow-md hover:shadow-lg"
-                    onClick={handleBackToCreation}
-                >
-                    Continue Creating
-                </button>
-            </div>
+                </div>
 
-            <EditPage
-                isOpen={isEditing}
-                closePopUp={() => dispatch(setIsEditing(false))}
-                onSubmit={() => {}}
-                initialText=""
-                initialImage={getCurrentPageImage()}
-            />
-        </div>
+                <EditPage
+                    isOpen={isEditing}
+                    closePopUp={() => dispatch(setIsEditing(false))}
+                    onSubmit={() => {}}
+                    initialText=""
+                    initialImage={getCurrentPageImage()}
+                />
+            </div>
     );
 };
 
