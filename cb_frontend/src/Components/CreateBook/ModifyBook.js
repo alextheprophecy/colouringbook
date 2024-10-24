@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
@@ -71,16 +71,22 @@ const ModifyBook = () => {
     }, [dispatch, isFlipping, pages.length]);
 
     const onFlip = useCallback((e) => {
-        const book = getBookInstance();
-        if (!isFlipping && book) {
-            const isLastPage = e.data === pages.length;
-            book.getSettings().disableFlipByClick = isLastPage;
-            console.log(book.getSettings())
-            console.log(book.getState())
-            console.log('ui', book.getUI())
+        if (!isFlipping) {
             dispatch(setCurrentPage(e.data));
         }
     }, [dispatch, isFlipping, pages.length]);
+
+    useEffect(() => {
+        const book = getBookInstance();
+        console.log("donkey")
+        if (book) {
+            console.log("monk")
+            const isLastPage = currentPage === pages.length;
+            book.getSettings().disableFlipByClick = isLastPage;
+            book.getSettings().useMouseEvents = !isLastPage;
+            console.log(book.getSettings())
+        }
+    }, [currentPage, pages.length]);
 
     const handleNextPage = () => {
         const book = getBookInstance();
@@ -163,6 +169,7 @@ const ModifyBook = () => {
                         maxHeight={1533}
                         maxShadowOpacity={0.5}
                         mobileScrollSupport={true}
+                        clickEventForward={false}
                         ref={flipBookRef}
                         onFlip={onFlip}
                         className="demo-book"
@@ -181,20 +188,23 @@ const ModifyBook = () => {
                             </div>
                         ))}                  
                         <div className={`bg-[#f1e6cf] ${pageClassname(1)} flex items-center justify-center page-element`}>
-                            
+                        
+                        <div style={{ pointerEvents: 'none' }}>
+                            <textarea
+                                className="w-full h-32 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Write something..."
+                                style={{ pointerEvents: 'auto' }} // Allow the textarea to receive pointer events
+                            />
                             <CirclePlus 
                                 className="w-16 h-16 text-black hover:text-gray-700 cursor-pointer transition-colors absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                                 onClick={createImage}
                             />
+                          
+                        </div>
                         </div>
 
                     </HTMLFlipBook>
-<textarea
-                                value={description}
-                                onChange={handleDescriptionChange}
-                                placeholder="Write a description for a new page"
-                                className="w-full border border-black h-24 rounded-[5px] mb-2 p-2"
-                            />
+                    
                     {/* Creation page content */}
                     {/* <textarea
                             value={description}
