@@ -25,27 +25,31 @@ const CreateBook = () => {
             } :
             { imageSrc: null, description: '' }    
 
-    if (isModifyingBook) return <ModifyBook />;
+    const CreationContainer = (children) => <div className="w-[90vw] mt-[10vh] ml-[5vw] mr-[5vw] bg-white">{children}</div>
 
     const { imageSrc, description } = getCurrentPageData()
+    
+    if (isModifyingBook) return CreationContainer(<ModifyBook />)
 
-    return (
-        <div className="w-[90vw] mt-[10vh] ml-[5vw] mr-[5vw] bg-white">
-            {currentPage === pages.length ? (
-                <CreatePage 
-                    explainText={`Add description for page ${currentPage + 1}`}
-                />
-            ) : (
-                <PagePreview
-                    pageNumber={currentPage + 1}
-                    imageSrc={imageSrc}
-                    onNext={handleNext}
-                    onModifyBook={handleModifyBook}
-                />
-            )}
-            {isEditing && <EditPage />}
-        </div>
-    );
+    return CreationContainer(
+            <>
+                {currentPage === pages.length ? (
+                    <CreatePage 
+                        explainText={`Add description for page ${currentPage + 1}`}
+                    />
+                ) : (
+                    <PagePreview
+                        pageNumber={currentPage + 1}
+                        imageSrc={imageSrc}
+                        onNext={handleNext}
+                        onModifyBook={handleModifyBook}
+                    />
+                )}
+                {isEditing && <EditPage />}
+            </>
+        )
+        
+    
 };
 
 export default CreateBook;

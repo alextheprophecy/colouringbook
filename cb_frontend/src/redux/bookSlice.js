@@ -13,7 +13,6 @@ const initialState = {
   currentPage: 0,
   isEditing: false,
   isModifyingBook: false,
-  isAnimating: false,
 };
 
 const bookSlice = createSlice({
@@ -35,14 +34,10 @@ const bookSlice = createSlice({
     },
     setIsModifyingBook: (state, action) => {
       state.isModifyingBook = action.payload;
-      if(action.payload) state.isAnimating = true
-    },
-    finishAnimation: (state) => {
-      state.isAnimating = false;
     },
   },
 });
 
-export const { addPage, updatePage, setCurrentPage, setIsEditing, setIsModifyingBook, finishAnimation } = bookSlice.actions;
+export const { addPage, updatePage, setCurrentPage, setIsEditing, setIsModifyingBook } = bookSlice.actions;
 
 export default bookSlice.reducer;
