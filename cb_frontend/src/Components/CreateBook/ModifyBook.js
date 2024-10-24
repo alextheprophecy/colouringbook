@@ -37,7 +37,7 @@ const ModifyBook = () => {
     const startAnimation = useCallback((lastPageIndex=pages.length-1) => {
         const book = getBookInstance();
 
-        if (currentPage===lastPageIndex || !book || isFlipping) return;
+        if (currentPage>=lastPageIndex || !book || isFlipping) return;
 
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
@@ -48,7 +48,7 @@ const ModifyBook = () => {
                 ? FLIP_TIMES.ANIMATION_COVER 
                 : FLIP_TIMES.ANIMATION_FLIP;
 
-            if (currentPageIndex < lastPageIndex) {
+            if ((currentPageIndex < lastPageIndex) && isModifyingBook) {
                 book.flipNext('top');
                 currentPageIndex++;
                 
@@ -59,6 +59,7 @@ const ModifyBook = () => {
                 }, delay);
             } else {
                 setTimeout(() => {
+                    dispatch(setCurrentPage(lastPageIndex));
                     setIsFlipping(false);
                     book.getSettings().flippingTime = FLIP_TIMES.USER;
                     book.getSettings().disableFlipByClick = false;
@@ -145,16 +146,6 @@ const ModifyBook = () => {
             )}
         </>
     );
-    
-    // Add this function near other event handlers
-    const handleCreationPageInteraction = (focused) => {
-        const book = getBookInstance();
-        if (book) {
-            book.getSettings().disableFlipByClick = focused;
-            book.getSettings().enableMouseEvents = !focused;
-            setIsCreationPageFocused(focused);
-        }
-    };
 
     return (
             <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
@@ -198,7 +189,12 @@ const ModifyBook = () => {
                         </div>
 
                     </HTMLFlipBook>
-
+<textarea
+                                value={description}
+                                onChange={handleDescriptionChange}
+                                placeholder="Write a description for a new page"
+                                className="w-full border border-black h-24 rounded-[5px] mb-2 p-2"
+                            />
                     {/* Creation page content */}
                     {/* <textarea
                             value={description}

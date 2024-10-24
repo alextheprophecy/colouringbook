@@ -25,9 +25,6 @@ const CreateBook = () => {
             } :
             { imageSrc: null, description: '' }    
 
-    const handleLogBookData = () => {
-        console.log(pages[currentPage]);
-    };
 
     const CreationContainer = (children) => <div className="w-[90vw] mt-[10vh] ml-[5vw] mr-[5vw] bg-white">{children}</div>
 
