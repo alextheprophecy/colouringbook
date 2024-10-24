@@ -2,33 +2,39 @@ import React, { useRef, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { setCurrentPage, setIsEditing, setIsModifyingBook } from '../../redux/bookSlice';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { setCurrentPage, setIsEditing, setIsModifyingBook, addPage } from '../../redux/bookSlice';
+import { ChevronRight, ChevronLeft, CirclePlus } from 'lucide-react';
+import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 
 const ModifyBook = () => {
-    // Group all constants
     const FLIP_TIMES = {
         USER: 600,
-        ANIMATION_DELAY: 750,
-        ANIMATION_COVER: 1500,
-        ANIMATION_FLIP: 350
+        ANIMATION_DELAY: 550,
+        ANIMATION_COVER: 1200,
+        ANIMATION_FLIP: 320
     };
 
-    // Group all hooks
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, isModifyingBook } = useSelector(state => state.book);
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
+    
+    const {
+        description,
+        handleDescriptionChange,
+        createImage
+    } = useCreatePage();
 
-    // Helper functions
+    // Add this state at the top with other state declarations
+    const [isCreationPageFocused, setIsCreationPageFocused] = useState(false);
+
     const getCurrentPageImage = () => {
         return pages[currentPage]?.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`;
     };
 
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
-    // Animation handlers
-    const startAnimation = useCallback((lastPageIndex=pages.length - 1) => {
+    const startAnimation = useCallback((lastPageIndex=pages.length) => {
         const book = getBookInstance();
         if (!book || isFlipping) return;
 
@@ -62,22 +68,31 @@ const ModifyBook = () => {
         setTimeout(flipThroughPages, FLIP_TIMES.ANIMATION_DELAY);
     }, [dispatch, isFlipping, pages.length]);
 
-    // Event handlers
     const onFlip = useCallback((e) => {
-        if (!isFlipping) {
+        const book = getBookInstance();
+        if (!isFlipping && book) {
+            const isLastPage = e.data === pages.length;
+            book.getSettings().disableFlipByClick = isLastPage;
+            console.log(book.getSettings())
+            console.log(book.getState())
+            console.log('ui', book.getUI())
             dispatch(setCurrentPage(e.data));
         }
-    }, [dispatch, isFlipping]);
+    }, [dispatch, isFlipping, pages.length]);
 
     const handleNextPage = () => {
-        if (!isFlipping && currentPage < pages.length - 1) {
-            getBookInstance()?.flipNext('top');
+        const book = getBookInstance();
+        if (!isFlipping && currentPage < pages.length && book) {
+            book.getSettings().disableFlipByClick = currentPage + 1 === pages.length;
+            book.flipNext('top');
         }
     };
 
     const handlePreviousPage = () => {
-        if (!isFlipping && currentPage > 0) {
-            getBookInstance()?.flipPrev('top');
+        const book = getBookInstance();
+        if (!isFlipping && currentPage > 0 && book) {
+            book.getSettings().disableFlipByClick = false;
+            book.flipPrev('top');
         }
     };
 
@@ -96,7 +111,13 @@ const ModifyBook = () => {
         dispatch(setCurrentPage(pages.length));
     };
 
-    // Update the renderNavigationButtons function
+    const pageClassname = (index) => {
+        return `${index === 0 
+                ? 'rounded-[3px]  rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
+                : 'rounded-[3px]  rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
+            } mx-auto w-full h-full object-cover`
+    };
+
     const renderNavigationButtons = () => (
         <>
             {currentPage > 0 && (
@@ -110,7 +131,7 @@ const ModifyBook = () => {
                     />
                 </button>
             )}
-            {currentPage < pages.length - 1 && (
+            {currentPage < pages.length && (
                 <button 
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
                     onClick={handleNextPage}
@@ -123,16 +144,25 @@ const ModifyBook = () => {
             )}
         </>
     );
+    
+    // Add this function near other event handlers
+    const handleCreationPageInteraction = (focused) => {
+        const book = getBookInstance();
+        if (book) {
+            book.getSettings().disableFlipByClick = focused;
+            book.getSettings().enableMouseEvents = !focused;
+            setIsCreationPageFocused(focused);
+        }
+    };
 
     return (
         <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
             {renderNavigationButtons()}
                         
-            {/* Added flex container to center the book */}
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center relative">
                 <HTMLFlipBook
                     width={300}
-                    height={450}
+                    height={450}    
                     size="stretch"
                     minWidth={315}
                     maxWidth={1000}
@@ -144,7 +174,6 @@ const ModifyBook = () => {
                     onFlip={onFlip}
                     className="demo-book"
                     showCover={true}
-                    useMouseEvents={!isEditing && !isFlipping}
                     flippingTime={FLIP_TIMES.USER}
                     startPage={0}
                     onInit={() => startAnimation()}
@@ -154,16 +183,40 @@ const ModifyBook = () => {
                             <img 
                                 src={page.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`} 
                                 alt={`Page ${index + 1}`}
-                                className={`${
-                                    index === 0 
-                                        ? 'rounded-[3px]  rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
-                                        : 'rounded-[3px]  rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
-                                } mx-auto w-full h-full object-cover`}
+                                className={pageClassname(index)}
                             />
                         </div>
-                    ))}
+                    ))}                  
+                    <div className={`bg-[#f1e6cf] ${pageClassname(1)} flex items-center justify-center`}>
+                        <CirclePlus 
+                            className="w-16 h-16 text-black hover:text-gray-700 cursor-pointer transition-colors absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                createImage()
+                            }}
+                        />
+                    </div>
+
                 </HTMLFlipBook>
-            </div>
+                {/* Creation page content */}
+                 {/* <textarea
+                            value={description}
+                            onChange={handleDescriptionChange}
+                            placeholder="Write a description for a new page"
+                            className="w-full border border-black h-24 rounded-[5px] mb-2 p-2"
+                        />
+                        <button
+                            onClick={createImage}
+                            className={`mt-2 p-2 rounded mx-auto block ${
+                                description.trim() !== '' 
+                                    ? 'bg-blue-500 text-white' 
+                                    : 'bg-gray-300 text-gray-400 cursor-not-allowed'
+                            }`}
+                            disabled={description.trim() === ''}
+                        >
+                            Create New Page
+                        </button>} */}
+                </div>
 
             <div className="mt-8 flex flex-col gap-4 items-center">
                 {pages.length > 0 && (
