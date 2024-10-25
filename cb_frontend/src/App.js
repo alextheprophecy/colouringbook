@@ -13,7 +13,6 @@ import { AnimatePresence } from "framer-motion";
 import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 import CreateBook from "./Components/Views/CreateBook";
-import TestFlipBook from './Components/Views/test';
 
 function App() {
     const routes = (
@@ -23,7 +22,7 @@ function App() {
             <Route exact path='/login' element={<><Navbar /><LoginView /></>} />
             <Route exact path='/gallery' element={<><Navbar /><GalleryView /></>} />
             <Route exact path='/playground' element={<><Navbar /><PlaygroundView /></>} />
-            <Route exact path='/test' element={<><TestFlipBook/></>} />
+            <Route exact path='/test' element={<><PlaygroundView /></>} />
         </Routes>
     );
 

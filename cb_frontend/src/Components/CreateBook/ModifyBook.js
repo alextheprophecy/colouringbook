@@ -1,167 +1,63 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { setCurrentPage, setIsEditing, setIsModifyingBook, addPage } from '../../redux/bookSlice';
 import { ChevronRight, ChevronLeft, CirclePlus } from 'lucide-react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
+import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 
 const ModifyBook = () => {
-    const FLIP_TIMES = {
-        USER: 600,
-        QUICK_DELAY: 10,
-        QUICK_FLIP: 150,
-        ANIMATION_DELAY: 550,
-        ANIMATION_COVER: 1200,
-        ANIMATION_FLIP: 320
-    };
-
-    const dispatch = useDispatch();
-    const { pages, currentPage, isEditing, isModifyingBook } = useSelector(state => state.book);
-    const flipBookRef = useRef(null);
-    const [isFlipping, setIsFlipping] = useState(false);
-    
     const {
-        description,
-        handleDescriptionChange,
-        createImage
-    } = useCreatePage();
+        flipBookRef,
+        pages,
+        currentPage,
+        isEditing,
+        isModifyingBook,
+        isFlipping,
+        isOnCreationPage,
+        startAnimation,
+        handlePageNavigation,
+        onFlip,
+        toggleModifyingBook,
+        setIsEditing,
+        getCurrentPageImage,
+        flipToCreationPage
+    } = useModifyBook();
 
-
-    const isOnCreationPage = useCallback(() => currentPage === pages.length+1, [currentPage, pages.length]);
-
-    const getCurrentPageImage = () => {
-        return pages[currentPage]?.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`;
-    };
-
-    const getBookInstance = () => flipBookRef.current?.pageFlip();
-
-    const startAnimation = useCallback((targetPage = pages.length - 1, quickFlip = false) => {
-        const book = getBookInstance();
-        if (currentPage >= targetPage || !book || isFlipping) return;
-
-        const flipSpeed = quickFlip?FLIP_TIMES.QUICK_FLIP:FLIP_TIMES.ANIMATION_FLIP;
-        const startDelay = currentPage===0?FLIP_TIMES.ANIMATION_DELAY:FLIP_TIMES.QUICK_DELAY
-
-
-        setIsFlipping(true);
-        book.getSettings().disableFlipByClick = true;
-        
-        let currentPageIndex = currentPage;
-        const flipThroughPages = () => {
-            book.getSettings().flippingTime = currentPageIndex === 0 
-                ? FLIP_TIMES.ANIMATION_COVER 
-                : flipSpeed;
-
-            if (currentPageIndex < targetPage && isModifyingBook) {
-                book.flipNext('top');
-                currentPageIndex++;
-                
-                const delay = currentPageIndex === 1 ? (FLIP_TIMES.ANIMATION_COVER/3) : flipSpeed;
-                setTimeout(() => {
-                    dispatch(setCurrentPage(currentPageIndex));
-                    flipThroughPages();
-                }, delay);
-            } else {
-                setTimeout(() => {
-                    dispatch(setCurrentPage(targetPage));
-                    setIsFlipping(false);
-                    book.getSettings().flippingTime = FLIP_TIMES.USER;
-                    book.getSettings().disableFlipByClick = false;
-                }, quickFlip?FLIP_TIMES.QUICK_DELAY:FLIP_TIMES.USER);
-            }
-        };
-
-        setTimeout(flipThroughPages, startDelay);
-
-    }/* , [dispatch, isFlipping, currentPage, pages.length, isModifyingBook] */);
-
-    
-    const flipToCreationPage = useCallback(() => {
-        startAnimation(pages.length, true);
-    }, [startAnimation, pages.length]);
-
-
-    const onFlip = useCallback((e) => {
-        if (!isFlipping) {
-            dispatch(setCurrentPage(e.data));
-        }
-    }, [dispatch, isFlipping, pages.length]);
-    
-    useEffect(() => {
-        const book = getBookInstance();
-        if (book) {
-            book.getSettings().disableFlipByClick = isOnCreationPage();
-            book.getSettings().useMouseEvents = !isOnCreationPage();
-        }
-    }, [currentPage, pages.length]);
-
-    const handleNextPage = () => {
-        console.log("going next");
-        console.log(currentPage);
-        const book = getBookInstance();
-        if (!isFlipping && currentPage < pages.length && book) {
-            book.getSettings().disableFlipByClick = isOnCreationPage();
-            book.flipNext('top');
-            console.log('we are going to:', currentPage+1);
-        }
-    };
-
-    const handlePreviousPage = () => {
-        const book = getBookInstance();
-        if (!isFlipping && book) {
-            if (isOnCreationPage()) {
-                // Immediately update the current page before flipping
-                dispatch(setCurrentPage(pages.length - 1));
-                book.flipPrev('top');
-                console.log('flipping back');
-            } else if (currentPage > 0) {
-                book.flipPrev('top');
-            }
-            book.getSettings().disableFlipByClick = false;
-        }
-    };
-    
-
-    const toggleModifyingBook = () => {
-        dispatch(setIsModifyingBook(!isModifyingBook));
-    };
-
+    const { createImage } = useCreatePage();
 
     const pageClassname = (index) => {
         return `${index === 0 
-                ? 'rounded-[3px]  rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
-                : 'rounded-[3px]  rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
-            } mx-auto w-full h-full object-cover`
+            ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
+            : 'rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
+        } mx-auto w-full h-full object-cover`;
     };
 
     const renderNavigationButtons = () => (
         <>
-            {(currentPage > 0) && (
+            {currentPage > 0 && (
                 <button 
                     className="absolute left-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
-                    onClick={handlePreviousPage}
+                    onClick={handlePageNavigation.previous}
                     disabled={isFlipping}
                 >
                     <ChevronLeft 
-                        className={`h-12 w-12 ${(isFlipping) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
             )}
             {currentPage < pages.length && !isOnCreationPage() && (
                 <button 
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
-                    onClick={handleNextPage}
+                    onClick={handlePageNavigation.next}
                     disabled={isFlipping}
                 >
                     <ChevronRight 
-                        className={`h-12 w-12 ${(isFlipping) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
             )}
         </>
     );
-
 
     return (
             <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
@@ -171,7 +67,7 @@ const ModifyBook = () => {
                     <HTMLFlipBook
                         key={pages.length} // Force re-initialization when pages change
                         width={300}
-                        height={450}
+                        height={450}    
                         size="stretch"
                         minWidth={315}
                         maxWidth={1000}
@@ -179,7 +75,7 @@ const ModifyBook = () => {
                         maxHeight={1533}
                         maxShadowOpacity={0.5}
                         mobileScrollSupport={true}
-                        clickEventForward={false}
+                        clickEventForward={true}
                         ref={flipBookRef}
                         onFlip={onFlip}
                         className="demo-book"
@@ -246,7 +142,7 @@ const ModifyBook = () => {
 
                 <EditPage
                     isOpen={isEditing}
-                    closePopUp={() => dispatch(setIsEditing(false))}
+                    closePopUp={() => setIsEditing(false)}
                     onSubmit={() => {}}
                     initialText=""
                     initialImage={getCurrentPageImage()}
