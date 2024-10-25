@@ -25,8 +25,8 @@ const ModifyBook = () => {
         createImage
     } = useCreatePage();
 
-    // Add this state at the top with other state declarations
-    const [isCreationPageFocused, setIsCreationPageFocused] = useState(false);
+
+    const isOnCreationPage = () => currentPage === pages.length;
 
     const getCurrentPageImage = () => {
         return pages[currentPage]?.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`;
@@ -34,21 +34,20 @@ const ModifyBook = () => {
 
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
-    const startAnimation = useCallback((lastPageIndex=pages.length-1) => {
+    const startAnimation = useCallback((targetPage = pages.length - 1) => {
         const book = getBookInstance();
-
-        if (currentPage>=lastPageIndex || !book || isFlipping) return;
+        if (currentPage >= targetPage || !book || isFlipping) return;
 
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
         
-        let currentPageIndex = 0;
+        let currentPageIndex = currentPage;
         const flipThroughPages = () => {
             book.getSettings().flippingTime = currentPageIndex === 0 
                 ? FLIP_TIMES.ANIMATION_COVER 
                 : FLIP_TIMES.ANIMATION_FLIP;
 
-            if ((currentPageIndex < lastPageIndex) && isModifyingBook) {
+            if (currentPageIndex < targetPage && isModifyingBook) {
                 book.flipNext('top');
                 currentPageIndex++;
                 
@@ -59,7 +58,7 @@ const ModifyBook = () => {
                 }, delay);
             } else {
                 setTimeout(() => {
-                    dispatch(setCurrentPage(lastPageIndex));
+                    dispatch(setCurrentPage(targetPage));
                     setIsFlipping(false);
                     book.getSettings().flippingTime = FLIP_TIMES.USER;
                     book.getSettings().disableFlipByClick = false;
@@ -68,56 +67,55 @@ const ModifyBook = () => {
         };
 
         setTimeout(flipThroughPages, FLIP_TIMES.ANIMATION_DELAY);
-    }, [dispatch, isFlipping, pages.length]);
+    }, [dispatch, isFlipping, currentPage, pages.length, isModifyingBook]);
+
+    
+    const flipToCreationPage = useCallback(() => {
+        startAnimation(pages.length);
+    }, [startAnimation, pages.length]);
+
+    const [isFlippingToCreation, setIsFlippingToCreation] = useState(false);
 
     const onFlip = useCallback((e) => {
         if (!isFlipping) {
             dispatch(setCurrentPage(e.data));
         }
     }, [dispatch, isFlipping, pages.length]);
-
+    
     useEffect(() => {
         const book = getBookInstance();
-        console.log("donkey")
         if (book) {
-            console.log("monk")
-            const isLastPage = currentPage === pages.length;
-            book.getSettings().disableFlipByClick = isLastPage;
-            book.getSettings().useMouseEvents = !isLastPage;
-            console.log(book.getSettings())
+            book.getSettings().disableFlipByClick = isOnCreationPage() || isFlippingToCreation;
+            book.getSettings().useMouseEvents = !isOnCreationPage() && !isFlippingToCreation;
         }
-    }, [currentPage, pages.length]);
+    }, [currentPage, pages.length, isFlippingToCreation]);
 
     const handleNextPage = () => {
         const book = getBookInstance();
-        if (!isFlipping && currentPage < pages.length && book) {
-            book.getSettings().disableFlipByClick = currentPage + 1 === pages.length;
+        if (!isFlipping && !isFlippingToCreation && currentPage < pages.length && book) {
+            book.getSettings().disableFlipByClick = isOnCreationPage();
             book.flipNext('top');
         }
     };
 
     const handlePreviousPage = () => {
         const book = getBookInstance();
-        if (!isFlipping && currentPage > 0 && book) {
+        if (!isFlipping && !isFlippingToCreation && currentPage > 0 && book) {
+            if (isOnCreationPage()) {
+                book.flip(pages.length - 1);
+                dispatch(setCurrentPage(pages.length - 1));
+            } else {
+                book.flipPrev('top');
+            }
             book.getSettings().disableFlipByClick = false;
-            book.flipPrev('top');
         }
     };
-
-    const toggleEdit = () => {
-        if (!isFlipping) {
-            dispatch(setIsEditing(!isEditing));
-        }
-    };
+    
 
     const toggleModifyingBook = () => {
         dispatch(setIsModifyingBook(!isModifyingBook));
     };
 
-    const handleBackToCreation = () => {
-        dispatch(setIsModifyingBook(false));
-        dispatch(setCurrentPage(pages.length));
-    };
 
     const pageClassname = (index) => {
         return `${index === 0 
@@ -128,30 +126,31 @@ const ModifyBook = () => {
 
     const renderNavigationButtons = () => (
         <>
-            {currentPage > 0 && (
+            {(currentPage > 0 || isOnCreationPage()) && (
                 <button 
                     className="absolute left-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
                     onClick={handlePreviousPage}
-                    disabled={isFlipping}
+                    disabled={isFlipping || isFlippingToCreation}
                 >
                     <ChevronLeft 
-                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-12 w-12 ${(isFlipping || isFlippingToCreation) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
             )}
-            {currentPage < pages.length && (
+            {currentPage < pages.length && !isOnCreationPage() && (
                 <button 
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
                     onClick={handleNextPage}
-                    disabled={isFlipping}
+                    disabled={isFlipping || isFlippingToCreation}
                 >
                     <ChevronRight 
-                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-12 w-12 ${(isFlipping || isFlippingToCreation) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
             )}
         </>
     );
+
 
     return (
             <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
@@ -176,7 +175,7 @@ const ModifyBook = () => {
                         showCover={true}
                         flippingTime={FLIP_TIMES.USER}
                         startPage={currentPage}
-                        onInit={() => startAnimation()}
+                        onInit={() => startAnimation(pages.length - 1)}  // For initial animation
                     >
                         {pages.map((page, index) => (
                             <div key={index} className="page-element">
@@ -203,26 +202,7 @@ const ModifyBook = () => {
                         </div>
                         </div>
 
-                    </HTMLFlipBook>
-                    
-                    {/* Creation page content */}
-                    {/* <textarea
-                            value={description}
-                            onChange={handleDescriptionChange}
-                            placeholder="Write a description for a new page"
-                            className="w-full border border-black h-24 rounded-[5px] mb-2 p-2"
-                        />
-                        <button
-                            onClick={createImage}
-                            className={`mt-2 p-2 rounded mx-auto block ${
-                                description.trim() !== '' 
-                                    ? 'bg-blue-500 text-white' 
-                                    : 'bg-gray-300 text-gray-400 cursor-not-allowed'
-                            }`}
-                            disabled={description.trim() === ''}
-                        >
-                            Create New Page
-                        </button>} */}
+                    </HTMLFlipBook>                   
                 </div>
 
                 <div className="mt-8 flex flex-col gap-4 items-center">
@@ -241,8 +221,13 @@ const ModifyBook = () => {
                     )}
                     
                     <button 
-                        className="w-full max-w-md bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 shadow-md hover:shadow-lg"
-                        onClick={handleBackToCreation}
+                        className={`w-full max-w-md ${
+                            isOnCreationPage()
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-green-500 hover:bg-green-600'
+                        } text-white py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 shadow-md hover:shadow-lg`}
+                        onClick={flipToCreationPage}
+                        disabled={isOnCreationPage() || isFlipping}
                     >
                         Continue Creating
                     </button>
