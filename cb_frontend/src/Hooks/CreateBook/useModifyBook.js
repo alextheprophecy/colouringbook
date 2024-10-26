@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPage, setIsEditing, setIsModifyingBook } from '../../redux/bookSlice';
 
@@ -17,7 +17,9 @@ const useModifyBook = () => {
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
 
-    const isOnCreationPage = useCallback(() => currentPage === pages.length, [currentPage, pages.length]);
+    const isOnCreationPage = useCallback(() => {
+        return currentPage === pages.length
+    }, [currentPage, pages.length]);
     
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 

@@ -19,6 +19,7 @@ const firstPage = () => {
 
 const initialState = {
   pages: [firstPage(), ...pagesExample],
+  currentContext: '',
   currentPage: 0,
   isEditing: false,
   isModifyingBook: false,
@@ -38,6 +39,9 @@ const bookSlice = createSlice({
       console.log("Updating page", index, data);
       console.log(action.payload);
       state.pages[index] = { ...state.pages[index], ...data };
+    },
+    updateContext: (state, action) => {
+      state.currentContext = action.payload;
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -59,6 +63,6 @@ const bookSlice = createSlice({
   },
 });
 
-export const { addPage, updatePage, setCurrentPage, setIsEditing, setIsModifyingBook, startLoading, stopLoading } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, setIsModifyingBook, startLoading, stopLoading } = bookSlice.actions;
 
 export default bookSlice.reducer;

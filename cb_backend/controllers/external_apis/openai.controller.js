@@ -13,13 +13,7 @@ const _gpt_chat_complete = openaiModel => (systemPrompt, userPrompt) => {
         }).then(completion => completion.choices[0].message.content)
 }
 
-const query_gpt4o_mini = _gpt_chat_complete('gpt-4o-mini')
-
-const query_gpt4o2024 = _gpt_chat_complete('gpt-4o-2024-08-06')
-
-const query_formatted_gpt4o2024 = (systemPrompt, userPrompt, responseFormat, responseName) => {
-    const openaiModel = 'gpt-4o-2024-08-06'
-
+const _gpt_chat_complete_formatted = openaiModel => (systemPrompt, userPrompt, responseFormat, responseName) => {
     return openai.beta.chat.completions.parse(
         {
             model: openaiModel,
@@ -36,10 +30,18 @@ const query_formatted_gpt4o2024 = (systemPrompt, userPrompt, responseFormat, res
         })
 }
 
+const query_gpt4o_mini = _gpt_chat_complete('gpt-4o-mini')
+
+const query_gpt4o2024 = _gpt_chat_complete('gpt-4o-2024-08-06')
+
+const query_formatted_gpt4o2024 = _gpt_chat_complete_formatted('gpt-4o-2024-08-06')
+
+const query_formatted_gpt4o_mini = _gpt_chat_complete_formatted('gpt-4o-mini-2024-07-18')
 
 
 module.exports = {
     query_gpt4o_mini,
     query_gpt4o2024,
-    query_formatted_gpt4o2024
+    query_formatted_gpt4o2024,
+    query_formatted_gpt4o_mini
 }

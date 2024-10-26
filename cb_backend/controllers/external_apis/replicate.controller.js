@@ -9,10 +9,14 @@ const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {
     return seed_list[Math.floor(Math.random()*seed_list.length)]
 }
 
+const randomSeed = () => {
+    return Math.floor(Math.random() * 99999)
+}
+
 const _runModel = (input, model) =>
     replicate.run(model, {input: input}).then(o => o[0].url())
 
-const queryFluxSchnell = (prompt, seed= randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) => {
+const queryFluxSchnell = (prompt, seed = randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) => {
     const input = {
         prompt: prompt,
         disable_safety_checker: !SAFETY_CHECKER,
@@ -46,5 +50,6 @@ const queryFluxBetter = (prompt, seed = randomSavedSeed(DEFAULT_DEV_SEEDS)) => {
 module.exports = {
     queryFluxSchnell,
     queryFluxBetter,
-    randomSavedSeed
+    randomSavedSeed,
+    randomSeed
 }

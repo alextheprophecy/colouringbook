@@ -2,6 +2,7 @@ const {queryFluxSchnell, queryFluxBetter, randomSavedSeed} = require("../externa
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
 const {pagesSimpleStory, AdvancedGenerator, generateScenePageDescription} = require("./book_description.controller");
+const {updateBookContext, generatePageDescriptionGivenContext, contextObjectSchema} = require("./descriptions_controller");
 
 const MAX_PAGE_COUNT = 6
 
@@ -70,11 +71,51 @@ const generateSingleScenePage = async (req, res) => {
         console.error('Error generating single scene page:', error);
         res.status(500).json({ error: 'Failed to generate scene page' });
     }
+}
+
+const generatePageWithContext = async (req, res) => {
+    const user = req.user;
+    const { sceneDescription, currentContext } = req.body;
+
+    try {
+        if (!sceneDescription) return res.status(400).json({ error: 'Missing sceneDescription in request body' })        
+        
+        const parsedContext = (!currentContext || currentContext === '') ? {
+                characters: [],
+                storySummary: '',
+                environment: '',
+                keyObjects: [],
+                currentSituation: ''
+            } :  contextObjectSchema.parse(currentContext);
+        
+        
+        const pageDescription = await generatePageDescriptionGivenContext(sceneDescription, parsedContext);
+
+        //generate image
+        const imageModel = queryFluxSchnell /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
+        
+        const [image, updatedContext] = await Promise.all([
+            imageModel(CHILD_PROMPT(pageDescription)),
+            updateBookContext(pageDescription, parsedContext)
+        ]);
+        
+        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image });
+        
+    } catch (error) {
+        console.error("Error in generatePageWithContext:", error);
+        res.status(500).json({ error: 'An error occurred while processing the request' });
+    }
 };
+
+const regeneratePage = async (req, res) => {
+    const user = req.user;
+    const { detailed_description, currentContext } = req.body;
+}
 
 module.exports = {
     generateColouringBook,
     genBookPDF,
     test,
-    generateSingleScenePage
+    generateSingleScenePage,
+    generatePageWithContext
 }
