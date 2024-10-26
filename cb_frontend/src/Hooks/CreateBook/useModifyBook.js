@@ -2,14 +2,14 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPage, setIsEditing, setIsModifyingBook } from '../../redux/bookSlice';
 
-export const FLIP_TIMES = {
+export const FLIP_TIMES = Object.freeze({
     USER: 600,
     QUICK_DELAY: 10,
     QUICK_FLIP: 150,
     ANIMATION_DELAY: 550,
     ANIMATION_COVER: 1200,
     ANIMATION_FLIP: 320
-};
+});
 
 const useModifyBook = () => {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const useModifyBook = () => {
         if (currentPage >= targetPage || !book || isFlipping) return;
 
         const flipSpeed = quickFlip ? FLIP_TIMES.QUICK_FLIP : FLIP_TIMES.ANIMATION_FLIP;
-        const startDelay = currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY;
+        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)
 
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
@@ -108,4 +108,3 @@ const useModifyBook = () => {
 };
 
 export default useModifyBook;
-

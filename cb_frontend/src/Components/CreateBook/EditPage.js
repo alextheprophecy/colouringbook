@@ -36,12 +36,13 @@ const EditPage = () => {
                 className={`bg-white p-4 rounded-lg w-full max-w-md transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
             >
-                <button 
+               {/*  <button 
                     className="z-[15] absolute top-[1%] right-[2%] text-gray-500 bg-white rounded-full p-1"
                     onClick={handleClose}
                 >
-                    <ChevronLeft size={30} strokeWidth={2.5} color='grey' /> {/* Larger and thicker X icon with color math */}
-                </button>
+                    <ChevronLeft size={30} strokeWidth={2.5} color='grey' /> 
+                </button> */}
+
                 {isLoading ? (
                     <Loading description="Generating new image..." />
                 ) : (

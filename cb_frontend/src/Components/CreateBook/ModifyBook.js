@@ -1,11 +1,14 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, CirclePlus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, CirclePlus, Pencil } from 'lucide-react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 
 const ModifyBook = () => {
+
+    const MIN_WIDTH = Object.freeze(300);
+     // Set minimum width as a constant
     const {
         flipBookRef,
         pages,
@@ -32,27 +35,71 @@ const ModifyBook = () => {
         } mx-auto w-full h-full object-cover`;
     };
 
+
     const renderNavigationButtons = () => (
         <>
             {currentPage > 0 && (
                 <button 
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
+                    className="absolute left-0 top-[50%] transform -translate-y-1/2 -translate-x-1/2 
+                              bg-white/80
+                              p-2 rounded-full
+                              shadow-lg hover:shadow-xl
+                              transition-all duration-200
+                              ring-1 ring-blue-100
+                              group
+                              z-10"
                     onClick={handlePageNavigation.previous}
                     disabled={isFlipping}
                 >
                     <ChevronLeft 
-                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-8 w-8 
+                                  text-blue-400 group-hover:text-blue-500
+                                  ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
             )}
             {currentPage < pages.length && !isOnCreationPage() && (
                 <button 
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#87CEFA] hover:text-blue-400 transition-colors z-10"
+                    className="absolute -right-0 top-[50%] transform -translate-y-1/2 translate-x-1/2
+                              bg-white/80
+                              p-2 rounded-full
+                              shadow-lg hover:shadow-xl
+                              transition-all duration-200
+                              ring-1 ring-blue-100
+                              group
+                              z-10"
                     onClick={handlePageNavigation.next}
                     disabled={isFlipping}
                 >
                     <ChevronRight 
-                        className={`h-12 w-12 ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`h-8 w-8 
+                                  text-blue-400 group-hover:text-blue-500
+                                  ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    />
+                </button>
+            )}
+            
+            {/* Updated Edit button */}
+            {!isOnCreationPage() && currentPage > 0 && !isFlipping && (
+                <button 
+                    className={`absolute right-0 bottom-0
+                            w-16 h-16
+                            bg-white/60
+                            shadow-lg hover:shadow-xl
+                            rounded-tl-full
+                            group
+                            overflow-hidden
+                            origin-bottom-right
+                            z-10`}
+                   
+                    onClick={() => setIsEditing(true)}
+                    disabled={isFlipping}
+                >
+                    <Pencil 
+                        className={`absolute bottom-2 right-2
+                                h-8 w-8 
+                                text-blue-400 group-hover:text-blue-500
+                                cursor-pointer`}
                     />
                 </button>
             )}
@@ -60,18 +107,18 @@ const ModifyBook = () => {
     );
 
     return (
-            <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] max-w-[900px] mx-auto relative min-h-[600px] shadow-lg">
-                {renderNavigationButtons()}
+            <div className= {`p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] mx-auto flex justify-center items-center flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] `}>
+               
 
-                <div className="flex justify-center items-center relative">
+                <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
+                {renderNavigationButtons()}
                     <HTMLFlipBook
                         key={pages.length} // Force re-initialization when pages change
                         width={300}
                         height={450}    
                         size="stretch"
-                        minWidth={315}
+                        minWidth={MIN_WIDTH}
                         maxWidth={1000}
-                        minHeight={400}
                         maxHeight={1533}
                         maxShadowOpacity={0.5}
                         mobileScrollSupport={true}
@@ -91,42 +138,55 @@ const ModifyBook = () => {
                                     alt={`Page ${index + 1}`}
                                     className={pageClassname(index)}
                                 />
+                                
+                            
                             </div>
                         ))}                  
-                        <div className={`bg-[#f1e6cf] ${pageClassname(1)} flex items-center justify-center page-element`}>
-                        
-                        <div style={{ pointerEvents: 'none' }}>
-                            <textarea
-                                className="w-full h-32 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Write something..."
-                                style={{ pointerEvents: 'auto' }} // Allow the textarea to receive pointer events
-                            />
-                            <CirclePlus 
-                                className="w-16 h-16 text-black hover:text-gray-700 cursor-pointer transition-colors absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                onClick={createImage}
-                            />
-                          
-                        </div>
+
+                        {/* Creation page */}
+                        <div className="page-element relative">
+                            {/* Border layer */}
+                            <div className={`${pageClassname(1)} absolute inset-0 bg-amber-200`} />
+                            
+                            {/* Content layer */}
+                            <div className={` mx-auto w-full h-full object-cover rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] absolute inset-0 bg-white scale-[0.99]`}>                            
+                                <div className="relative w-full h-full" style={{ pointerEvents: 'none' }}>                                   
+                                    {/* Content container */}
+                                    <div className="flex flex-col h-full pt-8 px-6">
+                                        <textarea
+                                            className="w-[100%] h-[80%] mx-auto p-4 bg-transparent 
+                                                      focus:outline-none resize-none
+                                                      text-gray-700 placeholder-gray-400
+                                                      font-children text-lg leading-relaxed
+                                                      shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
+                                            placeholder="Describe your scene..."
+                                            style={{ pointerEvents: 'auto' }}
+                                        />
+                                        
+                                        <div className="relative group mt-auto mb-4 self-center" style={{ pointerEvents: 'auto' }}>
+                                            <div className="absolute -inset-1 bg-gradient-to-r from-amber-200 to-amber-100 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-200" />
+                                            <button
+                                                onClick={createImage}
+                                                className="relative flex items-center space-x-2 px-5 py-2 
+                                                          bg-amber-50 hover:bg-amber-100/80 
+                                                          rounded-lg
+                                                          shadow-md hover:shadow-lg 
+                                                          transform hover:scale-105 
+                                                          transition-all duration-200"
+                                            >
+                                                <CirclePlus className="w-5 h-5 text-amber-700" />
+                                                <span className="font-children text-amber-800 font-medium text-lg">Add</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </HTMLFlipBook>                   
                 </div>
 
                 <div className="mt-8 flex flex-col gap-4 items-center">
-                    {pages.length > 0 && (
-                        <button 
-                            className={`w-full max-w-md  text-white ${
-                                currentPage === 0 ? 'opacity-50 bg-gray-300 cursor-not-allowed' : 'bg-[#87CEFA] hover:bg-blue-400'
-                            } py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 ${
-                                isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer shadow-md hover:shadow-lg'
-                            }`}
-                            onClick={toggleModifyingBook}
-                            disabled={isFlipping || currentPage === 0}
-                        >
-                            {currentPage===0? 'Book Cover' : `Edit page ${currentPage}`}
-                        </button>
-                    )}
-                    
                     <button 
                         className={`w-full max-w-md ${
                             isOnCreationPage()
@@ -136,7 +196,7 @@ const ModifyBook = () => {
                         onClick={flipToCreationPage}
                         disabled={isOnCreationPage() || isFlipping}
                     >
-                        Continue Creating
+                        Add new page
                     </button>
                 </div>
 
