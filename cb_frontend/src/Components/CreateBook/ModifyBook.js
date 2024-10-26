@@ -7,6 +7,7 @@ import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook'
 import { useCallback, useState } from 'react';
 import CreatePage from './CreatePage';
 
+
 const ModifyBook = () => {
 
     const MIN_WIDTH = Object.freeze(300);
@@ -28,17 +29,12 @@ const ModifyBook = () => {
         flipToCreationPage
     } = useModifyBook();
 
-    const { createImage} = useCreatePage();
-
-    const [description, setDescription] = useState('');
-
     const pageClassname = (index) => {
         return `${index === 0 
             ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
             : 'rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
         } mx-auto w-full h-full object-cover`;
-    };
-
+    };        
 
     const renderNavigationButtons = () => (
         <>
@@ -110,11 +106,6 @@ const ModifyBook = () => {
         </>
     );
 
-    // Move the description state to useCallback to prevent unnecessary re-renders
-    const handleDescriptionChanges = useCallback((e) => {
-        setDescription(e.target.value);
-    }, []); // Empty dependency array since we don't need any dependencies
-
     return (
             <div className= {`p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] mx-auto flex justify-center items-center flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] `}>
                 <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
@@ -150,7 +141,9 @@ const ModifyBook = () => {
                         ))}                  
 
                         {/* Creation page */}
-                        {CreatePage({pageClassname})}
+                        <CreatePage classNameProp={pageClassname(1)}/>
+
+                        
                     </HTMLFlipBook>   
 
                 </div>

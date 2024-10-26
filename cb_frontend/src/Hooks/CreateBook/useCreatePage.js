@@ -10,7 +10,7 @@ const useCreatePage = () => {
     const { generateImage } = useImageGeneration();
     const { loadRequest } = useLoadRequest();
 
-    const handleDescriptionChange = (e) => {setDescription(e.target.value)};
+    const handleDescriptionChange = (e) => setDescription(e.target.value);
 
     const createImage = async () => {
         alert(description);

@@ -4,27 +4,24 @@ import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { CirclePlus } from 'lucide-react';
 import { useState } from 'react';
 
-const CreatePage = ({ pageClassname }) => {  
+const CreatePage = React.forwardRef(({classNameProp}, ref) => {  
     const {
-        createImage
+        createImage,
+        description,
+        handleDescriptionChange
     } = useCreatePage();
 
 
-    const [description, setDescription] = useState('');
-    const handleTextareaClick = (e) => {
-        e.stopPropagation();
-    };
-
     return (
-        <div className="page-element">
+        <div ref={ref} className="page-element">
             {/* Border layer */}
-            <div className={`${pageClassname(1)} absolute inset-0 bg-amber-200`} />
+            <div className={`${classNameProp} absolute inset-0 bg-amber-200`} />
             
             {/* Content layer */}
             <div className={` mx-auto w-full h-full object-cover rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] absolute inset-0 bg-white scale-[0.99]`}>                            
                 <div className="relative w-full h-full">                                   
                     {/* Content container */}
-                    <div className="flex flex-col h-full pt-8 px-6" onClick={handleTextareaClick}>
+                    <div className="flex flex-col h-full pt-8 px-6">
                         <textarea
                             className="w-[100%] h-[80%] mx-auto p-4 bg-transparent 
                                     focus:outline-none resize-none
@@ -33,12 +30,7 @@ const CreatePage = ({ pageClassname }) => {
                                     shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
                             placeholder="Describe your scene..."
                             value={description}
-                            onChange={(e) => {
-                                setDescription(e.target.value);
-
-                            }} 
-                            onClick={handleTextareaClick}
-                            onMouseDown={handleTextareaClick}                                        
+                            onChange={handleDescriptionChange}                                   
                         />
                         
                         <div className="relative group mt-auto mb-4 self-center">
@@ -61,6 +53,6 @@ const CreatePage = ({ pageClassname }) => {
             </div>
         </div>
     );
-};
+});
 
 export default CreatePage;
