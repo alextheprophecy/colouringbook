@@ -27,6 +27,9 @@ const pdf_data = (user_email, book_id) => ({
 const getPDF = (user, book) =>
     getFileUrl(pdf_data(user.email, book.id))
 
+const getImage = (user, book, imageIndex) =>
+    getFileUrl(image_data(user.email, book.id, imageIndex))
+
 const saveBookPDF = async (imageBuffers, user, book) => {
     const pdfStream = imgToPDF(imageBuffers, imgToPDF.sizes.A4)
     const passThroughStream = new PassThrough()
@@ -54,5 +57,6 @@ module.exports = {
     saveBookPDF,
     savePageData,
     image_data,
-    getFileData
+    getFileData,
+    getImage
 }

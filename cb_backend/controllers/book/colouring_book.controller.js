@@ -9,7 +9,6 @@ const CHILD_PROMPT = (description)=>`Children's detailed coloring book. ${descri
 const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
 
-
 const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const book = req.book;
@@ -73,12 +72,15 @@ const enhancePage = async (req, res) => {
     const { detailedDescription, bookId, currentPage } = req.body;
 }
 
-const finishBook = async (req, res) => {
+const getBookPDF = async (req, res) => {
     const user = req.user;
     const book = req.book;
-
+    console.log('getting book pdf for book:', book);
     try {
-        if (book.finished) return res.status(400).json({ error: 'Book is already finished' });        
+        if (book.finished) {
+            const pdfUrl = await getPDF(user, book);
+            return res.status(200).send(pdfUrl);
+        }
         if (book.pageCount === 0) return res.status(400).json({ error: 'Cannot finish a book with no pages' });        
 
         const _genBookPDF = (user, book) =>
@@ -86,7 +88,8 @@ const finishBook = async (req, res) => {
                 Array.from({length: book.pageCount}, (_, i) => 
                     getFileData(image_data(user.email, book.id, i).key))
             ).then(imageBuffers => saveBookPDF(imageBuffers, user, book));
-
+        
+        
         // Generate PDF, update book status, and get presigned URL concurrently
         const [uploadResult, updatedBook, pdfUrl] = await Promise.all([
             _genBookPDF(user, book),
@@ -109,9 +112,10 @@ const finishBook = async (req, res) => {
     }
 };
 
+
 module.exports = {
     generatePageWithContext,
     regeneratePage,
     enhancePage,
-    finishBook
+    getBookPDF,
 }

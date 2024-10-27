@@ -20,7 +20,7 @@ function App() {
             <Route exact path='/' element={<><Navbar /><MainView /></>} />
             <Route exact path='/create' element={<><CreateBook/></>} />
             <Route exact path='/login' element={<><Navbar /><LoginView /></>} />
-            <Route exact path='/gallery' element={<><Navbar /><GalleryView /></>} />
+            <Route exact path='/gallery' element={<><GalleryView /></>} />
             <Route exact path='/playground' element={<><Navbar /><PlaygroundView /></>} />
             <Route exact path='/test' element={<><PlaygroundView /></>} />
         </Routes>

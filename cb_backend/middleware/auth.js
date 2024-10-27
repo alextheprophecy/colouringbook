@@ -22,7 +22,7 @@ const verifyToken = (req,res,next) => {
 }
 
 const verifyBook = async (req, res, next) => {
-    const bookId = req.params.bookId || req.body.bookId;
+    const bookId = req.query.bookId || req.body.bookId;
     
     if (bookId && req.user) {
         try {
