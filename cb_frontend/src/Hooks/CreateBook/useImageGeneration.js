@@ -26,8 +26,8 @@ const useImageGeneration = () => {
 
         try {            
             const response = await api.post('image/regeneratePage', {detailedDescription});
-            const { image } = response.data;
-            return image;  
+            const { image, seed } = response.data;
+            return { image, seed };  
 
         } catch (error) {
             console.error('Error generating page:', error);

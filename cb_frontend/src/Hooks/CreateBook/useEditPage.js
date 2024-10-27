@@ -9,10 +9,9 @@ const useEditPage = () => {
     const { pages, currentPage, isEditing } = useSelector(state => state.book);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
-    const [isClosing, setIsClosing] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [showDescription, setShowDescription] = useState(false);
-    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available']);
+    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available', 0]);
     const { regenerateImage, enhanceImage } = useImageGeneration();
     const [isLoading, setIsLoading] = useState(false);
     const { loadRequest} = useLoadRequest();
@@ -24,31 +23,29 @@ const useEditPage = () => {
         const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
         const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
         console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
-        return [formattedUserDescription, formattedDetailedDescription];
+        return [formattedUserDescription, formattedDetailedDescription, pageData?.seed];
     }
 
+    const handleClose = useCallback(() => {
+        setIsVisible(false);
+        setIsEnhancing(false);
+        dispatch(setIsEditing(false));
+    }, [dispatch]);
+
+    
     useEffect(() => {
-        if (isEditing && !isClosing) {
+        console.log('changes');
+        if (isEditing) {
+            console.log('isEditing', isEditing);
+            //open the edit page
             setShowDescription(false);
             setSceneDescription(formatPageDescription(pages[currentPage]));
             setCurrentImage(pages[currentPage]?.image || '');
-            setTimeout(() => setIsVisible(true), 50);
-        } else if (!isEditing && !isClosing) {
+            setIsVisible(true)
+        } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages, isClosing]);
-
-    const handleClose = useCallback(() => {
-        if (!isClosing) {
-            setIsClosing(true);
-            setIsVisible(false);
-            setIsEnhancing(false);
-            setTimeout(() => {
-                dispatch(setIsEditing(false));
-                setIsClosing(false);
-            }, 300);
-        }
-    }, [dispatch, isClosing]);
+    }, [isEditing, currentPage, pages]);
 
     const handleEnhance = useCallback(() => {
         alert('Not implemented yet');
@@ -63,8 +60,8 @@ const useEditPage = () => {
         console.log('Regenerating image...', detailedDescription);
         try {
             console.log('Regenerating image...');
-            const image = await loadRequest(() => regenerateImage(detailedDescription), "Regenerating image...");
-            dispatch(updatePage({index: currentPage, data: { image }}));
+            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription), "Regenerating image...");
+            dispatch(updatePage({index: currentPage, data: { image, seed }}));
             return true;
         } catch (error) {
             console.error('Error regenerating image:', error);
@@ -79,7 +76,6 @@ const useEditPage = () => {
         editText,
         setEditText,
         isVisible,
-        isClosing,
         currentImage,
         isLoading,
         handleClose,

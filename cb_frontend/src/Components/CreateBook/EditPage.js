@@ -11,7 +11,6 @@ const EditPage = () => {
         editText,
         setEditText,
         isVisible,
-        isClosing,
         currentImage,
         isLoading,
         handleClose,
@@ -24,7 +23,7 @@ const EditPage = () => {
         handleEnhance
     } = useEditPage();
 
-    if ((!isVisible && !isClosing) || currentPage === 0) return null;    
+    if (!isVisible || currentPage === 0) return null;    
 
     return (
         <div 
@@ -34,104 +33,104 @@ const EditPage = () => {
             <div 
                 className={`bg-white p-4 rounded-lg w-full max-w-md transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-            >
-                {isLoading ? (
-                    <Loading description="Generating new image..." />
-                ) : (
-                    <>
-                        <div className="mb-4 relative">
-                            {showDescription ? (
-                                <div className="w-[90%] mx-[5%] aspect-[2/3] bg-gray-100 rounded p-4 overflow-y-auto">
-                                    <h3 className="text-lg font-bold mb-2">User Description</h3>
-                                    <p className="text-sm mb-4">{sceneDescription[0]}</p>
-                                    <h3 className="text-lg font-bold mb-2">API Description</h3>
-                                    <p className="text-sm">{sceneDescription[1]}</p>
-                                </div>                
-                            ) : (
-                                currentImage && (
-                                    <img 
-                                        src={currentImage} 
-                                        alt="Current Page" 
-                                        className="w-[90%] mx-[5%] aspect-[2/3] object-cover rounded"
-                                    />
-                                )
-                            )}
-                            <button
-                                className="absolute bottom-2 right-[calc(5%+5px)] bg-white bg-opacity-75 text-black text-s px-2 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center"
-                                onClick={() => setShowDescription(!showDescription)}
-                            >
-                                {showDescription ? 'See Image' : <><Info className="w-4 h-4 inline-block mr-1" />Info </>}
-                            </button>
-                        </div>
-                        {!isEnhancing ? (
-                            <div className="flex flex-col items-center space-y-4">
-                                <div className="w-full flex justify-center gap-4 mb-4">
-                                    <button 
-                                        className="flex-1 bg-green-500 hover:bg-green-600 
-                                            text-white py-3 px-6 rounded-lg 
-                                            transition-all duration-300 ease-in-out 
-                                            hover:scale-[1.02] shadow-md hover:shadow-lg
-                                            flex items-center justify-center gap-2
-                                            font-children font-semibold tracking-[0.075em]"
-                                        onClick={() => setIsEnhancing(true)}
-                                    >
-                                        <Wand2 className="w-6 h-6 flex-shrink-0"/> 
-                                        <span>Enhance</span>
-                                    </button>
-                                    <button 
-                                        className="flex-1 bg-blue-500 hover:bg-blue-600 
-                                            text-white py-3 px-6 rounded-lg 
-                                            transition-all duration-300 ease-in-out 
-                                            hover:scale-[1.02] shadow-md hover:shadow-lg
-                                            flex items-center justify-center gap-2
-                                            font-children font-semibold tracking-[0.075em]"
-                                        onClick={handleRegenerate}
-                                    >
-                                        <RotateCcw className="w-6 h-6 flex-shrink-0"/>
-                                        <span>Regenerate scene</span>
-                                    </button>
+            >                
+                <>
+                    <div className="mb-4 relative">
+                        {showDescription ? (
+                            <div className="w-[90%] mx-[5%] aspect-[2/3] bg-gray-100 rounded p-4 overflow-y-auto">
+                                <h3 className="text-lg font-bold mb-2">User Description</h3>
+                                <p className="text-sm mb-4">{sceneDescription[0]}</p>
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-lg font-bold">API Description</h3>
+                                    <p className="text-m font-bold text-red-500">Seed: {sceneDescription[2]}</p>
                                 </div>
+                                <p className="text-sm">{sceneDescription[1]}</p>
+                            </div>                
+                        ) : (
+                            currentImage && (
+                                <img 
+                                    src={currentImage} 
+                                    alt="Current Page" 
+                                    className="w-[90%] mx-[5%] aspect-[2/3] object-cover rounded"
+                                />
+                            )
+                        )}
+                        <button
+                            className="absolute bottom-2 right-[calc(5%+5px)] bg-white bg-opacity-75 text-black text-s px-2 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center"
+                            onClick={() => setShowDescription(!showDescription)}
+                        >
+                            {showDescription ? 'See Image' : <><Info className="w-4 h-4 inline-block mr-1" />Info </>}
+                        </button>
+                    </div>
+                    {!isEnhancing ? (
+                        <div className="flex flex-col items-center space-y-4">
+                            <div className="w-full flex justify-center gap-4 mb-4">
                                 <button 
-                                    className="w-full max-w-md bg-gray-400 hover:bg-gray-500 
+                                    className="flex-1 bg-green-500 hover:bg-green-600 
                                         text-white py-3 px-6 rounded-lg 
                                         transition-all duration-300 ease-in-out 
                                         hover:scale-[1.02] shadow-md hover:shadow-lg
-                                        font-children font-semibold tracking-wider"
+                                        flex items-center justify-center gap-2
+                                        font-children font-semibold tracking-[0.075em]"
+                                    onClick={() => setIsEnhancing(true)}
+                                >
+                                    <Wand2 className="w-6 h-6 flex-shrink-0"/> 
+                                    <span>Enhance</span>
+                                </button>
+                                <button 
+                                    className="flex-1 bg-blue-500 hover:bg-blue-600 
+                                        text-white py-3 px-6 rounded-lg 
+                                        transition-all duration-300 ease-in-out 
+                                        hover:scale-[1.02] shadow-md hover:shadow-lg
+                                        flex items-center justify-center gap-2
+                                        font-children font-semibold tracking-[0.075em]"
+                                    onClick={handleRegenerate}
+                                >
+                                    <RotateCcw className="w-6 h-6 flex-shrink-0"/>
+                                    <span>Regenerate scene</span>
+                                </button>
+                            </div>
+                            <button 
+                                className="w-full max-w-md bg-gray-400 hover:bg-gray-500 
+                                    text-white py-3 px-6 rounded-lg 
+                                    transition-all duration-300 ease-in-out 
+                                    hover:scale-[1.02] shadow-md hover:shadow-lg
+                                    font-children font-semibold tracking-wider"
+                                onClick={handleClose}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="bg-[#87CEFA] p-2 rounded mb-4 text-center">
+                                Describe your scene again
+                                <textarea 
+                                    className="w-full h-32 border border-gray-300 rounded bg-gray-200 mt-2"
+                                    value={editText}
+                                    onChange={(e) => setEditText(e.target.value)}
+                                    placeholder={" Make the main character smile more ... \n Add a tree on the left ..."}
+                                />
+                            </div>
+                            <div className="flex justify-end">
+                                <button 
+                                    className="mr-2 px-4 py-2 bg-gray-200 rounded"
                                     onClick={handleClose}
                                 >
                                     Cancel
                                 </button>
+                                <button 
+                                    className={`px-4 py-2 rounded ${editText.trim() !== '' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400 cursor-not-allowed'}`}
+                                    onClick={handleEnhance}
+                                    disabled={editText.trim() === ''}
+                                >
+                                    Save
+                                </button>
                             </div>
-                        ) : (
-                            <>
-                                <div className="bg-[#87CEFA] p-2 rounded mb-4 text-center">
-                                    Describe your scene again
-                                    <textarea 
-                                        className="w-full h-32 border border-gray-300 rounded bg-gray-200 mt-2"
-                                        value={editText}
-                                        onChange={(e) => setEditText(e.target.value)}
-                                        placeholder={" Make the main character smile more ... \n Add a tree on the left ..."}
-                                    />
-                                </div>
-                                <div className="flex justify-end">
-                                    <button 
-                                        className="mr-2 px-4 py-2 bg-gray-200 rounded"
-                                        onClick={handleClose}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button 
-                                        className={`px-4 py-2 rounded ${editText.trim() !== '' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400 cursor-not-allowed'}`}
-                                        onClick={handleEnhance}
-                                        disabled={editText.trim() === ''}
-                                    >
-                                        Save
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </>
-                )}
+                        </>
+                    )}
+                </>
+            
             </div>
         </div>
     );

@@ -15,8 +15,8 @@ const useCreatePage = () => {
     const createImage = async () => {
         if (description.trim() !== '') {
             try {
-                const { image, detailedDescription, updatedContext} = await loadRequest(() => generateImage(description), "Creating image...");
-                dispatch(addPage({ image: image, user_description: description, detailed_description: detailedDescription }));
+                const { image, detailedDescription, seed, updatedContext} = await loadRequest(() => generateImage(description), "Creating image...");
+                dispatch(addPage({ image: image, user_description: description, detailed_description: detailedDescription, seed }));
                 dispatch(updateContext(updatedContext));
                 return true;
             } catch (error) {

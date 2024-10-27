@@ -95,13 +95,13 @@ const generatePageWithContext = async (req, res) => {
 
         //generate image
         const imageModel = queryFluxSchnell
-        
+        const seed = randomSavedSeed();
         const [image, updatedContext] = await Promise.all([
-            imageModel(CHILD_PROMPT(pageDescription)),
+            imageModel(CHILD_PROMPT(pageDescription), seed),
             updateBookContext(pageDescription, parsedContext)
         ]);
         
-        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image }); 
+        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image, seed}); 
 
         /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
 
@@ -119,9 +119,9 @@ const regeneratePage = async (req, res) => {
     
     try {
         console.log('regenerating page with:', detailedDescription);
-        const gen_seed = randomSeed();
-        const image = await queryFluxBetter(CHILD_PROMPT(detailedDescription), gen_seed);
-        res.status(200).json({ image });
+        const seed = randomSeed();
+        const image = await queryFluxBetter(CHILD_PROMPT(detailedDescription), seed);
+        res.status(200).json({ image, seed });
     } catch (error) {
         console.error('Error regenerating page:', error);
         res.status(500).json({ error: 'Failed to regenerate page' });

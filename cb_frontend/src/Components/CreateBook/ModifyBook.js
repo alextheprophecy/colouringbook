@@ -93,7 +93,8 @@ const ModifyBook = () => {
                             ring-1 ring-blue-200
                             z-10`}
                    
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => {console.log('edit');
+                        setIsEditing(true)}}
                     disabled={isFlipping}
                 >
                     <Pencil 
@@ -183,13 +184,7 @@ const ModifyBook = () => {
                     </button>
                 </div>
 
-                <EditPage
-                    isOpen={isEditing}
-                    closePopUp={() => setIsEditing(false)}
-                    onSubmit={() => {}}
-                    initialText=""
-                    initialImage={getCurrentPageImage()}
-                />
+                <EditPage/>
             </div>
     );
 };
