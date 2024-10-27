@@ -14,7 +14,7 @@ const useCreateBook = () => {
             const { book } = response.data;
             console.log(book._id)
             // After successful creation, update the state
-            dispatch(startBook(book._id));
+            dispatch(startBook({bookId: book._id, title}));
             return book; 
         }, `Creating Book ${title}`);
     };

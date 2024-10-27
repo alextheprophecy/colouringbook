@@ -71,7 +71,10 @@ class UserControllers {
         const cookies = req.cookies
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
             if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
-            else res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+            else {
+                console.log("refreshed token")
+                res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+            }
         })
     }
 

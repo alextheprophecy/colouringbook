@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const Book2 = require('../models/book2.model')
 require("dotenv").config()
 
 const verifyToken = (req,res,next) => {
@@ -10,14 +11,8 @@ const verifyToken = (req,res,next) => {
             if (err){ //access token expired
                 console.log("expired token ", err)
                 res.status(401).json("Expired Token!")
-               /* console.log('ERROR 1: ', err)
-                jwt.verify(authHeader.refresh_token, process.env.JWT_REFRESH_SECRET, (err, user) => {
-                    if(err) res.status(403).json("Refresh token expired. Login again!")
-                    else res.status(401).json("Refresh token!")
-                })*/
             }else{
                 req.user = user
-                console.log("logged in: ", user)
                 next();
             }
         })
@@ -26,4 +21,28 @@ const verifyToken = (req,res,next) => {
     }
 }
 
-module.exports = {verifyToken}
+const verifyBook = async (req, res, next) => {
+    const bookId = req.params.bookId || req.body.bookId;
+    
+    if (bookId && req.user) {
+        try {
+            const book = await Book2.findOne({ 
+                userId: req.user.id, 
+                _id: bookId 
+            });
+            
+            if (!book) {
+                return res.status(404).json({ error: 'Book not found' });
+            }else{
+                req.book = book;
+                next();   
+            }         
+        } catch (error) {
+            return res.status(500).json({ error: 'Error verifying book' });
+        }
+    }else{
+        return res.status(500).json({ error: 'Book id or no user' });    
+    }
+}
+
+module.exports = {verifyToken, verifyBook}

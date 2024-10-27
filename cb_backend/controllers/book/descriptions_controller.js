@@ -36,7 +36,7 @@ const DescriptionsController = () => {
     }
 
     const updateBookContext = async (newPageDescription, currentContext, miniModel = true) => {
-        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to maintain and update a comprehensive context object for the book, ensuring continuity and visual coherence across pages. Make sure to update descriptions that have changed, keep the context up to date, concise, and visual. Remove or update elements that are no longer relevant to the current story progression.`;
+        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to maintain and update a comprehensive context object for the book, ensuring continuity and visual coherence across pages. Make sure to update descriptions that have changed, keep the context up to date, concise, and visual. Remove or update elements that are no longer relevant to the current story progression. Note: you are forbidden from mentioning colors.`;
 
         const userPrompt = `Current book context:
             ${JSON.stringify(currentContext, null, 2)}
@@ -45,9 +45,9 @@ const DescriptionsController = () => {
             ${newPageDescription}
 
             Please update the book context object to include new information from this page. Maintain and update the following key elements:
-            1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
+            1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits, without colors c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
             2. **Story Summary:** A concise summary of the story so far.
-            3. **Environment:** Very short description of the current setting location, in a few words.
+            3. **Environment:** Very short description of the current setting location, in a few words. NEVER mention colors.
             4. **Key Objects:** List only the important items or objects that are central to the story's progression or have a significant impact on the plot. (examples: magical artifacts, treasure maps, or items the characters are seeking or using in a meaningful way. Do **not** include trivial or scene-setting items like background objects. Leave empty if none. Do not include characters here.
             5. **Current Situation:** The immediate context of the story at this point, in the present scene, in a few words as a note.
 

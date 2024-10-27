@@ -9,8 +9,8 @@ const pagesExample = [
 
 ];
 
-const firstPage = () => {
-  const text = encodeURIComponent("My Colouring\nBook"); // Encode the text to preserve newlines
+const firstPage = (title="Coloring \n book") => {
+  const text = encodeURIComponent(title); // Encode the text to preserve newlines
   return ({
     image: `https://placehold.co/400x600/f1e6cf/000000?text=${text}`, 
     description: "Book Cover"
@@ -18,14 +18,16 @@ const firstPage = () => {
 }
 
 const initialState = {
-  pages: [firstPage()],
+  pages: [],
   currentContext: '',
   currentPage: 0,
   isEditing: false,
   isLoading: false,
   loadingText: 'Loading...',
   hasBookStarted: false, // New state variable
-  bookId: 0
+  isBookFinished: false,
+  bookId: 0,
+  title: ''
 };
 
 const bookSlice = createSlice({
@@ -49,7 +51,7 @@ const bookSlice = createSlice({
     },
     setIsEditing: (state, action) => {
       state.isEditing = action.payload;
-    },
+    },  
     startLoading: (state, action) => {
       state.isLoading = true;
       state.loadingText = action.payload;
@@ -59,12 +61,19 @@ const bookSlice = createSlice({
       state.loadingText = '';
     },
     startBook: (state, action) => {
+      const titleInput = action.payload.title;
+      state.pages.push(firstPage(titleInput));
       state.hasBookStarted = true;
-      state.bookId = action.payload
+      state.bookId = action.payload.bookId;
+      state.title = titleInput;
+      
+    },
+    finishBook: (state) => {
+      state.isBookFinished = true;
     },
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook, finishBook } = bookSlice.actions;
 
 export default bookSlice.reducer;

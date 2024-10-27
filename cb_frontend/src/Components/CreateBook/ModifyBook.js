@@ -1,7 +1,7 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, CirclePlus, Pencil, Plus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, CirclePlus, Pencil, Plus, Download, FileDown } from 'lucide-react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 import { useCallback, useState } from 'react';
@@ -22,7 +22,10 @@ const ModifyBook = () => {
         handlePageNavigation,
         onFlip,
         setIsEditing,
-        flipToCreationPage
+        flipToCreationPage,
+        handleFinishBook,
+        isFinishing,
+        isBookFinished,
     } = useModifyBook();
 
     const pageClassname = (index) => {
@@ -54,7 +57,7 @@ const ModifyBook = () => {
                     />
                 </button>
             )}
-            {currentPage < pages.length && !isOnCreationPage() && (
+            {currentPage < pages.length && (
                 <button 
                     className="absolute -right-0 top-[50%] transform -translate-y-1/2 translate-x-1/2
                               bg-white/80
@@ -75,8 +78,8 @@ const ModifyBook = () => {
                 </button>
             )}
             
-            {/* Updated Edit button */}
-            {!isOnCreationPage() && currentPage > 0 && !isFlipping && (
+            {/* Only show edit button if book is not finished */}
+            {!isOnCreationPage() && currentPage > 0 && !isFlipping && !isBookFinished && (
                 <button 
                     className={`absolute right-0 bottom-0
                             w-16 h-16
@@ -109,7 +112,7 @@ const ModifyBook = () => {
                 <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
                     {renderNavigationButtons()}
                     <HTMLFlipBook
-                        key={`book-${pages.length}`}
+                        key={`book-${pages.length}-${isBookFinished}`}
                         width={300}
                         height={450}    
                         size="stretch"
@@ -134,53 +137,72 @@ const ModifyBook = () => {
                                     alt={`Page ${index + 1}`}
                                     className={pageClassname(index)}
                                 />
-                                                    
                             </div>
                         ))}                  
 
                         {/* Creation page */}
-                        <CreatePage classNameProp={pageClassname(1)}/>                        
+                        <CreatePage classNameProp={pageClassname(1)}/>                   
                     </HTMLFlipBook>
                 </div>
 
                 <div className="mt-8 flex flex-col gap-4 items-center">
-                    <button 
-                        className={`w-full max-w-md 
-                            ${isOnCreationPage()
-                                ? 'opacity-0 pointer-events-none'
-                                : 'opacity-100 relative'
-                            } 
-                            ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
-                            text-white py-3 px-6 rounded-lg 
-                            transition-opacity duration-300 ease-in-out 
-                            hover:scale-[1.02] shadow-md hover:shadow-lg
-                            flex items-center justify-center gap-2
-                             font-children font-semibold tracking-wider`}
-                        onClick={flipToCreationPage}
-                        disabled={isOnCreationPage() || isFlipping}
-                    >
-                        <Plus className="w-5 h-5" />
-                        New page
-                    </button>
+                    {/* Only show New Page button if book is not finished */}
+                    {!isBookFinished && (
+                        <button 
+                            className={`w-full max-w-md 
+                                ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
+                                ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
+                                text-white py-3 px-6 rounded-lg 
+                                transition-opacity duration-300 ease-in-out 
+                                hover:scale-[1.02] shadow-md hover:shadow-lg
+                                flex items-center justify-center gap-2
+                                font-children font-semibold tracking-wider`}
+                            onClick={flipToCreationPage}
+                            disabled={isOnCreationPage() || isFlipping}
+                        >
+                            <Plus className="w-5 h-5" />
+                            New page
+                        </button>
+                    )}
 
                     <button 
                         className={`w-full max-w-md 
-                            ${isOnCreationPage()
-                                ? 'opacity-100 -translate-y-4 scale-110'
-                                : 'opacity-70 translate-y-0 scale-100'
-                            }
-                            bg-blue-500 hover:bg-blue-600 
+                            ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
+                            ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
+                            ${isFinishing ? 'cursor-not-allowed' : ''}
                             text-white py-3 px-6 rounded-lg 
                             transition-all duration-300 ease-in-out 
                             hover:scale-[1.02] shadow-md hover:shadow-lg
-                            font-children font-semibold  tracking-wider`}
-                        onClick={() => {/* Add your finish book logic here */}}
+                            font-children font-semibold tracking-wider
+                            flex items-center justify-center gap-2`}
+                        onClick={handleFinishBook}
+                        disabled={isFinishing}
                     >
-                        Finish Book
+                        {isFinishing ? (
+                            <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
+                                Processing...
+                            </div>
+                        ) : (
+                            <>
+                                {isBookFinished ? (
+                                    <>
+                                        <FileDown className="w-5 h-5" />
+                                        Download PDF
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="w-5 h-5" />
+                                        Finish Book
+                                    </>
+                                )}
+                            </>
+                        )}
                     </button>
                 </div>
 
-                <EditPage/>
+                {/* Only render EditPage if book is not finished */}
+                {!isBookFinished && <EditPage />}
             </div>
     );
 };

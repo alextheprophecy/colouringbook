@@ -1,6 +1,8 @@
-import { useRef, useCallback, useState, useEffect, useMemo } from 'react';
+import { useRef, useCallback, useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentPage, setIsEditing} from '../../redux/bookSlice';
+import { setCurrentPage, setIsEditing, finishBook} from '../../redux/bookSlice';
+import api from '../../Hooks/ApiHandler'; // Assuming you have an API handler for making requests
+import useLoadRequest from './useLoadRequest';
 
 export const FLIP_TIMES = Object.freeze({
     USER: 600,
@@ -14,9 +16,12 @@ export const FLIP_TIMES = Object.freeze({
 
 const useModifyBook = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing} = useSelector(state => state.book);
+    const { pages, currentPage, bookId, isBookFinished} = useSelector(state => state.book);
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
+    const [isFinishing, setIsFinishing] = useState(false);
+    const { loadRequest } = useLoadRequest();
+    const [pdfUrl, setPdfUrl] = useState(null);  // Add this new state
 
     const isOnCreationPage = useCallback(() => {
         return currentPage === pages.length
@@ -87,6 +92,39 @@ const useModifyBook = () => {
         if (book) book.getSettings().useMouseEvents = !isOnCreationPage();
     }, [isOnCreationPage]);
 
+    const handleFinishBook = async () => {
+        if (isFinishing) return;
+        
+        if (isBookFinished) {
+            // Use stored PDF URL if available, otherwise fallback to first page PDF
+            window.open(pdfUrl || pages[0].pdfUrl, '_blank');
+            return;
+        }
+
+        setIsFinishing(true);
+        try {
+            const response = await loadRequest(
+                async () => await api.post('image/finishBook', { bookId }),
+                'Generating your book...'
+            );
+            
+            const data = response.data;
+            if (!data?.bookPDF) {
+                throw new Error('No PDF URL received from server');
+            }
+            
+            setPdfUrl(data.bookPDF);
+            window.open(data.bookPDF, '_blank'); // Changed to '_blank' instead of `${title}.pdf`
+            dispatch(finishBook());
+
+        } catch (error) {
+            console.error('Error finishing book:', error);
+            alert(error.message || 'Failed to finish book. Please try again.');
+        } finally {
+            setIsFinishing(false);
+        }
+    };
+
     return {
         flipBookRef,
         pages,
@@ -100,7 +138,11 @@ const useModifyBook = () => {
         getCurrentPageImage: () => pages[currentPage]?.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`,
         flipToCreationPage: useCallback(() => {
             startAnimation(pages.length, true);
-        }, [startAnimation, pages.length])
+        }, [startAnimation, pages.length]),
+        handleFinishBook,
+        isFinishing,
+        isBookFinished,
+        pdfUrl,  // Add this to the returned object
     };
 };
 

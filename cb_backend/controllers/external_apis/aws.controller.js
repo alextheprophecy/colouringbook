@@ -10,33 +10,6 @@ const BUCKET_NAME='colouringbookpages'
 const getFileUrl = ({key, TTL=3600}) =>
     getSignedUrl(client, new GetObjectCommand({Bucket: BUCKET_NAME, Key: key}), {expiresIn: TTL})
 
-
-const uploadFromURL = (url, file_data) => {
-    return axios.get(url, { responseType: "arraybuffer", responseEncoding: "binary" }).then((response) => {
-        const params = new PutObjectCommand({
-            ContentType: response.headers["content-type"],
-            ContentLength: response.data.length.toString(), // or response.header["content-length"] if available for the type of file downloaded
-            Bucket: BUCKET_NAME,
-            Body: response.data,
-            Key: file_data.key
-        })
-        return client.send(params)
-    })
-}
-
-const uploadStream = (stream, key, contentType) => {
-    const upload = new Upload({
-        client,
-        params: {
-            Bucket: BUCKET_NAME,
-            Key: key,
-            Body: stream,
-            ContentType: contentType,
-        },
-    })
-    return upload.done()
-}
-
 const getFileData = async (key) => {
     const command = new GetObjectCommand({
         Bucket: BUCKET_NAME,
@@ -71,10 +44,24 @@ const uploadFromBase64URI = (dataURI, {key}) => {
     return client.send(params);
 }
 
+
+const uploadStream = (stream, key, contentType) => {
+    const upload = new Upload({
+        client,
+        params: {
+            Bucket: BUCKET_NAME,
+            Key: key,
+            Body: stream,
+            ContentType: contentType,
+        },
+    })
+    return upload.done()
+}
+
+
 module.exports = {
     getFileUrl,
-    uploadFromURL,
     getFileData,
-    uploadStream,
     uploadFromBase64URI,
+    uploadStream
 }
