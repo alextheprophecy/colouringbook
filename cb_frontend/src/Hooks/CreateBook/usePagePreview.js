@@ -15,16 +15,15 @@ const usePagePreview = () => {
     const handleRegenerate = useCallback(async () => {
         setIsLoading(true);
         try {
-            const { newImage, detailedDescription } = await loadRequest(
+            const { image } = await loadRequest(
                 () => regenerateImage(currentPageData.detailedDescription),
                 "Regenerating image..."
             );
             dispatch(updatePage({ 
                 index: currentPage, 
                 data: { 
-                    image: newImage, 
-                    detailed_description: detailedDescription 
-                } 
+                    image: image
+                }
             }));
         } catch (error) {
             console.error('Error regenerating image:', error);

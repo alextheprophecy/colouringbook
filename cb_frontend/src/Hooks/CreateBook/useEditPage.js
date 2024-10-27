@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePage, setIsEditing } from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
-import { EditOptions } from '../../constants/editOptions';
 import useLoadRequest from './useLoadRequest';
 
 const useEditPage = () => {
@@ -13,36 +12,37 @@ const useEditPage = () => {
     const [isClosing, setIsClosing] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [showDescription, setShowDescription] = useState(false);
-    const [sceneDescription, setSceneDescription] = useState('');
-    const [showEditOptions, setShowEditOptions] = useState(true);
-    const [editMode, setEditMode] = useState('');
-    const { generateImage, enhanceImage } = useImageGeneration();
+    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available']);
+    const { regenerateImage, enhanceImage } = useImageGeneration();
     const [isLoading, setIsLoading] = useState(false);
     const { loadRequest} = useLoadRequest();
+
+    const [isEnhancing, setIsEnhancing] = useState(false);
+
+    const formatPageDescription = (pageData) => {
+        if (!pageData) return ['No user description available', 'No detailed description available'];
+        const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
+        const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
+        console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
+        return [formattedUserDescription, formattedDetailedDescription];
+    }
 
     useEffect(() => {
         if (isEditing && !isClosing) {
             setShowDescription(false);
-            setSceneDescription(pages[currentPage]?.description || '');
+            setSceneDescription(formatPageDescription(pages[currentPage]));
             setCurrentImage(pages[currentPage]?.image || '');
             setTimeout(() => setIsVisible(true), 50);
         } else if (!isEditing && !isClosing) {
             handleClose();
         }
-    }, [isEditing, currentPage, pages]);
-
-    const handleEditOption = (mode) => {
-        setEditMode(mode);
-        setShowEditOptions(false);
-        if (mode === EditOptions.MODIFY) setEditText('');
-        else setEditText(sceneDescription);
-    };
+    }, [isEditing, currentPage, pages, isClosing]);
 
     const handleClose = useCallback(() => {
         if (!isClosing) {
             setIsClosing(true);
             setIsVisible(false);
-            setShowEditOptions(true);
+            setIsEnhancing(false);
             setTimeout(() => {
                 dispatch(setIsEditing(false));
                 setIsClosing(false);
@@ -50,33 +50,30 @@ const useEditPage = () => {
         }
     }, [dispatch, isClosing]);
 
-    const handleSubmit = useCallback(async () => {
-        if (editText.trim() !== '') {
-            setIsLoading(true);
-            try {
-                let newImage, detailedDescription;
-                if (editMode === EditOptions.MODIFY) 
-                    ({ newImage, detailedDescription } = await loadRequest(() => enhanceImage(sceneDescription, editText), "Enhancing image..."));
-                else 
-                    ({ newImage, detailedDescription } = await loadRequest(() => generateImage(editText), "Creating a new scene for page " + (currentPage)));            
+    const handleEnhance = useCallback(() => {
+        alert('Not implemented yet');
+    }, []);
 
-                dispatch(updatePage({ 
-                    index: currentPage, 
-                    data: { 
-                        image: newImage, 
-                        description: editText,
-                        detailed_description: detailedDescription
-                    } 
-                }));
-                dispatch(setIsEditing(false));
-                setShowEditOptions(true);
-            } catch (error) {
-                console.error('Error generating image:', error);
-            } finally {
-                setIsLoading(false);
-            }
+    const handleRegenerate = useCallback(async () => {
+        const detailedDescription = pages[currentPage]?.detailed_description;
+        if (!detailedDescription) {
+            alert('No detailed description found');
+            return false;
         }
-    }, [editText, currentPage, dispatch, generateImage, enhanceImage, editMode, sceneDescription]);
+        console.log('Regenerating image...', detailedDescription);
+        try {
+            console.log('Regenerating image...');
+            const image = await loadRequest(() => regenerateImage(detailedDescription), "Regenerating image...");
+            dispatch(updatePage({index: currentPage, data: { image }}));
+            return true;
+        } catch (error) {
+            console.error('Error regenerating image:', error);
+            return false;
+        } finally {
+            setIsLoading(false);
+            handleClose();
+        }      
+    }, [currentPage, pages]);
 
     return {
         editText,
@@ -86,13 +83,13 @@ const useEditPage = () => {
         currentImage,
         isLoading,
         handleClose,
-        handleSubmit,
         showDescription,
         setShowDescription,
         sceneDescription,
-        showEditOptions,
-        handleEditOption,
-        editMode
+        isEnhancing,
+        setIsEnhancing,
+        handleEnhance,
+        handleRegenerate
     };
 };
 

@@ -9,6 +9,8 @@ const useLoadRequest = () => {
         try {
             const result = await asyncFunction();
             return result;
+            //TODO: if result is false, show error message in a pop up
+
         } catch (error) {
             console.error('Error during async operation:', error);
             throw error;

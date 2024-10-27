@@ -2,8 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Loading from './Loading';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
-import { EditOptions } from '../../constants/editOptions';
-import { ChevronLeft } from 'lucide-react'; // Import the X icon
+import {Wand2, RotateCcw, Info } from 'lucide-react'; // Add Info to the imports
 
 const EditPage = () => {
     const currentPage = useSelector((state) => state.book.currentPage);
@@ -16,13 +15,13 @@ const EditPage = () => {
         currentImage,
         isLoading,
         handleClose,
-        handleSubmit,
         showDescription,
         setShowDescription,
         sceneDescription,
-        showEditOptions,
-        handleEditOption,
-        editMode
+        isEnhancing,
+        setIsEnhancing,
+        handleRegenerate,
+        handleEnhance
     } = useEditPage();
 
     if ((!isVisible && !isClosing) || currentPage === 0) return null;    
@@ -36,13 +35,6 @@ const EditPage = () => {
                 className={`bg-white p-4 rounded-lg w-full max-w-md transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
             >
-               {/*  <button 
-                    className="z-[15] absolute top-[1%] right-[2%] text-gray-500 bg-white rounded-full p-1"
-                    onClick={handleClose}
-                >
-                    <ChevronLeft size={30} strokeWidth={2.5} color='grey' /> 
-                </button> */}
-
                 {isLoading ? (
                     <Loading description="Generating new image..." />
                 ) : (
@@ -50,8 +42,11 @@ const EditPage = () => {
                         <div className="mb-4 relative">
                             {showDescription ? (
                                 <div className="w-[90%] mx-[5%] aspect-[2/3] bg-gray-100 rounded p-4 overflow-y-auto">
-                                    <p className="text-sm">{sceneDescription}</p>
-                                </div>
+                                    <h3 className="text-lg font-bold mb-2">User Description</h3>
+                                    <p className="text-sm mb-4">{sceneDescription[0]}</p>
+                                    <h3 className="text-lg font-bold mb-2">API Description</h3>
+                                    <p className="text-sm">{sceneDescription[1]}</p>
+                                </div>                
                             ) : (
                                 currentImage && (
                                     <img 
@@ -62,36 +57,46 @@ const EditPage = () => {
                                 )
                             )}
                             <button
-                                className="absolute bottom-2 right-[calc(5%+5px)] bg-white bg-opacity-75 text-black text-xs px-2 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300"
+                                className="absolute bottom-2 right-[calc(5%+5px)] bg-white bg-opacity-75 text-black text-s px-2 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center"
                                 onClick={() => setShowDescription(!showDescription)}
                             >
-                                {showDescription ? 'See Image' : 'See Description'}
+                                {showDescription ? 'See Image' : <><Info className="w-4 h-4 inline-block mr-1" />Info </>}
                             </button>
                         </div>
-                        {showEditOptions ? (
+                        {!isEnhancing ? (
                             <div className="flex flex-col items-center space-y-4">
-                                <div className="w-full flex justify-center space-x-4">
-                                    <div className="w-1/2 flex flex-col items-center">
-                                        <button 
-                                            className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
-                                            onClick={() => handleEditOption(EditOptions.MODIFY)}
-                                        >
-                                            Enhance scene
-                                        </button>
-                                        <span className="text-xs text-gray-500 mt-1">make character smile, add a tree on the left, ...</span>
-                                    </div>
-                                    <div className="w-1/2 flex flex-col items-center">
-                                        <button 
-                                            className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-300"
-                                            onClick={() => handleEditOption(EditOptions.START_OVER)}
-                                        >
-                                            Replace scene
-                                        </button>
-                                        <span className="text-xs text-gray-500 mt-1">Start fresh with a new scene</span>
-                                    </div>
+                                <div className="w-full flex justify-center gap-4 mb-4">
+                                    <button 
+                                        className="flex-1 bg-green-500 hover:bg-green-600 
+                                            text-white py-3 px-6 rounded-lg 
+                                            transition-all duration-300 ease-in-out 
+                                            hover:scale-[1.02] shadow-md hover:shadow-lg
+                                            flex items-center justify-center gap-2
+                                            font-children font-semibold tracking-[0.075em]"
+                                        onClick={() => setIsEnhancing(true)}
+                                    >
+                                        <Wand2 className="w-6 h-6 flex-shrink-0"/> 
+                                        <span>Enhance</span>
+                                    </button>
+                                    <button 
+                                        className="flex-1 bg-blue-500 hover:bg-blue-600 
+                                            text-white py-3 px-6 rounded-lg 
+                                            transition-all duration-300 ease-in-out 
+                                            hover:scale-[1.02] shadow-md hover:shadow-lg
+                                            flex items-center justify-center gap-2
+                                            font-children font-semibold tracking-[0.075em]"
+                                        onClick={handleRegenerate}
+                                    >
+                                        <RotateCcw className="w-6 h-6 flex-shrink-0"/>
+                                        <span>Regenerate scene</span>
+                                    </button>
                                 </div>
                                 <button 
-                                    className="w-1/2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors duration-300"
+                                    className="w-full max-w-md bg-gray-400 hover:bg-gray-500 
+                                        text-white py-3 px-6 rounded-lg 
+                                        transition-all duration-300 ease-in-out 
+                                        hover:scale-[1.02] shadow-md hover:shadow-lg
+                                        font-children font-semibold tracking-wider"
                                     onClick={handleClose}
                                 >
                                     Cancel
@@ -100,12 +105,12 @@ const EditPage = () => {
                         ) : (
                             <>
                                 <div className="bg-[#87CEFA] p-2 rounded mb-4 text-center">
-                                    {editMode === EditOptions.MODIFY ? 'How can we improve this image?' : 'Describe your scene again'}
+                                    Describe your scene again
                                     <textarea 
                                         className="w-full h-32 border border-gray-300 rounded bg-gray-200 mt-2"
                                         value={editText}
                                         onChange={(e) => setEditText(e.target.value)}
-                                        placeholder={editMode === EditOptions.MODIFY ? " Make the main character smile more ... \n Add a tree on the left ..." : "Describe your new scene..."}
+                                        placeholder={" Make the main character smile more ... \n Add a tree on the left ..."}
                                     />
                                 </div>
                                 <div className="flex justify-end">
@@ -117,7 +122,7 @@ const EditPage = () => {
                                     </button>
                                     <button 
                                         className={`px-4 py-2 rounded ${editText.trim() !== '' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400 cursor-not-allowed'}`}
-                                        onClick={handleSubmit}
+                                        onClick={handleEnhance}
                                         disabled={editText.trim() === ''}
                                     >
                                         Save

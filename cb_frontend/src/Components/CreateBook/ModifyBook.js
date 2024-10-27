@@ -1,7 +1,7 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, CirclePlus, Pencil } from 'lucide-react';
+import { ChevronRight, ChevronLeft, CirclePlus, Pencil, Plus } from 'lucide-react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 import { useCallback, useState } from 'react';
@@ -53,7 +53,7 @@ const ModifyBook = () => {
                 >
                     <ChevronLeft 
                         className={`h-8 w-8 
-                                  text-blue-400 group-hover:text-blue-500
+                                  text-blue-600 group-hover:text-blue-800
                                   ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
@@ -73,7 +73,7 @@ const ModifyBook = () => {
                 >
                     <ChevronRight 
                         className={`h-8 w-8 
-                                  text-blue-400 group-hover:text-blue-500
+                                  text-blue-600 group-hover:text-blue-800
                                   ${isFlipping ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     />
                 </button>
@@ -84,12 +84,13 @@ const ModifyBook = () => {
                 <button 
                     className={`absolute right-0 bottom-0
                             w-16 h-16
-                            bg-white/60
+                            bg-white/80
                             shadow-lg hover:shadow-xl
                             rounded-tl-full
                             group
                             overflow-hidden
                             origin-bottom-right
+                            ring-1 ring-blue-200
                             z-10`}
                    
                     onClick={() => setIsEditing(true)}
@@ -98,7 +99,7 @@ const ModifyBook = () => {
                     <Pencil 
                         className={`absolute bottom-2 right-2
                                 h-8 w-8 
-                                text-blue-400 group-hover:text-blue-500
+                                text-blue-600 group-hover:text-blue-800
                                 cursor-pointer`}
                     />
                 </button>
@@ -141,24 +142,44 @@ const ModifyBook = () => {
                         ))}                  
 
                         {/* Creation page */}
-                        <CreatePage classNameProp={pageClassname(1)}/>
-
-                        
-                    </HTMLFlipBook>   
-
+                        <CreatePage classNameProp={pageClassname(1)}/>                        
+                    </HTMLFlipBook>
                 </div>
 
                 <div className="mt-8 flex flex-col gap-4 items-center">
                     <button 
-                        className={`w-full max-w-md ${
-                            isOnCreationPage()
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-green-500 hover:bg-green-600'
-                        } text-white py-3 px-6 rounded-lg font-semibold transition-all transform hover:scale-102 shadow-md hover:shadow-lg`}
+                        className={`w-full max-w-md 
+                            ${isOnCreationPage()
+                                ? 'opacity-0 pointer-events-none'
+                                : 'opacity-100 relative'
+                            } 
+                            ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
+                            text-white py-3 px-6 rounded-lg 
+                            transition-opacity duration-300 ease-in-out 
+                            hover:scale-[1.02] shadow-md hover:shadow-lg
+                            flex items-center justify-center gap-2
+                             font-children font-semibold tracking-wider`}
                         onClick={flipToCreationPage}
                         disabled={isOnCreationPage() || isFlipping}
                     >
-                        Add new page
+                        <Plus className="w-5 h-5" />
+                        New page
+                    </button>
+
+                    <button 
+                        className={`w-full max-w-md 
+                            ${isOnCreationPage()
+                                ? 'opacity-100 -translate-y-4 scale-110'
+                                : 'opacity-70 translate-y-0 scale-100'
+                            }
+                            bg-blue-500 hover:bg-blue-600 
+                            text-white py-3 px-6 rounded-lg 
+                            transition-all duration-300 ease-in-out 
+                            hover:scale-[1.02] shadow-md hover:shadow-lg
+                            font-children font-semibold  tracking-wider`}
+                        onClick={() => {/* Add your finish book logic here */}}
+                    >
+                        Finish Book
                     </button>
                 </div>
 

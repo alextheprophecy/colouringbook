@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useLoadRequest from './useLoadRequest';
-import { addPage } from '../../redux/bookSlice';
+import { addPage, updateContext} from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 
 const useCreatePage = () => {
@@ -13,18 +13,17 @@ const useCreatePage = () => {
     const handleDescriptionChange = (e) => setDescription(e.target.value);
 
     const createImage = async () => {
-        alert(description);
-        /* if (description.trim() !== '') {
+        if (description.trim() !== '') {
             try {
-                const { image, detailedDescription } = await loadRequest(() => generateImage(description), "Creating image...");
+                const { image, detailedDescription, updatedContext} = await loadRequest(() => generateImage(description), "Creating image...");
                 dispatch(addPage({ image: image, user_description: description, detailed_description: detailedDescription }));
+                dispatch(updateContext(updatedContext));
                 return true;
             } catch (error) {
                 console.error('Error generating image:', error);
                 return false;
             }
-        } */
-        // alert('Please enter a description');
+        }
     };
 
     return {

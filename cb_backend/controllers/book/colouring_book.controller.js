@@ -1,8 +1,9 @@
-const {queryFluxSchnell, queryFluxBetter, randomSavedSeed} = require("../external_apis/replicate.controller");
+const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed} = require("../external_apis/replicate.controller");
 const Book = require("../../models/book.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
 const {pagesSimpleStory, AdvancedGenerator, generateScenePageDescription} = require("./book_description.controller");
 const {updateBookContext, generatePageDescriptionGivenContext, contextObjectSchema} = require("./descriptions_controller");
+const { query } = require("express");
 
 const MAX_PAGE_COUNT = 6
 
@@ -76,10 +77,10 @@ const generateSingleScenePage = async (req, res) => {
 const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const { sceneDescription, currentContext } = req.body;
+    console.log('generating page with:', sceneDescription);
+    if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
 
-    try {
-        if (!sceneDescription) return res.status(400).json({ error: 'Missing sceneDescription in request body' })        
-        
+    try {        
         const parsedContext = (!currentContext || currentContext === '') ? {
                 characters: [],
                 storySummary: '',
@@ -89,17 +90,21 @@ const generatePageWithContext = async (req, res) => {
             } :  contextObjectSchema.parse(currentContext);
         
         
-        const pageDescription = await generatePageDescriptionGivenContext(sceneDescription, parsedContext);
+        const pageDescription = await generatePageDescriptionGivenContext(sceneDescription, parsedContext, miniModel = false);
+        console.log('generated page description:', pageDescription);
 
         //generate image
-        const imageModel = queryFluxSchnell /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
+        const imageModel = queryFluxSchnell
         
         const [image, updatedContext] = await Promise.all([
             imageModel(CHILD_PROMPT(pageDescription)),
             updateBookContext(pageDescription, parsedContext)
         ]);
         
-        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image });
+        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image }); 
+
+        /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
+
         
     } catch (error) {
         console.error("Error in generatePageWithContext:", error);
@@ -109,7 +114,18 @@ const generatePageWithContext = async (req, res) => {
 
 const regeneratePage = async (req, res) => {
     const user = req.user;
-    const { detailed_description, currentContext } = req.body;
+    const { detailedDescription } = req.body;
+    if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
+    
+    try {
+        console.log('regenerating page with:', detailedDescription);
+        const gen_seed = randomSeed();
+        const image = await queryFluxBetter(CHILD_PROMPT(detailedDescription), gen_seed);
+        res.status(200).json({ image });
+    } catch (error) {
+        console.error('Error regenerating page:', error);
+        res.status(500).json({ error: 'Failed to regenerate page' });
+    }
 }
 
 module.exports = {
@@ -117,5 +133,6 @@ module.exports = {
     genBookPDF,
     test,
     generateSingleScenePage,
-    generatePageWithContext
+    generatePageWithContext,
+    regeneratePage
 }

@@ -1,8 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
-import { CirclePlus } from 'lucide-react';
-import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 const CreatePage = React.forwardRef(({classNameProp}, ref) => {  
     const {
@@ -44,8 +42,8 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                         transform hover:scale-105 
                                         transition-all duration-200"
                             >
-                                <CirclePlus className="w-5 h-5 text-amber-700" />
-                                <span className="font-children text-amber-800 font-medium text-lg">Add</span>
+                                <Plus className="w-5 h-5 text-amber-700" />
+                                <span className="text-amber-800 text-lg font-children font-semibold">Add</span>
                             </button>
                         </div>
                     </div>
