@@ -44,7 +44,47 @@ const EditPage = () => {
                                     <h3 className="text-lg font-bold">API Description</h3>
                                     <p className="text-m font-bold text-red-500">Seed: {sceneDescription[2]}</p>
                                 </div>
-                                <p className="text-sm">{sceneDescription[1]}</p>
+                                <p className="text-sm mb-4">{sceneDescription[1]}</p>
+                                
+                                <h3 className="text-lg font-bold mb-2">Context</h3>
+                                {sceneDescription[3] && (
+                                    <div className="text-sm">
+                                        <div className="mb-2">
+                                            <span className="font-semibold">Story Summary:</span> {sceneDescription[3].storySummary}
+                                        </div>
+                                        <div className="mb-2">
+                                            <span className="font-semibold">Environment:</span> {sceneDescription[3].environment}
+                                        </div>
+                                        <div className="mb-2">
+                                            <span className="font-semibold">Current Situation:</span> {sceneDescription[3].currentSituation}
+                                        </div>
+                                        {sceneDescription[3].characters && (
+                                            <div className="mb-2">
+                                                <span className="font-semibold">Characters:</span>
+                                                <ul className="list-disc pl-4">
+                                                    {sceneDescription[3].characters.map((char, index) => (
+                                                        <li key={index}>
+                                                            <span className="font-medium">{char.name}:</span> {char.description}
+                                                            {char.lastSeenDoing && (
+                                                                <span className="italic"> (Last Seen doing: {char.lastSeenDoing})</span>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {sceneDescription[3].keyObjects && sceneDescription[3].keyObjects.length > 0 && (
+                                            <div>
+                                                <span className="font-semibold">Key Objects:</span>
+                                                <ul className="list-disc pl-4">
+                                                    {sceneDescription[3].keyObjects.map((obj, index) => (
+                                                        <li key={index}>{obj}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>                
                         ) : (
                             currentImage && (

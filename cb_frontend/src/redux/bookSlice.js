@@ -22,9 +22,10 @@ const initialState = {
   currentContext: '',
   currentPage: 0,
   isEditing: false,
-  isModifyingBook: false,
   isLoading: false,
   loadingText: 'Loading...',
+  hasBookStarted: false, // New state variable
+  bookId: 0
 };
 
 const bookSlice = createSlice({
@@ -49,9 +50,6 @@ const bookSlice = createSlice({
     setIsEditing: (state, action) => {
       state.isEditing = action.payload;
     },
-    setIsModifyingBook: (state, action) => {
-      state.isModifyingBook = action.payload;
-    },
     startLoading: (state, action) => {
       state.isLoading = true;
       state.loadingText = action.payload;
@@ -60,9 +58,13 @@ const bookSlice = createSlice({
       state.isLoading = false;
       state.loadingText = '';
     },
+    startBook: (state, action) => {
+      state.hasBookStarted = true;
+      state.bookId = action.payload
+    },
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, setIsModifyingBook, startLoading, stopLoading } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook } = bookSlice.actions;
 
 export default bookSlice.reducer;

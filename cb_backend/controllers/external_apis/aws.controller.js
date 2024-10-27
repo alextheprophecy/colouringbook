@@ -7,9 +7,8 @@ const client = new S3Client({ region: process.env.AWS_DEFAULT_REGION});
 const BUCKET_NAME='colouringbookpages'
 
 
-
-const getFileUrl = (file_data) =>
-    getSignedUrl(client, new GetObjectCommand({Bucket: BUCKET_NAME, Key: file_data.key}), {expiresIn: file_data.TTL})
+const getFileUrl = ({key, TTL=3600}) =>
+    getSignedUrl(client, new GetObjectCommand({Bucket: BUCKET_NAME, Key: key}), {expiresIn: TTL})
 
 
 const uploadFromURL = (url, file_data) => {
@@ -53,10 +52,29 @@ const getFileData = async (key) => {
     })
 }
 
+const uploadFromBase64URI = (dataURI, {key}) => {
+    // Remove the data URL prefix and get just the base64 data
+    const base64Data = dataURI.replace(/^data:image\/\w+;base64,/, '');
+    //get the image filetype: const mimeType = dataURI.match(/^data:([^;]+);base64,/)[1];
+
+    // Convert base64 to buffer
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    const params = new PutObjectCommand({
+        ContentType: 'image/png',  // You can make this dynamic if needed
+        ContentLength: buffer.length.toString(),
+        Bucket: BUCKET_NAME,
+        Body: buffer,
+        Key: key
+    });
+    
+    return client.send(params);
+}
 
 module.exports = {
     getFileUrl,
     uploadFromURL,
     getFileData,
     uploadStream,
+    uploadFromBase64URI,
 }

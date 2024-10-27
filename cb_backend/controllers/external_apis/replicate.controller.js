@@ -15,7 +15,6 @@ const randomSeed = () => {
 
 const _runModel = (input, model) =>
     replicate.run(model, {input: input}).then(o => o[0].url())
-
 const queryFluxSchnell = (prompt, seed = randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) => {
     const input = {
         prompt: prompt,

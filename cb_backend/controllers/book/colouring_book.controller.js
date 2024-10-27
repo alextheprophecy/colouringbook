@@ -1,8 +1,10 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed} = require("../external_apis/replicate.controller");
 const Book = require("../../models/book.model");
+const Book2 = require("../../models/book2.model");
 const {uploadBookImages, getImageData, saveBookPDF} = require("../user/files.controller");
 const {pagesSimpleStory, AdvancedGenerator, generateScenePageDescription} = require("./book_description.controller");
-const {updateBookContext, generatePageDescriptionGivenContext, contextObjectSchema} = require("./descriptions_controller");
+const {updateBookContext, generatePageDescriptionGivenContext, parseContextInput} = require("./descriptions_controller");
+const {uploadFromBase64URI, getFileUrl} = require("../external_apis/aws.controller");
 const { query } = require("express");
 
 const MAX_PAGE_COUNT = 6
@@ -74,54 +76,76 @@ const generateSingleScenePage = async (req, res) => {
     }
 }
 
+
+const savePageData = async (user, bookId, pageNumber, image) => {
+    const key = `users/${user.email.replace('@', '-')}/${bookId}/p${pageNumber}/v_${Date.now()}.png`;
+    const [presignedUrl, _] = await Promise.all([
+        getFileUrl({key}),
+        uploadFromBase64URI(image.href, {key})
+    ])
+    return presignedUrl;
+}
+
+
 const generatePageWithContext = async (req, res) => {
     const user = req.user;
-    const { sceneDescription, currentContext } = req.body;
+    const { sceneDescription, currentContext, bookId} = req.body;
     console.log('generating page with:', sceneDescription);
-    if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
+    if (!bookId || !sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
 
-    try {        
-        const parsedContext = (!currentContext || currentContext === '') ? {
-                characters: [],
-                storySummary: '',
-                environment: '',
-                keyObjects: [],
-                currentSituation: ''
-            } :  contextObjectSchema.parse(currentContext);
+    try {
+        // Check if the Book2 entry with the given pageId exists
+        const bookEntry = await Book2.findOne({userId: user.id, _id: bookId});
+        if (!bookEntry) return res.status(404).json({ error: 'Book entry not found' });
         
-        
-        const pageDescription = await generatePageDescriptionGivenContext(sceneDescription, parsedContext, miniModel = false);
-        console.log('generated page description:', pageDescription);
+        const parsedContext = parseContextInput(currentContext);        
+        const pageDescription = await generatePageDescriptionGivenContext(sceneDescription, parsedContext, miniModel = true); //TODO: change to false and set models to better
 
-        //generate image
-        const imageModel = queryFluxSchnell
+        // Generate image
+        const imageModel = queryFluxSchnell;
         const seed = randomSavedSeed();
         const [image, updatedContext] = await Promise.all([
-            imageModel(CHILD_PROMPT(pageDescription), seed),
+            imageModel(CHILD_PROMPT(pageDescription), seed), //get href since image is a url object
             updateBookContext(pageDescription, parsedContext)
         ]);
-        
-        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image, seed}); 
 
-        /* options.greaterQuality ? queryFluxBetter : queryFluxSchnell*/;
+        //save data to s3 and update book
+        const [presignedUrl, _] = await Promise.all([
+            savePageData(user, bookEntry.id, bookEntry.pageCount, image),                        
+            Book2.findByIdAndUpdate(bookEntry.id, { $inc: { pageCount: 1 } })
+        ]);
 
-        
+        console.log('presignedUrl:', presignedUrl);
+        res.status(200).json({ detailedDescription: pageDescription, updatedContext, image: presignedUrl, seed });
+
     } catch (error) {
         console.error("Error in generatePageWithContext:", error);
         res.status(500).json({ error: 'An error occurred while processing the request' });
     }
 };
 
+
+
 const regeneratePage = async (req, res) => {
     const user = req.user;
-    const { detailedDescription } = req.body;
+    const { detailedDescription, bookId, currentPage } = req.body;
+
     if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
+    if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
     
     try {
+        const bookEntry = await Book2.findOne({userId: user.id, _id: bookId});
+        console.log('bookEntry:', bookEntry);
+        if (!bookEntry) return res.status(404).json({ error: 'Book entry not found' });
+
         console.log('regenerating page with:', detailedDescription);
         const seed = randomSeed();
-        const image = await queryFluxBetter(CHILD_PROMPT(detailedDescription), seed);
-        res.status(200).json({ image, seed });
+
+        console.log('querying flux');
+        const image = await queryFluxSchnell(CHILD_PROMPT(detailedDescription), seed);
+        const presignedUrl = await savePageData(user, bookEntry.id, currentPage, image);
+
+        res.status(200).json({ image: presignedUrl, seed }); 
     } catch (error) {
         console.error('Error regenerating page:', error);
         res.status(500).json({ error: 'Failed to regenerate page' });
@@ -132,7 +156,6 @@ module.exports = {
     generateColouringBook,
     genBookPDF,
     test,
-    generateSingleScenePage,
     generatePageWithContext,
-    regeneratePage
+    regeneratePage,
 }

@@ -7,7 +7,7 @@ const DescriptionsController = () => {
         characters: z.array(z.object({
             name: z.string(),
             description: z.string(),
-            currentState: z.string(),
+            lastSeenDoing: z.string(),  // Changed from currentState
         })),
         storySummary: z.string(),
         environment: z.string(),
@@ -45,11 +45,11 @@ const DescriptionsController = () => {
             ${newPageDescription}
 
             Please update the book context object to include new information from this page. Maintain and update the following key elements:
-            1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits c) current expression/pose/state in the latest scene. Remove characters that are no longer relevant unless they might reappear later.
+            1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
             2. **Story Summary:** A concise summary of the story so far.
-            3. **Environment:** Description of the current setting or any significant locations.
+            3. **Environment:** Very short description of the current setting location, in a few words.
             4. **Key Objects:** List only the important items or objects that are central to the story's progression or have a significant impact on the plot. (examples: magical artifacts, treasure maps, or items the characters are seeking or using in a meaningful way. Do **not** include trivial or scene-setting items like background objects. Leave empty if none. Do not include characters here.
-            5. **Current Situation:** The immediate context of the story at this point, in the present scene.
+            5. **Current Situation:** The immediate context of the story at this point, in the present scene, in a few words as a note.
 
             Ensure all existing information is preserved unless explicitly changed by the new page. Add new elements as needed. The context should be short and snappy, maintaining visual and narrative consistency but concise enough for practical use.`;
         
@@ -61,12 +61,27 @@ const DescriptionsController = () => {
             throw error;
         }
     }
-    
+
+    const parseContextInput = (contextInput) => {
+        try {
+            return (!contextInput || contextInput === '') ? {
+                characters: [],
+                storySummary: '',
+                environment: '',
+                keyObjects: [],
+                currentSituation: ''
+            } : contextObjectSchema.parse(contextInput);
+        } catch (error) {
+            console.error("Error parsing context input:", error);
+            throw error;
+        }
+    }
 
     return {
         updateBookContext,
         generatePageDescriptionGivenContext,
-        contextObjectSchema
+        contextObjectSchema,
+        parseContextInput
     };
 }
 

@@ -16,16 +16,12 @@ const ModifyBook = () => {
         flipBookRef,
         pages,
         currentPage,
-        isEditing,
-        isModifyingBook,
         isFlipping,
         isOnCreationPage,
         startAnimation,
         handlePageNavigation,
         onFlip,
-        toggleModifyingBook,
         setIsEditing,
-        getCurrentPageImage,
         flipToCreationPage
     } = useModifyBook();
 
@@ -129,7 +125,7 @@ const ModifyBook = () => {
                         showCover={true}
                         flippingTime={FLIP_TIMES.USER}
                         startPage={currentPage}
-                        onInit={() => startAnimation(pages.length - 1)}  // For initial animation
+                        onInit={() => startAnimation(pages.length-1)}  // For initial animation
                     >
                         {pages.map((page, index) => (
                             <div key={index} className="page-element">

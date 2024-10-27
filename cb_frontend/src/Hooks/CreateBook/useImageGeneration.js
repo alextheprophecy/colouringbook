@@ -2,16 +2,15 @@ import api from '../../Hooks/ApiHandler'; // Assuming you have an API handler fo
 import { useSelector, useDispatch } from 'react-redux';
 
 const useImageGeneration = () => {
-    const { currentContext} = useSelector(state => state.book);
+    const { currentContext, bookId, currentPage } = useSelector(state => state.book);
 
     const generateImage = async (description) => {
         if (!description || description.trim() === '') return console.error('No description found');            
         
         try {            
-            console.log('generating page with:', description);
-            const response = await api.post('image/generatePageWithContext', {sceneDescription: description, currentContext});
+
+            const response = await api.post('image/generatePageWithContext', {sceneDescription: description, currentContext, bookId});
             const { updatedContext, ...pageData } = response.data;
-            console.log('created page with:', pageData, ' and updated context:', updatedContext);
 
             return { ...pageData, updatedContext };  
 
@@ -25,7 +24,8 @@ const useImageGeneration = () => {
         if (!detailedDescription || detailedDescription.trim() === '') return console.error('No detailedDescription found');            
 
         try {            
-            const response = await api.post('image/regeneratePage', {detailedDescription});
+            console.log('regenerating image with:', JSON.stringify({detailedDescription, bookId, currentPage: currentPage-1}));
+            const response = await api.post('image/regeneratePage', {detailedDescription, bookId, currentPage: currentPage-1}); //currentPage is 1-indexed (first page is cover)
             const { image, seed } = response.data;
             return { image, seed };  
 

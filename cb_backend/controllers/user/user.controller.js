@@ -1,5 +1,5 @@
 const User = require("../../models/user.model");
-const Book = require("../../models/book.model");
+const Book2 = require("../../models/book2.model");
 const {generateColouringBook, genBookPDF} = require("../book/colouring_book.controller");
 const {getBookImages} = require("../user/files.controller");
 const {getPDF} = require("./files.controller");
@@ -85,9 +85,20 @@ const _checkCreditsSufficient = (user, {greaterQuality, imageCount}) => {
     })
 }
 
+
+const createBook = async (req, res) => {
+    const user = req.user;
+    const { title } = req.body;
+    const book = new Book2({userId: user.id, title});
+    await book.save();
+    res.status(200).json({ book });
+}
+
+
 module.exports = {
     generateUserBook,
     getUserBooks,
     getBookPDF,
-    generateBookDescription
+    generateBookDescription,
+    createBook
 }

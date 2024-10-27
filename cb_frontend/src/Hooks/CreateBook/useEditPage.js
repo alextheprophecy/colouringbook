@@ -6,7 +6,7 @@ import useLoadRequest from './useLoadRequest';
 
 const useEditPage = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing } = useSelector(state => state.book);
+    const { pages, currentPage, isEditing, currentContext } = useSelector(state => state.book);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
@@ -19,11 +19,12 @@ const useEditPage = () => {
     const [isEnhancing, setIsEnhancing] = useState(false);
 
     const formatPageDescription = (pageData) => {
+        console.log('pageData:', pageData.currentContext);
         if (!pageData) return ['No user description available', 'No detailed description available'];
         const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
         const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
         console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
-        return [formattedUserDescription, formattedDetailedDescription, pageData?.seed];
+        return [formattedUserDescription, formattedDetailedDescription, pageData.seed || '', currentContext || null];
     }
 
     const handleClose = useCallback(() => {
