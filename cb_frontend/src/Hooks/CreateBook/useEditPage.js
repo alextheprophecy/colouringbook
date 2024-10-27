@@ -34,9 +34,7 @@ const useEditPage = () => {
 
     
     useEffect(() => {
-        console.log('changes');
         if (isEditing) {
-            console.log('isEditing', isEditing);
             //open the edit page
             setShowDescription(false);
             setSceneDescription(formatPageDescription(pages[currentPage]));
@@ -45,7 +43,7 @@ const useEditPage = () => {
         } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages]);
+    }, [isEditing, currentPage, pages, handleClose]);
 
     const handleEnhance = useCallback(() => {
         alert('Not implemented yet');
@@ -53,10 +51,8 @@ const useEditPage = () => {
 
     const handleRegenerate = useCallback(async () => {
         const detailedDescription = pages[currentPage]?.detailed_description;
-        if (!detailedDescription) {
-            alert('No detailed description found');
-            return false;
-        }
+        if (!detailedDescription) return alert('No detailed description found');
+        
         console.log('Regenerating image...', detailedDescription);
         try {
             console.log('Regenerating image...');
@@ -70,7 +66,7 @@ const useEditPage = () => {
             setIsLoading(false);
             handleClose();
         }      
-    }, [currentPage, pages]);
+    }, [currentPage, pages, handleClose]);
 
     return {
         editText,

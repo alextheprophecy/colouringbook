@@ -25,7 +25,7 @@ const EditPage = () => {
 
     if (!isVisible || currentPage === 0) return null;    
 
-    return (
+    return ( 
         <div 
             className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-all duration-300 ease-in-out z-[15] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
             onClick={handleClose} // Close when clicking outside
