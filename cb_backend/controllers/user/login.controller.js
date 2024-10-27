@@ -1,7 +1,7 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
 
-const access_TTL = '10s' //TODO: production change to 1h
+const access_TTL = '6h' //TODO: production change to 1h
 const refresh_TTL = '7d'
 
 const emailValidator = (email) => {

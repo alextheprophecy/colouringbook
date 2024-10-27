@@ -57,7 +57,7 @@ const ModifyBook = () => {
                     />
                 </button>
             )}
-            {currentPage < pages.length && (
+            {currentPage < (pages.length - (isBookFinished ? 1 : 0)) && (
                 <button 
                     className="absolute -right-0 top-[50%] transform -translate-y-1/2 translate-x-1/2
                               bg-white/80
@@ -130,18 +130,21 @@ const ModifyBook = () => {
                         startPage={currentPage}
                         onInit={() => startAnimation(pages.length-1)}  // For initial animation
                     >
-                        {pages.map((page, index) => (
-                            <div key={index} className="page-element">
-                                <img 
-                                    src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
-                                    alt={`Page ${index + 1}`}
-                                    className={pageClassname(index)}
-                                />
-                            </div>
-                        ))}                  
+                        {[
+                            ...pages.map((page, index) => (
+                                <div key={index} className="page-element">
+                                    <img 
+                                        src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
+                                        alt={`Page ${index + 1}`}
+                                        className={pageClassname(index)}
+                                    />
+                                </div>
+                            )),
+                            !isBookFinished ? (
+                                <CreatePage key="create-page" classNameProp={pageClassname(1)} />
+                            ) : null
+                        ].filter(Boolean)}
 
-                        {/* Creation page */}
-                        <CreatePage classNameProp={pageClassname(1)}/>                   
                     </HTMLFlipBook>
                 </div>
 

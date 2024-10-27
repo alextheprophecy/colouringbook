@@ -4,21 +4,23 @@ const { getFileUrl, image_data, getImage } = require("./files.controller");
 
 const getUserBooks = (req, res) => {
     const MAX_RETURNED_BOOKS = 7
+    const MAX_IMAGE_BOOKS = 3
     const user = req.user
 
     Book2.find({ userId: user.id })
         .sort({createdAt: -1})
         .then(async (books) => {
             const books_data = await Promise.all(
-                books.slice(0, MAX_RETURNED_BOOKS).map(async book => {
-                    const firstImage = await getImage(user, book, 0);
+                books.slice(0, MAX_RETURNED_BOOKS).map(async (book, index) => {
+                    const firstImage = index < MAX_IMAGE_BOOKS ? await getImage(user, book, 0) : null;
 
                     return {
                         id: book.id,
                         title: book.title,
                         date: book.createdAt,
                         pageCount: book.pageCount,
-                        coverImage: firstImage
+                        coverImage: firstImage,
+                        creationDate: book.createdAt
                     };
                 })
             );

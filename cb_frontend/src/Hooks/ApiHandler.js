@@ -2,7 +2,8 @@ import axios, {get} from "axios";
 import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
 import {handleLogout} from "./LoginHandler";
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'https://api.crayons.me/api'
+const localAddress = '172.20.10.2'//'localhost'
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
 const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
 

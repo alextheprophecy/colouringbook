@@ -26,7 +26,7 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                     text-gray-700 placeholder-gray-400
                                     font-children text-lg leading-relaxed
                                     shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
-                            placeholder="Describe your scene..."
+                            placeholder="A goblin in a forest eating a mushroom..."
                             value={description}
                             onChange={handleDescriptionChange}                                   
                         />
@@ -43,7 +43,7 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                         transition-all duration-200"
                             >
                                 <Plus className="w-5 h-5 text-amber-700" />
-                                <span className="text-amber-800 text-lg font-children font-semibold">Add</span>
+                                <span className="text-amber-800 text-lg font-children font-semibold">Create Page</span>
                             </button>
                         </div>
                     </div>

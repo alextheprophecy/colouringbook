@@ -47,7 +47,7 @@ const DescriptionsController = () => {
             Please update the book context object to include new information from this page. Maintain and update the following key elements:
             1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits, without colors c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
             2. **Story Summary:** A concise summary of the story so far.
-            3. **Environment:** Very short description of the current setting location, in a few words. NEVER mention colors.
+            3. **Environment:** Very brief description of the current setting location, pin pointing the most important elements. NEVER mention colors.
             4. **Key Objects:** List only the important items or objects that are central to the story's progression or have a significant impact on the plot. (examples: magical artifacts, treasure maps, or items the characters are seeking or using in a meaningful way. Do **not** include trivial or scene-setting items like background objects. Leave empty if none. Do not include characters here.
             5. **Current Situation:** The immediate context of the story at this point, in the present scene, in a few words as a note.
 

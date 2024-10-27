@@ -14,18 +14,24 @@ const SkeletonLoader = () => (
         <div className="animate-pulse h-full">
             <div className="flex justify-between items-center h-full">
                 {/* Left side content */}
-                <div className="space-y-2">
-                    <div className="h-7 w-20 bg-gray-200 rounded"></div>
+                <div className="flex flex-col h-full justify-between">
+                    <div className="space-y-2">
+                        <div className="h-7 w-48 bg-gray-200 rounded"></div>
+                        <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                        <div className="h-4 w-24 bg-gray-200 rounded mt-2"></div>
+                    </div>
+                </div>
+                {/* Right side content */}
+                <div className="flex flex-col h-full justify-between items-end">
+                    <div className="h-10 w-24 bg-gray-200 rounded"></div>
                     <div className="h-4 w-32 bg-gray-200 rounded"></div>
                 </div>
-                {/* Right side button */}
-                <div className="h-10 w-24 bg-gray-200 rounded"></div>
             </div>
         </div>
     </div>
 );
 
-const GalleryView = () => {
+const GalleryView = () =>  {
     const [loading, setLoading] = useState(false);
     const [processedBooks, setProcessedBooks] = useState([]);
 
@@ -110,7 +116,7 @@ const GalleryView = () => {
         return processedBooks.map(book => (
             <div 
                 key={book.id} 
-                className="w-full max-w-4xl mx-auto mb-6 h-48 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow relative overflow-hidden"
+                className={`w-full max-w-4xl mx-auto mb-6 ${book.coverImage ? 'h-48' : 'h-32'} p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow relative overflow-hidden`}
             >
                 {/* Background Image */}
                 <div 
@@ -120,17 +126,25 @@ const GalleryView = () => {
                 
                 {/* Content Overlay */}
                 <div className="relative z-10 flex justify-between items-center h-full">
-                    <div>
-                        <h2 className="text-2xl font-semibold text-gray-800">{book.title}</h2>
-                        <p className="text-sm text-gray-600">ID: {book.id}</p>
+                    <div className="flex flex-col h-full justify-between">
+                        <div>
+                            <h2 className="text-2xl font-semibold text-gray-800">{book.title}</h2>
+                            <p className="text-sm text-blue-800">
+                                {new Date(book.creationDate).toLocaleDateString()}
+                            </p>
+                            <p className="text-sm text-gray-600 mt-2">{book.pageCount} page{book.pageCount === 1 ? '' : 's'}</p>
+                        </div>
                     </div>
-                    <button 
-                        onClick={() => downloadBook(book)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
-                    >
-                        <Download className="w-4 h-4" />
-                        Download
-                    </button>
+                    <div className="flex flex-col h-full justify-center items-end gap-2">
+                        <button 
+                            onClick={() => downloadBook(book)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            Download
+                        </button>
+                        <span className="text-sm text-gray-400">{book.id}</span>
+                    </div>
                 </div>
             </div>
         ));

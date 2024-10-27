@@ -13,12 +13,13 @@ import { AnimatePresence } from "framer-motion";
 import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 import CreateBook from "./Components/Views/CreateBook";
+import Popup from "./Components/Popup";
 
 function App() {
     const routes = (
         <Routes>            
             <Route exact path='/' element={<><Navbar /><MainView /></>} />
-            <Route exact path='/create' element={<><CreateBook/></>} />
+            <Route exact path='/create' element={<CreateBook/>} />
             <Route exact path='/login' element={<><Navbar /><LoginView /></>} />
             <Route exact path='/gallery' element={<><GalleryView /></>} />
             <Route exact path='/playground' element={<><Navbar /><PlaygroundView /></>} />
@@ -31,24 +32,17 @@ function App() {
 
 export default function TranslatedApp() {
     const [showIntro, setShowIntro] = useState(shouldShowIntro);
-    useEffect(() => {
-        if (showIntro) {
-            const timer = setTimeout(() => {
-                setShowIntro(false);
-                setShouldShowIntro(false);
-            }, 2500);
-            return () => clearTimeout(timer);
-        }
-    }, [showIntro]);
-
+   
+    
     const website = (
         <>
+            <Popup />
             <BurgerMenu />
-                <div className="page-container">
-                    <main className="main-content">                        
-                        <App />
-                    </main>
-                </div>
+            <div className="page-container">
+                <main className="main-content">                        
+                    <App />
+                </main>
+            </div>
         </>
     );
 
