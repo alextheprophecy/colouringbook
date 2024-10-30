@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePage, setIsEditing } from '../../redux/bookSlice';
+import { updatePage, setIsEditing, updateContext } from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
 import { addNotification } from '../../redux/websiteSlice';
@@ -69,7 +69,7 @@ const useEditPage = (creationSettings) => {
         }
 
         try {
-            const { enhancedDescription, image, seed } = await loadRequest(
+            const { enhancedDescription, updatedContext, image, seed } = await loadRequest(
                 () => enhanceImage(
                     detailedDescription, 
                     editText, 
@@ -93,8 +93,11 @@ const useEditPage = (creationSettings) => {
                     seed
                 }
             }));
-
+            
+            if(updatedContext) dispatch(updateContext(updatedContext));
+            console.log('updated context', updatedContext);
             handleClose();
+            
         } catch (error) {
             console.error('Error enhancing page:', error);
             dispatch(addNotification({

@@ -66,7 +66,7 @@ const queryFineTuned = (prompt, {simple=false, seed=randomSeed(), num_outputs=1}
 
     //TODO: input params are tuned for non simple model
     const input = {
-        prompt: `${prompt_key_words} ${prompt}`,
+        prompt: `${prompt_key_words} ${prompt}. Bold and clear lines.`,
         hf_lora: weights_url,
         seed: seed,
         num_outputs: num_outputs,

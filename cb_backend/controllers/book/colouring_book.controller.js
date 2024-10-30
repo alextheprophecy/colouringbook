@@ -1,7 +1,7 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned} = require("../external_apis/replicate.controller");
 const Book2 = require("../../models/book2.model");
 const {getFileData, image_data, saveBookPDF, savePageData, getPDF} = require("../user/files.controller");
-const {updateBookContext, generatePageDescriptionGivenContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
+const {updateBookContext, generatePageDescriptionGivenContext, selectiveUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
 
 const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
@@ -123,17 +123,23 @@ const enhancePage = async (req, res) => {
             currentContext
         );
 
-        // Then generate a new image using the enhanced description
-        const imageResult = await _generateImage(
-            user, 
-            book, 
-            currentPage,
-            enhancedDescription,
-            generationSettings
-        );
+        // Run image generation and context update in parallel
+        const [imageResult, contextUpdate] = await Promise.all([
+            _generateImage(
+                user, 
+                book, 
+                currentPage,
+                enhancedDescription,
+                generationSettings
+            ),
+            selectiveUpdateBookContext(enhancedDescription, currentContext)
+        ]);
+
+        const updatedContext = contextUpdate.status === 'UPDATE_CONTEXT' ? contextUpdate.new_context : null;
 
         res.status(200).json({ 
             enhancedDescription,
+            updatedContext,
             image: imageResult.url,
             seed: imageResult.seed
         });

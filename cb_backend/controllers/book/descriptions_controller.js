@@ -15,23 +15,59 @@ const DescriptionsController = () => {
         previousScene: z.string()
     });
 
-    /* const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
-        const sys_prompt = `You are an expert in creative scene direction, generating imaginative compositions for black-and-white coloring book pages that look like cinematic storyboard frames. Your job is to reimagine each new scene dynamically, using creative angles, unique framing, and focused compositions.
-            Guidelines:
-            1. Visualize scenes as if directing a movie.
-            2. Use the book context only to ensure continuity (like character identities) but focus on creative new angles or compositions.
-            3. Consider dynamic shots: close-ups, character-focused frames, interesting perspectives, or focus shifts.
-            4. Avoid showing all context elements every time; instead, emphasize whatever will make the scene exciting, e.g., just one character close-up or a single focus object.
-            5. Generate concise, imaginative descriptions, not final image prompts.`;
-    
-        const usr_prompt = `Using the provided context and scene, describe a creative composition idea.
-        - New scene: "${sceneDescription}".
-        - Book Context: "${JSON.stringify(bookContext)}".
+    const UpdateStatus = Object.freeze({
+        UPDATE_CONTEXT: "UPDATE_CONTEXT",
+        NO_UPDATE: "NO_UPDATE"
+    });
+
+    const selectiveUpdateBookContext = async (newPageDescription, currentContext, miniModel = false) => {
+        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to evaluate whether a new page description introduces an intrinsic change that needs to be reflected in the book context. 
         
-        Focus on making the scene engaging and visually distinct. Think of it as a storyboard for a movie scene.`;
+        Guidelines:
+        1. If the new description introduces an intrinsic change (e.g., a permanent change to a character's appearance or a persistent setting change), then return an updated context object.
+        2. If the change is temporary and specific to this scene alone, return "NO_UPDATE" without modifying the context.
+        
+        Examples of intrinsic changes:
+        - A character now has a new appearance (like wearing a permanent item of clothing).
+        - The setting changes in a way that affects future scenes (e.g., adding a prominent detail to the foreground, changing the environment).
+        
+        Examples of temporary changes:
+        - Changes in posture, expressions, or one-off actions specific to this scene.`;
     
-        return query_gpt4o_mini(sys_prompt, usr_prompt);
-    }; */
+        const userPrompt = `Given the new page description, determine if an intrinsic update to the given current context is needed:
+        - New page description:
+        ${newPageDescription}
+
+        - Current book context:
+        ${JSON.stringify(currentContext, null, 2)}      
+        
+        If an intrinsic update is needed, return an updated context object. Otherwise, return "NO_UPDATE".`;
+    
+        // Define the response format with a union
+        const responseFormat = z.object({
+            result: z.union([
+                z.literal("NO_UPDATE"),
+                contextObjectSchema
+            ])
+        });
+    
+        try {
+            const result = await (miniModel ? query_formatted_gpt4o_mini : query_formatted_gpt4o2024)(systemPrompt, userPrompt, responseFormat, "result");
+    
+            // Determine if an update is needed
+            if (result.result === "NO_UPDATE") {
+                console.log("NO_UPDATE");
+                return { status: UpdateStatus.NO_UPDATE, new_context: null}; // No intrinsic update
+            } else {
+                console.log("UPDATE_CONTEXT", result.result);
+                return { status: UpdateStatus.UPDATE_CONTEXT, new_context: contextObjectSchema.parse(result.result) }; // Return updated context
+            }
+        } catch (error) {
+            console.error("Error selectively updating book context:", error);
+            throw error;
+        }
+    };
+    
 
     const enhancePageDescription = async (previousDescription, enhancementRequest, bookContext) => {
         const sys_prompt = `You are an expert at refining and enhancing descriptions for black-and-white children's coloring book images. Your task is to make small, specific adjustments to an existing description based on a user request. Keep the original description intact, modifying only the relevant parts as specified in the enhancement request.
@@ -155,6 +191,8 @@ const DescriptionsController = () => {
         }
     }
 
+
+
     const parseContextInput = (contextInput) => {
         try {
             return (!contextInput || contextInput === '') ? {
@@ -175,11 +213,11 @@ const DescriptionsController = () => {
         updateBookContext,
         generatePageDescriptionGivenContext,
         generateConcisePageDescription,
-        contextObjectSchema,
         generateCreativeSceneComposition,
         generateFinalImageDescription,
         parseContextInput,
-        enhancePageDescription
+        enhancePageDescription,
+        selectiveUpdateBookContext
     };
 }
 
