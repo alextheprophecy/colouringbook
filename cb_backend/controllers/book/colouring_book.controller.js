@@ -1,38 +1,29 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned} = require("../external_apis/replicate.controller");
 const Book2 = require("../../models/book2.model");
 const {getFileData, image_data, saveBookPDF, savePageData, getPDF} = require("../user/files.controller");
-const {updateBookContext, generatePageDescriptionGivenContext,generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
+const {updateBookContext, generatePageDescriptionGivenContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
 
 const MAX_PAGE_COUNT = 6
-const NEW_PAGE_GENERATION = true
+const TWO_STEP_DESCRIPTION_GENERATION = true
 const USE_SCHNELL_MODEL = false
 
 const CHILD_PROMPT = (description)=>`Children's detailed coloring book. ${description}. Only black outlines, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent coloring book.`
 const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
-const _generatePlaceholderImage = (description) => {
-    return {
-        url: description.compositionIdea || description.finalDescription,
-        seed: null
-    };
-};
-
-const _generateImage = async (user, book, pageNumber, description, useCreativeModel = false) => {
-    const seed = randomSavedSeed();
-    let imageBuffer;
+const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed = randomSeed()}) => {
+    let imageData;
     
-    if (useCreativeModel) {
-        imageBuffer = await queryFluxBetter(CHILD_PROMPT(description), {seed: seed});
-    } else {
-        imageBuffer = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
-    }
+    if (useFineTunedModel)
+        imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
+    else
+        imageData = await (USE_SCHNELL_MODEL?queryFluxSchnell:queryFluxBetter)(CHILD_PROMPT(description), seed);
     
-    const presignedUrl = await savePageData(user, book.id, pageNumber, imageBuffer);
+    const presignedUrl = await savePageData(user, book.id, pageNumber, imageData);
     return { url: presignedUrl, seed };
 };
 
-const _generateDescription = async (sceneDescription, currentContext, isNewPageGeneration = NEW_PAGE_GENERATION) => {
-    if (isNewPageGeneration) {
+const _generateDescription = async (sceneDescription, currentContext, isTwoStepGeneration = TWO_STEP_DESCRIPTION_GENERATION) => {
+    if (isTwoStepGeneration) {
         // New two-step generation process
         const compositionIdea = await generateCreativeSceneComposition(sceneDescription, currentContext);
         const finalDescription = await generateFinalImageDescription(compositionIdea, currentContext);
@@ -42,33 +33,35 @@ const _generateDescription = async (sceneDescription, currentContext, isNewPageG
         };
     } else {
         // Current single-step generation process
-        const description = await generateConcisePageDescription(sceneDescription, currentContext, false);
+        const finalDescription = await generateConcisePageDescription(sceneDescription, currentContext, false);
         return {
             compositionIdea: null,
-            finalDescription: description
+            finalDescription
         };
     }
-};
+}
 
 const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const book = req.book;  
-    console.log(req.body.testMode)
-    const { sceneDescription, currentContext, testMode} = req.body;
-    console.log('generating page with:', sceneDescription, testMode);
+    const { sceneDescription, currentContext, ...creationSettings} = req.body;
+    console.log('generating page with:', sceneDescription, creationSettings);
     if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
+
+    const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
 
     try {
         const parsedContext = parseContextInput(currentContext);   
         const descriptions = await _generateDescription(sceneDescription, parsedContext);
-        const updatedContext = await updateBookContext(descriptions.finalDescription, parsedContext);
+        const updatedContext = await updateBookContext(descriptions.finalDescription, parsedContext, miniModel=!useAdvancedContext);
 
         let imageResult;
         if (testMode) {
-            imageResult = _generatePlaceholderImage(descriptions);
+            imageResult = { url: descriptions.compositionIdea || descriptions.finalDescription, seed: null}            
         } else {
-            imageResult = await _generateImage(user, book, book.pageCount, descriptions.finalDescription);
-            await Book2.findByIdAndUpdate(book.id, { $inc: { pageCount: 1 } });
+            [imageResult, _] = await Promise.all([
+                _generateImage(user, book, book.pageCount, descriptions.finalDescription, generationSettings),
+                Book2.findByIdAndUpdate(book.id, { $inc: { pageCount: 1 } })])            
         }
 
         res.status(200).json({ 
@@ -88,7 +81,10 @@ const generatePageWithContext = async (req, res) => {
 const regeneratePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
-    const { detailedDescription, currentPage, testMode } = req.body;
+    const { detailedDescription, currentPage, ...creationSettings } = req.body;
+
+    const { testMode, ...generationSettings } = creationSettings;
+    console.log('regenerating page test mode:', testMode);
 
     if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
     if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
@@ -97,8 +93,8 @@ const regeneratePage = async (req, res) => {
         console.log('regenerating page with:', detailedDescription);
 
         const imageResult = testMode ? 
-            _generatePlaceholderImage(detailedDescription) :
-            await _generateImage(user, book, currentPage, detailedDescription);
+            { url: detailedDescription, seed: null} :
+            await _generateImage(user, book, currentPage, detailedDescription, generationSettings);
 
         res.status(200).json({ 
             image: imageResult.url, 
@@ -112,8 +108,40 @@ const regeneratePage = async (req, res) => {
 
 const enhancePage = async (req, res) => {
     const user = req.user;
-    const { detailedDescription, bookId, currentPage } = req.body;
-}
+    const book = req.book;
+    const { previousDescription, enhancementRequest, currentContext, currentPage, ...generationSettings } = req.body;
+    
+    if (!previousDescription || !enhancementRequest) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    
+    try {
+        // First get the enhanced description
+        const enhancedDescription = await enhancePageDescription(
+            previousDescription,
+            enhancementRequest,
+            currentContext
+        );
+
+        // Then generate a new image using the enhanced description
+        const imageResult = await _generateImage(
+            user, 
+            book, 
+            currentPage,
+            enhancedDescription,
+            generationSettings
+        );
+
+        res.status(200).json({ 
+            enhancedDescription,
+            image: imageResult.url,
+            seed: imageResult.seed
+        });
+    } catch (error) {
+        console.error('Error enhancing page:', error);
+        res.status(500).json({ error: 'Failed to enhance page' });
+    }
+};
 
 const getBookPDF = async (req, res) => {
     const user = req.user;

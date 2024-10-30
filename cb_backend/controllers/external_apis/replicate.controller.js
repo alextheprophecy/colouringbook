@@ -2,13 +2,13 @@ const Replicate = require("replicate")
 const replicate = new Replicate()
 
 const DEFAULT_SCHNELL_SEEDS = [19129, 34895, 34135] //19129 good
-const DEFAULT_DEV_SEEDS = [19129, 34895, 34135, 23006] //19129 good
+const DEFAULT_DEV_SEEDS = [19129, 34895, 34135, 23006, 98663] //19129 good, 98663-very good result
 //34135(a bit too much shading), 23006 -good
 //19129 more cartoonish
 const SAFETY_CHECKER = false
 
 const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {
-    return 34135//seed_list[Math.floor(Math.random()*seed_list.length)]
+    return seed_list[Math.floor(Math.random()*seed_list.length)]
 }
 
 const randomSeed = () => {
@@ -17,17 +17,10 @@ const randomSeed = () => {
 
 const _runModel = async (input, model) => {
     const output = await replicate.run(model, {input: input});
-    console.log('o:', output);
-    
-    // output[0] is already a ReadableStream
+    // Get the stream
     const stream = output[0];
     
-    // Convert stream to buffer
-    const chunks = [];
-    for await (const chunk of stream) {
-        chunks.push(chunk);
-    }
-    return Buffer.concat(chunks);
+    return stream      
 }
 
 const queryFluxSchnell = (prompt, seed = randomSavedSeed(DEFAULT_SCHNELL_SEEDS)) => {
@@ -47,7 +40,7 @@ const queryFluxBetter = (prompt, seed = randomSavedSeed(DEFAULT_DEV_SEEDS)) => {
         go_fast: false,
         prompt: prompt,
         seed: seed,
-        guidance: 3.5,
+        guidance: 3.2,//2.8, //2.5-sketchy/more mistakes fingers, 5-5 very cartoon smooth coloring book outlines
         num_outputs: 1,
         disable_safety_checker: !SAFETY_CHECKER,
         aspect_ratio: "2:3",
@@ -60,6 +53,7 @@ const queryFluxBetter = (prompt, seed = randomSavedSeed(DEFAULT_DEV_SEEDS)) => {
     return _runModel(input, "black-forest-labs/flux-dev")
 }
 
+//70878
 const queryFineTuned = (prompt, {simple=false, seed=randomSeed(), num_outputs=1} = {}) => {
     const weights_url = simple ? 
         `https://civitai.com/api/download/models/888917?type=Model&format=SafeTensor&token=${process.env.CIVITAI_API_TOKEN}`
@@ -79,7 +73,7 @@ const queryFineTuned = (prompt, {simple=false, seed=randomSeed(), num_outputs=1}
         disable_safety_checker: !SAFETY_CHECKER,
         output_format: "png",
         aspect_ratio: "2:3",        
-        num_inference_steps: 33,
+        num_inference_steps: 36,
         prompt_strength: 1,
         guidance_scale: 3.5,
         lora_scale: 0.6,

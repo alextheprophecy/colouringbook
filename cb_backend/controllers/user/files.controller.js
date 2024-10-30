@@ -2,7 +2,7 @@ const {getFileUrl, getFileData, uploadFromBase64URI, uploadStream, uploadBuffer}
 const imgToPDF = require('image-to-pdf')
 const { PassThrough } = require('stream');
 
-const URL_TTL = {IMAGE: (Number)(3600), PDF: (Number)(12 * 3600)}
+const URL_TTL = {IMAGE: (Number)(24 * 3600), PDF: (Number)(12 * 3600)}
 
 const _book_key = (user_email, book_id) => {
     // Strip all non-alphanumeric characters except for @ first
@@ -37,19 +37,23 @@ const saveBookPDF = async (imageBuffers, user, book) => {
     return uploadStream(passThroughStream, pdf_data(user.email, book.id).key, 'application/pdf')
 }
 
-const savePageData = async (user, bookId, pageNumber, imageBuffer) => {
+const savePageData = async (user, bookId, pageNumber, imageData) => {
     const baseKey = _book_key(user.email, bookId);
     const timestamp = Date.now();
     
     const versionKey = `${baseKey}/versions/p${pageNumber}/v_${timestamp}.png`;
     const currentKey = `${baseKey}/p${pageNumber}.png`;
-    console.log('image:', imageBuffer);
-    await Promise.all([
-        uploadBuffer(imageBuffer, {key: versionKey}),
-        uploadBuffer(imageBuffer, {key: currentKey})
+    //TODO: Upload both version and current
+    /* await Promise.all([
+        uploadBuffer(buffer, {key: versionKey}),
+        uploadBuffer(buffer, {key: currentKey})
+    ]); */
+    const [_, presignedUrl] = await Promise.all([
+        uploadStream(imageData, currentKey, 'image/png'),
+        getFileUrl({key: currentKey, TTL: URL_TTL.IMAGE})        
     ]);
 
-    return getFileUrl({key: currentKey, TTL: URL_TTL.IMAGE});
+    return presignedUrl;
 }
 
 module.exports = {

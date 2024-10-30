@@ -4,7 +4,7 @@ import Loading from './Loading';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
 import {Wand2, RotateCcw, Info } from 'lucide-react'; // Add Info to the imports
 
-const EditPage = () => {
+const EditPage = ({creationSettings}) => {
     const currentPage = useSelector((state) => state.book.currentPage);
 
     const {
@@ -21,7 +21,7 @@ const EditPage = () => {
         setIsEnhancing,
         handleRegenerate,
         handleEnhance
-    } = useEditPage();
+    } = useEditPage(creationSettings);
 
     if (!isVisible || currentPage === 0) return null;    
 

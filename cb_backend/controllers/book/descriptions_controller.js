@@ -15,7 +15,7 @@ const DescriptionsController = () => {
         previousScene: z.string()
     });
 
-    const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
+    /* const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
         const sys_prompt = `You are an expert in creative scene direction, generating imaginative compositions for black-and-white coloring book pages that look like cinematic storyboard frames. Your job is to reimagine each new scene dynamically, using creative angles, unique framing, and focused compositions.
             Guidelines:
             1. Visualize scenes as if directing a movie.
@@ -31,6 +31,46 @@ const DescriptionsController = () => {
         Focus on making the scene engaging and visually distinct. Think of it as a storyboard for a movie scene.`;
     
         return query_gpt4o_mini(sys_prompt, usr_prompt);
+    }; */
+
+    const enhancePageDescription = async (previousDescription, enhancementRequest, bookContext) => {
+        const sys_prompt = `You are an expert at refining and enhancing descriptions for black-and-white children's coloring book images. Your task is to make small, specific adjustments to an existing description based on a user request. Keep the original description intact, modifying only the relevant parts as specified in the enhancement request.
+            Guidelines:
+            1. Make only the changes specified in the enhancement request without altering any other part of the scene.
+            2. Maintain simple, clear language to ensure the description is easy to visualize for children.
+            3. Use the book context to keep continuity with character appearance, positioning, and background.
+            4. Avoid adding new elements or altering composition unless explicitly requested.`;
+
+    
+        const usr_prompt = `Based on the enhancement request, update the previous page description while keeping it simple and clear:
+        - Enhancement Request: "${enhancementRequest}"
+        - Previous Description: "${previousDescription}"        
+        - Relevant Context: "${JSON.stringify({
+            characters: bookContext.characters,
+            keyObjects: bookContext.keyObjects,
+            environment: bookContext.environment,
+        })}"
+        
+        Make the necessary adjustments to the description without drastically changing the original scene or adding unnecessary details.`;
+    
+        return query_gpt4o_mini(sys_prompt, usr_prompt);
+    };
+    
+    const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
+        const sys_prompt = `You are an expert in creating simple, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
+            Guidelines:
+            1. Use simple framing, like medium shots or close-ups, with clear focus on main characters or actions, like a movie storyboard.
+            2. Avoid complex backgrounds and clutter. Use minimal backgrounds if they enhance the scene.
+            3. Ensure characters and objects are distinct and well-positioned, keeping the scene clean and easy to interpret.
+            4. Use the book context for continuity, but prioritize making each scene fun and visually clear for kids.`;
+    
+        const usr_prompt = `Using the provided scene and context, describe a simple, child-friendly composition idea:
+        - New scene: "${sceneDescription}".
+        - Book Context: "${JSON.stringify(bookContext)}".
+        
+        Focus on making the scene clear, engaging, and easy for children to color. Think of it as a simple storyboard for a coloring book page.`;
+    
+        return query_gpt4o_mini(sys_prompt, usr_prompt);
     };
     
     const generateFinalImageDescription = async (compositionIdea, bookContext) => {
@@ -38,11 +78,12 @@ const DescriptionsController = () => {
     
             Guidelines:
             1. Use only the necessary context (like character details and environment).
-            2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment).
-            3. Avoid mentioning color, shading, or any complex details outside of the scene.
-            4. Craft the description to fit within a single coloring page.`;
+            2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment) in easy to visualize terms.
+            3 Detail actions, body postures, and gestures explicitly.
+            4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.
+            5. Craft the description to fit within a single coloring page.`;
     
-        const usr_prompt = `Given the composition idea and context, generate a visual description:
+        const usr_prompt = `Given the composition idea and context, generate a clear and precisevisual description:
         - Composition Idea: "${compositionIdea}".
         - Relevant Context: "${JSON.stringify({
             characters: bookContext.characters,
@@ -55,7 +96,6 @@ const DescriptionsController = () => {
         return query_gpt4o2024(sys_prompt, usr_prompt);
     };
     
-
     const generatePageDescriptionGivenContext = async (sceneDescription, bookContext, miniModel = true) => {
         const sys_prompt = `You are an expert in generating story scenes and creating visual descriptions for black-and-white coloring book images. Your task is to generate a new detailed scene description based on a given context. Follow these guidelines:
             1. Focus primarily on the new scene described.
@@ -97,8 +137,8 @@ const DescriptionsController = () => {
             New page description:
             ${newPageDescription}
 
-            Please update the book context object to include new information from this page. Maintain and update the following key elements:
-            1.**Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits, without colors c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
+            Please update the book context object to include new information from this page. Maintain and update the following key elements, while removing any old elements that are definitely no longer relevant:
+            1. **Characters:** List only the important characters currently relevant to the story, with short, brief descriptions: a) name b) appearance, key traits, without colors c) lastSeenDoing - their action/state in their most recent appearance (not necessarily in this scene).
             2. **Story Summary:** A concise summary of the story so far.
             3. **Environment:** Very brief description of the current setting location, pin pointing the most important elements. NEVER mention colors.
             4. **Key Objects:** List only the important items or objects that are central to the story's progression or have a significant impact on the plot. (examples: magical artifacts, treasure maps, or items the characters are seeking or using in a meaningful way. Do **not** include trivial or scene-setting items like background objects. Leave empty if none. Do not include characters here.
@@ -138,7 +178,8 @@ const DescriptionsController = () => {
         contextObjectSchema,
         generateCreativeSceneComposition,
         generateFinalImageDescription,
-        parseContextInput
+        parseContextInput,
+        enhancePageDescription
     };
 }
 

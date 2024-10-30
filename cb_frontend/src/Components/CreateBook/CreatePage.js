@@ -2,12 +2,12 @@ import React from 'react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { Plus } from 'lucide-react';
 
-const CreatePage = React.forwardRef(({classNameProp, testMode}, ref) => {  
+const CreatePage = React.forwardRef(({classNameProp, creationSettings}, ref) => {  
     const {
         createImage,
         description,
         handleDescriptionChange
-    } = useCreatePage(testMode);
+    } = useCreatePage(creationSettings);
 
 
     return (

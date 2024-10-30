@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updatePage, setIsEditing } from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
+import { addNotification } from '../../redux/websiteSlice';
 
-const useEditPage = () => {
+const useEditPage = (creationSettings) => {
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, currentContext } = useSelector(state => state.book);
     const [editText, setEditText] = useState('');
@@ -47,9 +48,62 @@ const useEditPage = () => {
         }
     }, [isEditing, currentPage, pages, handleClose]);
 
-    const handleEnhance = useCallback(() => {
-        alert('Not implemented yet');
-    }, []);
+    const handleEnhance = useCallback(async () => {
+        if (!editText.trim()) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Please enter enhancement instructions',
+                duration: 3000
+            }));
+            return;
+        }
+
+        const detailedDescription = pages[currentPage]?.detailed_description;
+        if (!detailedDescription) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'No detailed description found',
+                duration: 3000
+            }));
+            return;
+        }
+
+        try {
+            const { enhancedDescription, image, seed } = await loadRequest(
+                () => enhanceImage(
+                    detailedDescription, 
+                    editText, 
+                    currentContext,
+                    {
+                        ...creationSettings,
+                        seed: pages[currentPage]?.seed
+                    },
+                    currentPage
+                ),
+                "Enhancing description..."
+            );
+
+            // Update the page with enhanced description and new image
+            dispatch(updatePage({
+                index: currentPage,
+                data: { 
+                    detailed_description: enhancedDescription,
+                    enhancement_request: editText,
+                    image,
+                    seed
+                }
+            }));
+
+            handleClose();
+        } catch (error) {
+            console.error('Error enhancing page:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to enhance page. Please try again.',
+                duration: 5000
+            }));
+        }
+    }, [editText, currentPage, pages, currentContext, creationSettings, handleClose, dispatch]);
 
     const handleRegenerate = useCallback(async () => {
         const detailedDescription = pages[currentPage]?.detailed_description;
@@ -58,7 +112,7 @@ const useEditPage = () => {
         console.log('Regenerating image...', detailedDescription);
         try {
             console.log('Regenerating image...');
-            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription), "Regenerating image...");
+            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription, creationSettings), "Regenerating image...");
             dispatch(updatePage({index: currentPage, data: { image, seed }}));
             return true;
         } catch (error) {

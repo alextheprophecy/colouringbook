@@ -1,78 +1,110 @@
-import axios, {get} from "axios";
-import {getUserData, getUserToken, saveUserToken} from "./UserDataHandler";
-import {handleLogout} from "./LoginHandler";
+import axios from "axios";
+import { getUserToken, saveUserToken } from "./UserDataHandler";
+import { handleLogout } from "./LoginHandler";
+import store from '../redux/store';
+import { addNotification } from '../redux/websiteSlice';
 
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
-const api = axios.create({baseURL: BASE_URL, withCredentials: true}); //, withCredentials: true
+const api = axios.create({baseURL: BASE_URL, withCredentials: true});
 
 api.interceptors.request.use((req) => {
-        return setReqTokenHeaders(req, getUserToken())
-    },
-    (err) => Promise.reject(err))
+    return setReqTokenHeaders(req, getUserToken())
+}, (err) => Promise.reject(err));
 
 api.interceptors.response.use(
     res => res,
     error => {
-        // Handle errors
         const { status } = error.response || {}
         const errCode = error.code
 
-        switch (errCode){
-            case 'ECONNABORTED':
-                alert("Request timeout. Please try again.")
-                return Promise.resolve()
+        if (errCode === 'ECONNABORTED') {
+            store.dispatch(addNotification({
+                type: 'error',
+                message: "Request timeout. Please try again.",
+                duration: 5000
+            }));
+            return Promise.reject(error);
         }
 
-        let errMsg = `ErrCode: ${errCode}, ` + error.response?.data ?? error.message
-        let alertMsg
+        let errMsg = error.response?.data?.error || 
+                    error.response?.data || 
+                    error.message || 
+                    'An unexpected error occurred';
 
         switch (status) {
             case 400:
-                alertMsg = "Bad Request. " + errMsg
+                store.dispatch(addNotification({
+                    type: 'error',
+                    message: errMsg,
+                    duration: 5000
+                }));
                 break;
-            case 401: //refresh token
-                if(errMsg.includes("Expired Token")) return refreshToken(error)
-                break
-            case 403: //refresh your token
-                alertMsg = "Unauthorized: " + errMsg
-                handleLogout()
+            case 401:
+                if(errMsg.includes("Expired Token")) return refreshToken(error);
+                break;
+            case 403:
+                store.dispatch(addNotification({
+                    type: 'error',
+                    message: errMsg,
+                    duration: 5000
+                }));
+                handleLogout();
                 break;
             case 404:
-                alertMsg = "Not Found. " + errMsg
+                store.dispatch(addNotification({
+                    type: 'error',
+                    message: errMsg,
+                    duration: 5000
+                }));
                 break;
             case 500:
-                alertMsg = "Server Error. " + errMsg
+                store.dispatch(addNotification({
+                    type: 'error',
+                    message: errMsg,
+                    duration: 5000
+                }));
                 break;
             default:
-                alertMsg = "An unknown error occurred. " + errMsg
+                store.dispatch(addNotification({
+                    type: 'error',
+                    message: errMsg,
+                    duration: 5000
+                }));
                 break;
         }
 
-        alert(alertMsg)
-        return Promise.resolve()
+        return Promise.reject(error);
     }
-)
+);
 
 const setReqTokenHeaders = (req, token) => {
-    if(token) req.headers.authorization = `Bearer ${token}`
-    return req
+    if(token) req.headers.authorization = `Bearer ${token}`;
+    return req;
 }
 
 const refreshToken = async (error) => {
-    const newAccessToken = await api.get('/user/refreshToken')
-    saveUserToken(newAccessToken.data)
+    try {
+        const newAccessToken = await api.get('/user/refreshToken');
+        saveUserToken(newAccessToken.data);
 
-    const originalRequest = error.config;
-    console.log('resending request with refreshed token: ', originalRequest)
-    return await api.request(originalRequest)
+        const originalRequest = error.config;
+        return await api.request(originalRequest);
+    } catch (refreshError) {
+        store.dispatch(addNotification({
+            type: 'error',
+            message: 'Session expired. Please login again.',
+            duration: 5000
+        }));
+        handleLogout();
+        return Promise.reject(refreshError);
+    }
 }
 
-const apiGet = (endpoint, config) => api.get(endpoint, config)
+const apiGet = (endpoint, config) => api.get(endpoint, config);
 
-
-export default api
+export default api;
 export {
     apiGet,
-}
+};

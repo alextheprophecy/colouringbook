@@ -1,7 +1,8 @@
 import { useRef, useCallback, useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPage, setIsEditing, finishBook} from '../../redux/bookSlice';
-import api from '../../Hooks/ApiHandler'; // Assuming you have an API handler for making requests
+import { addNotification } from '../../redux/websiteSlice';
+import api from '../../Hooks/ApiHandler';
 import useLoadRequest from './useLoadRequest';
 
 export const FLIP_TIMES = Object.freeze({
@@ -21,7 +22,7 @@ const useModifyBook = () => {
     const [isFlipping, setIsFlipping] = useState(false);
     const [isFinishing, setIsFinishing] = useState(false);
     const { loadRequest } = useLoadRequest();
-    const [pdfUrl, setPdfUrl] = useState(null);  // Add this new state
+    const [pdfUrl, setPdfUrl] = useState(null);
 
     const isOnCreationPage = useCallback(() => {
         return currentPage === pages.length
@@ -96,7 +97,14 @@ const useModifyBook = () => {
         if (isFinishing) return;
         
         if (isBookFinished) {
-            // Use stored PDF URL if available, otherwise fallback to first page PDF
+            if (!pdfUrl && !pages[0]?.pdfUrl) {
+                dispatch(addNotification({
+                    type: 'error',
+                    message: 'PDF URL not found',
+                    duration: 3000
+                }));
+                return;
+            }
             window.open(pdfUrl || pages[0].pdfUrl, '_blank');
             return;
         }
@@ -114,12 +122,22 @@ const useModifyBook = () => {
             }
             
             setPdfUrl(data.bookPDF);
-            window.open(data.bookPDF, '_blank'); // Changed to '_blank' instead of `${title}.pdf`
+            window.open(data.bookPDF, '_blank');
             dispatch(finishBook());
+            
+            dispatch(addNotification({
+                type: 'success',
+                message: 'Your book has been successfully generated!',
+                duration: 5000
+            }));
 
         } catch (error) {
             console.error('Error finishing book:', error);
-            alert(error.message || 'Failed to finish book. Please try again.');
+            dispatch(addNotification({
+                type: 'error',
+                message: error.message || 'Failed to finish book. Please try again.',
+                duration: 5000
+            }));
         } finally {
             setIsFinishing(false);
         }
@@ -142,7 +160,7 @@ const useModifyBook = () => {
         handleFinishBook,
         isFinishing,
         isBookFinished,
-        pdfUrl,  // Add this to the returned object
+        pdfUrl,
     };
 };
 
