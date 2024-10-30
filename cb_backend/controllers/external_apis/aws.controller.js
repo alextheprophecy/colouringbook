@@ -40,6 +40,7 @@ const uploadFromBase64URI = (dataURI, {key}) => {
         Body: buffer,
         Key: key
     });
+
     
     return client.send(params);
 }
@@ -58,10 +59,21 @@ const uploadStream = (stream, key, contentType) => {
     return upload.done()
 }
 
+const uploadBuffer = (buffer, {key}) => {
+    const params = new PutObjectCommand({
+        ContentType: 'image/png',
+        Bucket: BUCKET_NAME,
+        Body: buffer,
+        Key: key
+    });
+    
+    return client.send(params);
+}
 
 module.exports = {
     getFileUrl,
     getFileData,
     uploadFromBase64URI,
-    uploadStream
+    uploadStream,
+    uploadBuffer
 }

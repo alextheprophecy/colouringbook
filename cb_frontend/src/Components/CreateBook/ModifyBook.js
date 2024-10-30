@@ -108,105 +108,105 @@ const ModifyBook = () => {
     );
 
     return (
-            <div className= {`p-8 bg-gradient-to-b from-blue-50 to-blue-100 rounded-[20px] mx-auto flex justify-center items-center flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] `}>
-                <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
-                    {renderNavigationButtons()}
-                    <HTMLFlipBook
-                        key={`book-${pages.length}-${isBookFinished}`}
-                        width={300}
-                        height={450}    
-                        size="stretch"
-                        minWidth={MIN_WIDTH}
-                        maxWidth={1000}
-                        maxHeight={1533}
-                        maxShadowOpacity={0.5}
-                        mobileScrollSupport={true}
-                        clickEventForward={true}
-                        ref={flipBookRef}
-                        onFlip={onFlip}
-                        className="demo-book"
-                        showCover={true}
-                        flippingTime={FLIP_TIMES.USER}
-                        startPage={currentPage}
-                        onInit={() => startAnimation(pages.length-1)}  // For initial animation
-                    >
-                        {[
-                            ...pages.map((page, index) => (
-                                <div key={index} className="page-element">
-                                    <img 
-                                        src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
-                                        alt={`Page ${index + 1}`}
-                                        className={pageClassname(index)}
-                                    />
-                                </div>
-                            )),
-                            !isBookFinished ? (
-                                <CreatePage key="create-page" classNameProp={pageClassname(1)} />
-                            ) : null
-                        ].filter(Boolean)}
+        <div className={`mt-4 p-8 bg-gradient-to-b from-blue-50 to-blue-100 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+            <div className={`flex-1 flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
+                {renderNavigationButtons()}
+                <HTMLFlipBook
+                    key={`book-${pages.length}-${isBookFinished}`}
+                    width={300}
+                    height={450}    
+                    size="stretch"
+                    minWidth={MIN_WIDTH}
+                    maxWidth={1000}
+                    maxHeight={1533}
+                    maxShadowOpacity={0.5}
+                    mobileScrollSupport={true}
+                    clickEventForward={true}
+                    ref={flipBookRef}
+                    onFlip={onFlip}
+                    className="demo-book"
+                    showCover={true}
+                    flippingTime={FLIP_TIMES.USER}
+                    startPage={currentPage}
+                    onInit={() => startAnimation(pages.length-1)}  // For initial animation
+                >
+                    {[
+                        ...pages.map((page, index) => (
+                            <div key={index} className="page-element">
+                                <img 
+                                    src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
+                                    alt={`Page ${index + 1}`}
+                                    className={pageClassname(index)}
+                                />
+                            </div>
+                        )),
+                        !isBookFinished ? (
+                            <CreatePage key="create-page" classNameProp={pageClassname(1)} />
+                        ) : null
+                    ].filter(Boolean)}
 
-                    </HTMLFlipBook>
-                </div>
+                </HTMLFlipBook>
+            </div>
 
-                <div className="mt-8 flex flex-col gap-4 items-center">
-                    {/* Only show New Page button if book is not finished */}
-                    {!isBookFinished && (
-                        <button 
-                            className={`w-full max-w-md 
-                                ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
-                                ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
-                                text-white py-3 px-6 rounded-lg 
-                                transition-opacity duration-300 ease-in-out 
-                                hover:scale-[1.02] shadow-md hover:shadow-lg
-                                flex items-center justify-center gap-2
-                                font-children font-semibold tracking-wider`}
-                            onClick={flipToCreationPage}
-                            disabled={isOnCreationPage() || isFlipping}
-                        >
-                            <Plus className="w-5 h-5" />
-                            New page
-                        </button>
-                    )}
-
+            <div className="mt-[10px] flex flex-col gap-4 items-center">
+                {/* Only show New Page button if book is not finished */}
+                {!isBookFinished && (
                     <button 
                         className={`w-full max-w-md 
-                            ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
-                            ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
-                            ${isFinishing ? 'cursor-not-allowed' : ''}
+                            ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
+                            ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
                             text-white py-3 px-6 rounded-lg 
-                            transition-all duration-300 ease-in-out 
+                            transition-opacity duration-300 ease-in-out 
                             hover:scale-[1.02] shadow-md hover:shadow-lg
-                            font-children font-semibold tracking-wider
-                            flex items-center justify-center gap-2`}
-                        onClick={handleFinishBook}
-                        disabled={isFinishing}
+                            flex items-center justify-center gap-2
+                            font-children font-semibold tracking-wider`}
+                        onClick={flipToCreationPage}
+                        disabled={isOnCreationPage() || isFlipping}
                     >
-                        {isFinishing ? (
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
-                                Processing...
-                            </div>
-                        ) : (
-                            <>
-                                {isBookFinished ? (
-                                    <>
-                                        <FileDown className="w-5 h-5" />
-                                        Download PDF
-                                    </>
-                                ) : (
-                                    <>
-                                        <Download className="w-5 h-5" />
-                                        Finish Book
-                                    </>
-                                )}
-                            </>
-                        )}
+                        <Plus className="w-5 h-5" />
+                        New page
                     </button>
-                </div>
+                )}
 
-                {/* Only render EditPage if book is not finished */}
-                {!isBookFinished && <EditPage />}
+                <button 
+                    className={`w-full max-w-md 
+                        ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
+                        ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
+                        ${isFinishing ? 'cursor-not-allowed' : ''}
+                        text-white py-3 px-6 rounded-lg 
+                        transition-all duration-300 ease-in-out 
+                        hover:scale-[1.02] shadow-md hover:shadow-lg
+                        font-children font-semibold tracking-wider
+                        flex items-center justify-center gap-2`}
+                    onClick={handleFinishBook}
+                    disabled={isFinishing}
+                >
+                    {isFinishing ? (
+                        <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
+                            Processing...
+                        </div>
+                    ) : (
+                        <>
+                            {isBookFinished ? (
+                                <>
+                                    <FileDown className="w-5 h-5" />
+                                    Download PDF
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="w-5 h-5" />
+                                    Finish Book
+                                </>
+                            )}
+                        </>
+                    )}
+                </button>
             </div>
+
+            {/* Only render EditPage if book is not finished */}
+            {!isBookFinished && <EditPage />}
+        </div>
     );
 };
 

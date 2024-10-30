@@ -89,9 +89,9 @@ export default function TranslatedApp() {
     return (
         <Suspense fallback="...loading page...">
             <RouterProvider router={router} />
-            <AnimatePresence>
+            {/* <AnimatePresence>
                 {showIntro && <IntroScreen />}
-            </AnimatePresence>
+            </AnimatePresence> */}
         </Suspense>
     );
 }

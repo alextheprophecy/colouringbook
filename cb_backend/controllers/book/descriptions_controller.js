@@ -7,12 +7,12 @@ const DescriptionsController = () => {
         characters: z.array(z.object({
             name: z.string(),
             description: z.string(),
-            lastSeenDoing: z.string(),  // Changed from currentState
+            lastSeenDoing: z.string(),
         })),
         storySummary: z.string(),
         environment: z.string(),
         keyObjects: z.array(z.string()).optional(),
-        currentSituation: z.string()
+        previousScene: z.string()
     });
 
     const generatePageDescriptionGivenContext = async (sceneDescription, bookContext, miniModel = true) => {
@@ -35,6 +35,18 @@ const DescriptionsController = () => {
         return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
     }
 
+    const generateConcisePageDescription = async (sceneDescription, bookContext, miniModel = true) => {
+            const sys_prompt = `You are an expert in generating concise scene descriptions for black-and-white coloring book images. Your task is to create visually rich but short scene prompts that clearly capture key elements in under 77 tokens. Focus on making each description vivid and simple, ensuring that scenes are easy to interpret in line art. Prioritize essential details about character actions, positions, and relevant surroundings, avoiding any mention of color, shading, thoughts, or dialogue. Each prompt should fit on a single page and appeal to children.`;
+        
+            const usr_prompt = `Create a short scene description based on the following details:
+            - Scene: "${sceneDescription}".
+            - Book Context: "${JSON.stringify(bookContext)}" (use only if it helps maintain character or setting continuity).
+        
+            Generate a visually rich but brief description of the scene for a black-and-white coloring book. Emphasize actions, character poses, and essential surroundings. Avoid unnecessary detail, and focus on creating an easy-to-interpret image.`;
+        
+            return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
+    }
+
     const updateBookContext = async (newPageDescription, currentContext, miniModel = true) => {
         const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to maintain and update a comprehensive context object for the book, ensuring continuity and visual coherence across pages. Make sure to update descriptions that have changed, keep the context up to date, concise, and visual. Remove or update elements that are no longer relevant to the current story progression. Note: you are forbidden from mentioning colors.`;
 
@@ -49,7 +61,7 @@ const DescriptionsController = () => {
             2. **Story Summary:** A concise summary of the story so far.
             3. **Environment:** Very brief description of the current setting location, pin pointing the most important elements. NEVER mention colors.
             4. **Key Objects:** List only the important items or objects that are central to the story's progression or have a significant impact on the plot. (examples: magical artifacts, treasure maps, or items the characters are seeking or using in a meaningful way. Do **not** include trivial or scene-setting items like background objects. Leave empty if none. Do not include characters here.
-            5. **Current Situation:** The immediate context of the story at this point, in the present scene, in a few words as a note.
+            5. **Previous Scene:** A brief summary of the scene that just occurred (the newPageDescription), which will serve as context for the next page.
 
             Ensure all existing information is preserved unless explicitly changed by the new page. Add new elements as needed. The context should be short and snappy, maintaining visual and narrative consistency but concise enough for practical use.`;
         
@@ -69,7 +81,7 @@ const DescriptionsController = () => {
                 storySummary: '',
                 environment: '',
                 keyObjects: [],
-                currentSituation: ''
+                previousScene: ''
             } : contextObjectSchema.parse(contextInput);
         } catch (error) {
             console.error("Error parsing context input:", error);
@@ -77,9 +89,11 @@ const DescriptionsController = () => {
         }
     }
 
+
     return {
         updateBookContext,
         generatePageDescriptionGivenContext,
+        generateConcisePageDescription,
         contextObjectSchema,
         parseContextInput
     };

@@ -1,4 +1,4 @@
-const {getFileUrl, getFileData, uploadFromBase64URI, uploadStream} = require("../external_apis/aws.controller");
+const {getFileUrl, getFileData, uploadFromBase64URI, uploadStream, uploadBuffer} = require("../external_apis/aws.controller");
 const imgToPDF = require('image-to-pdf')
 const { PassThrough } = require('stream');
 
@@ -37,16 +37,16 @@ const saveBookPDF = async (imageBuffers, user, book) => {
     return uploadStream(passThroughStream, pdf_data(user.email, book.id).key, 'application/pdf')
 }
 
-const savePageData = async (user, bookId, pageNumber, image) => {
+const savePageData = async (user, bookId, pageNumber, imageBuffer) => {
     const baseKey = _book_key(user.email, bookId);
     const timestamp = Date.now();
     
     const versionKey = `${baseKey}/versions/p${pageNumber}/v_${timestamp}.png`;
     const currentKey = `${baseKey}/p${pageNumber}.png`;
-
+    console.log('image:', imageBuffer);
     await Promise.all([
-        uploadFromBase64URI(image.href, {key: versionKey}),
-        uploadFromBase64URI(image.href, {key: currentKey})
+        uploadBuffer(imageBuffer, {key: versionKey}),
+        uploadBuffer(imageBuffer, {key: currentKey})
     ]);
 
     return getFileUrl({key: currentKey, TTL: URL_TTL.IMAGE});
