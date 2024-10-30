@@ -23,8 +23,9 @@ const useEditPage = () => {
         if (!pageData) return ['No user description available', 'No detailed description available'];
         const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
         const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
+        const compositionIdea = pageData?.compositionIdea || 'No composition idea available';
         console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
-        return [formattedUserDescription, formattedDetailedDescription, pageData.seed || '', currentContext || null];
+        return [formattedUserDescription, formattedDetailedDescription, pageData.seed || '', currentContext || null, compositionIdea];
     }
 
     const handleClose = useCallback(() => {

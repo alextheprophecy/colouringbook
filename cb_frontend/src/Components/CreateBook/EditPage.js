@@ -40,6 +40,10 @@ const EditPage = () => {
                             <div className="w-[90%] mx-[5%] aspect-[2/3] bg-gray-100 rounded p-4 overflow-y-auto">
                                 <h3 className="text-lg font-bold mb-2">User Description</h3>
                                 <p className="text-sm mb-4">{sceneDescription[0]}</p>
+                                
+                                <h3 className="text-lg font-bold mb-2">Composition Idea</h3>
+                                <p className="text-sm mb-4 italic text-gray-700">{sceneDescription[4]}</p>
+                                
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-lg font-bold">API Description</h3>
                                     <p className="text-m font-bold text-red-500">Seed: {sceneDescription[2]}</p>
@@ -88,11 +92,17 @@ const EditPage = () => {
                             </div>                
                         ) : (
                             currentImage && (
-                                <img 
-                                    src={currentImage} 
-                                    alt="Current Page" 
-                                    className="w-[90%] mx-[5%] aspect-[2/3] object-cover rounded"
-                                />
+                                typeof currentImage === 'string' && (currentImage.startsWith('http') || currentImage.startsWith('blob')) ? (
+                                    <img 
+                                        src={currentImage} 
+                                        alt="Current Page" 
+                                        className="w-[90%] mx-[5%] aspect-[2/3] object-cover rounded"
+                                    />
+                                ) : (
+                                    <div className="w-[90%] mx-[5%] aspect-[2/3] bg-white rounded p-4 overflow-y-auto font-children text-gray-700">
+                                        <p className="whitespace-pre-wrap">{currentImage}</p>
+                                    </div>
+                                )
                             )
                         )}
                         <button

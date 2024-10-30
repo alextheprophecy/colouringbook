@@ -15,6 +15,47 @@ const DescriptionsController = () => {
         previousScene: z.string()
     });
 
+    const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
+        const sys_prompt = `You are an expert in creative scene direction, generating imaginative compositions for black-and-white coloring book pages that look like cinematic storyboard frames. Your job is to reimagine each new scene dynamically, using creative angles, unique framing, and focused compositions.
+            Guidelines:
+            1. Visualize scenes as if directing a movie.
+            2. Use the book context only to ensure continuity (like character identities) but focus on creative new angles or compositions.
+            3. Consider dynamic shots: close-ups, character-focused frames, interesting perspectives, or focus shifts.
+            4. Avoid showing all context elements every time; instead, emphasize whatever will make the scene exciting, e.g., just one character close-up or a single focus object.
+            5. Generate concise, imaginative descriptions, not final image prompts.`;
+    
+        const usr_prompt = `Using the provided context and scene, describe a creative composition idea.
+        - New scene: "${sceneDescription}".
+        - Book Context: "${JSON.stringify(bookContext)}".
+        
+        Focus on making the scene engaging and visually distinct. Think of it as a storyboard for a movie scene.`;
+    
+        return query_gpt4o_mini(sys_prompt, usr_prompt);
+    };
+    
+    const generateFinalImageDescription = async (compositionIdea, bookContext) => {
+        const sys_prompt = `You are creating a precise visual description for a black-and-white coloring book image based on a given composition idea and selected context. Emphasize clear, visual details without abstract concepts or unnecessary context.
+    
+            Guidelines:
+            1. Use only the necessary context (like character details and environment).
+            2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment).
+            3. Avoid mentioning color, shading, or any complex details outside of the scene.
+            4. Craft the description to fit within a single coloring page.`;
+    
+        const usr_prompt = `Given the composition idea and context, generate a visual description:
+        - Composition Idea: "${compositionIdea}".
+        - Relevant Context: "${JSON.stringify({
+            characters: bookContext.characters,
+            keyObjects: bookContext.keyObjects,
+            environment: bookContext.environment,
+        })}".
+    
+        Create a description with clear visual details for the image generation model.`;
+        
+        return query_gpt4o2024(sys_prompt, usr_prompt);
+    };
+    
+
     const generatePageDescriptionGivenContext = async (sceneDescription, bookContext, miniModel = true) => {
         const sys_prompt = `You are an expert in generating story scenes and creating visual descriptions for black-and-white coloring book images. Your task is to generate a new detailed scene description based on a given context. Follow these guidelines:
             1. Focus primarily on the new scene described.
@@ -36,16 +77,16 @@ const DescriptionsController = () => {
     }
 
     const generateConcisePageDescription = async (sceneDescription, bookContext, miniModel = true) => {
-            const sys_prompt = `You are an expert in generating concise scene descriptions for black-and-white coloring book images. Your task is to create visually rich but short scene prompts that clearly capture key elements in under 77 tokens. Focus on making each description vivid and simple, ensuring that scenes are easy to interpret in line art. Prioritize essential details about character actions, positions, and relevant surroundings, avoiding any mention of color, shading, thoughts, or dialogue. Each prompt should fit on a single page and appeal to children.`;
-        
-            const usr_prompt = `Create a short scene description based on the following details:
-            - Scene: "${sceneDescription}".
-            - Book Context: "${JSON.stringify(bookContext)}" (use only if it helps maintain character or setting continuity).
-        
-            Generate a visually rich but brief description of the scene for a black-and-white coloring book. Emphasize actions, character poses, and essential surroundings. Avoid unnecessary detail, and focus on creating an easy-to-interpret image.`;
-        
-            return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
-    }
+        const sys_prompt = `You are an expert in generating concise scene descriptions for black-and-white coloring book images. Your task is to create short, visually rich scene prompts that capture essential elements in a concise way. Each description should feel like a cinematic snapshot that advances the story, easy to interpret in line art. Prioritize essential details about character actions, positions, and relevant surroundings. Avoid any mention of color, shading, thoughts, or dialogue. Each prompt should be engaging, easy for children to understand, and fit on a single page.`;
+    
+        const usr_prompt = `Create a concise scene description based on the following:
+        - Scene: "${sceneDescription}".
+        - Book Context: "${JSON.stringify(bookContext)}" (use only if it helps maintain character or setting continuity).
+    
+        Write a vivid but brief description of the scene, around three sentences. Emphasize key actions, character expressions, and relevant surroundings for a black-and-white coloring book image. Keep it clear, to the point, and visually engaging.`;
+    
+        return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
+    };
 
     const updateBookContext = async (newPageDescription, currentContext, miniModel = true) => {
         const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to maintain and update a comprehensive context object for the book, ensuring continuity and visual coherence across pages. Make sure to update descriptions that have changed, keep the context up to date, concise, and visual. Remove or update elements that are no longer relevant to the current story progression. Note: you are forbidden from mentioning colors.`;
@@ -95,6 +136,8 @@ const DescriptionsController = () => {
         generatePageDescriptionGivenContext,
         generateConcisePageDescription,
         contextObjectSchema,
+        generateCreativeSceneComposition,
+        generateFinalImageDescription,
         parseContextInput
     };
 }

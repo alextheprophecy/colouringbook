@@ -4,16 +4,19 @@ import { useSelector, useDispatch } from 'react-redux';
 const useImageGeneration = () => {
     const { currentContext, bookId, currentPage } = useSelector(state => state.book);
 
-    const generateImage = async (description) => {
+    const generateImage = async (description, testMode = false, useCreativeModel = false) => {
         if (!description || description.trim() === '') return console.error('No description found');            
         
         try {            
-
-            const response = await api.post('image/generatePageWithContext', {sceneDescription: description, currentContext, bookId});
+            const response = await api.post('image/generatePageWithContext', {
+                sceneDescription: description, 
+                currentContext, 
+                bookId, 
+                testMode,
+                useCreativeModel
+            });
             const { updatedContext, ...pageData } = response.data;
-
             return { ...pageData, updatedContext };  
-
         } catch (error) {
             console.error('Error generating page:', error);
             alert(`Error generating page: ${error}`);

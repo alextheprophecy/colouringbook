@@ -28,6 +28,17 @@ const ModifyBook = () => {
         isBookFinished,
     } = useModifyBook();
 
+    const [testMode, setTestMode] = useState(false);
+    const [useFineTunedModel, setUseFineTunedModel] = useState(false);
+
+    const toggleTestMode = useCallback(() => {
+        setTestMode(prev => !prev);
+    }, []);
+
+    const toggleFineTunedModel = useCallback(() => {
+        setUseFineTunedModel(prev => !prev);
+    }, []);
+
     const pageClassname = (index) => {
         return `${index === 0 
             ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
@@ -81,7 +92,7 @@ const ModifyBook = () => {
             {/* Only show edit button if book is not finished */}
             {!isOnCreationPage() && currentPage > 0 && !isFlipping && !isBookFinished && (
                 <button 
-                    className={`absolute right-0 bottom-0
+                    className={`absolute right-[-5px] bottom-0
                             w-16 h-16
                             bg-white/80
                             shadow-lg hover:shadow-xl
@@ -133,15 +144,26 @@ const ModifyBook = () => {
                     {[
                         ...pages.map((page, index) => (
                             <div key={index} className="page-element">
-                                <img 
-                                    src={page.image || `https://placehold.co/400x600?text=Page+${index + 1}`} 
-                                    alt={`Page ${index + 1}`}
-                                    className={pageClassname(index)}
-                                />
+                                {typeof page.image === 'string' && (page.image.startsWith('http') || page.image.startsWith('blob')) ? (
+                                    <img 
+                                        src={page.image} 
+                                        alt={`Page ${index + 1}`}
+                                        className={pageClassname(index)}
+                                    />
+                                ) : (
+                                    <div className={`${pageClassname(index)} bg-white p-6 font-children text-gray-700 overflow-y-auto`}>
+                                        <p className="whitespace-pre-wrap">{page.image}</p>
+                                    </div>
+                                )}
                             </div>
                         )),
                         !isBookFinished ? (
-                            <CreatePage key="create-page" classNameProp={pageClassname(1)} />
+                            <CreatePage 
+                                key="create-page" 
+                                classNameProp={pageClassname(1)} 
+                                testMode={testMode} 
+                                useCreativeModel={!useFineTunedModel}
+                            />
                         ) : null
                     ].filter(Boolean)}
 
@@ -202,6 +224,46 @@ const ModifyBook = () => {
                         </>
                     )}
                 </button>
+
+                {/* New Test Mode Toggle */}
+                <div className="w-full max-w-md p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
+                    <label className="flex items-center justify-between cursor-pointer">
+                        <div className="flex flex-col">
+                            <span className="text-lg font-children font-semibold text-gray-700">Test Mode</span>
+                            <span className="text-sm text-gray-500">Generate descriptions and no images</span>
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="checkbox"
+                                checked={testMode}
+                                onChange={toggleTestMode}
+                                className="sr-only"
+                            />
+                            <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${testMode ? 'bg-red-500' : 'bg-gray-300'}`}>
+                                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${testMode ? 'transform translate-x-6' : ''}`}></div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <div className="w-full max-w-md p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
+                    <label className="flex items-center justify-between cursor-pointer">
+                        <div className="flex flex-col">
+                            <span className="text-lg font-children font-semibold text-gray-700">Fine-Tuned Model</span>
+                            <span className="text-sm text-gray-500">Use more consistent but less creative image generation</span>
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="checkbox"
+                                checked={useFineTunedModel}
+                                onChange={toggleFineTunedModel}
+                                className="sr-only"
+                            />
+                            <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${useFineTunedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${useFineTunedModel ? 'transform translate-x-6' : ''}`}></div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
             </div>
 
             {/* Only render EditPage if book is not finished */}

@@ -4,7 +4,7 @@ import useLoadRequest from './useLoadRequest';
 import { addPage, updateContext} from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 
-const useCreatePage = () => {
+const useCreatePage = (testMode = false, useCreativeModel = false) => {
     const dispatch = useDispatch();
     const [description, setDescription] = useState('');
     const { generateImage } = useImageGeneration();
@@ -20,11 +20,11 @@ const useCreatePage = () => {
             console.error('Cannot create new pages: Book is finished');
             return false;
         }
-
+        
         if (description.trim() !== '') {
             try {
-                const { image, detailedDescription, seed, updatedContext} = await loadRequest(() => generateImage(description), "Creating image...");
-                dispatch(addPage({ image: image, user_description: description, detailed_description: detailedDescription, seed }));
+                const { detailedDescription, updatedContext, ...imageSeedAndRest} = await loadRequest(() => generateImage(description, testMode, useCreativeModel), "Creating image...");
+                dispatch(addPage({user_description: description, detailed_description: detailedDescription, ...imageSeedAndRest}));
                 dispatch(updateContext(updatedContext));
                 return true;
             } catch (error) {
