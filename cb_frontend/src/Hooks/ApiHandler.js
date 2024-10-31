@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { getUserToken, saveUserToken } from "./UserDataHandler";
 import { handleLogout } from "./LoginHandler";
 import store from '../redux/store';
@@ -7,7 +8,13 @@ import { addNotification, updateCredits } from '../redux/websiteSlice';
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
-const api = axios.create({baseURL: BASE_URL, withCredentials: true});
+const api = axios.create({
+    baseURL: BASE_URL,
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
 
 api.interceptors.request.use((req) => {
     return setReqTokenHeaders(req, getUserToken())
