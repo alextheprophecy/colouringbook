@@ -5,9 +5,10 @@ import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
 import { addNotification } from '../../redux/websiteSlice';
 
-const useEditPage = (creationSettings) => {
+const useEditPage = () => {
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, currentContext } = useSelector(state => state.book);
+    const settings = useSelector(state => state.website.settings);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
@@ -30,6 +31,7 @@ const useEditPage = (creationSettings) => {
     }
 
     const handleClose = useCallback(() => {
+        setEditText('');
         setIsVisible(false);
         setIsEnhancing(false);
         dispatch(setIsEditing(false));
@@ -62,7 +64,7 @@ const useEditPage = (creationSettings) => {
         if (!detailedDescription) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'No detailed description found',
+                message: 'No detailed description found. Please generate an image first.',
                 duration: 3000
             }));
             return;
@@ -75,7 +77,7 @@ const useEditPage = (creationSettings) => {
                     editText, 
                     currentContext,
                     {
-                        ...creationSettings,
+                        ...settings,
                         seed: pages[currentPage]?.seed
                     },
                     currentPage
@@ -97,7 +99,7 @@ const useEditPage = (creationSettings) => {
             if(updatedContext) dispatch(updateContext(updatedContext));
             console.log('updated context', updatedContext);
             handleClose();
-            
+
         } catch (error) {
             console.error('Error enhancing page:', error);
             dispatch(addNotification({
@@ -106,7 +108,7 @@ const useEditPage = (creationSettings) => {
                 duration: 5000
             }));
         }
-    }, [editText, currentPage, pages, currentContext, creationSettings, handleClose, dispatch]);
+    }, [editText, currentPage, pages, currentContext, settings, handleClose, dispatch]);
 
     const handleRegenerate = useCallback(async () => {
         const detailedDescription = pages[currentPage]?.detailed_description;
@@ -115,7 +117,7 @@ const useEditPage = (creationSettings) => {
         console.log('Regenerating image...', detailedDescription);
         try {
             console.log('Regenerating image...');
-            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription, creationSettings), "Regenerating image...");
+            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription, settings), "Regenerating image...");
             dispatch(updatePage({index: currentPage, data: { image, seed }}));
             return true;
         } catch (error) {

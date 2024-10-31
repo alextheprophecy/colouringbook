@@ -4,8 +4,11 @@ import EditPage from './EditPage';
 import { ChevronRight, ChevronLeft, CirclePlus, Pencil, Plus, Download, FileDown } from 'lucide-react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import CreatePage from './CreatePage';
+import { getUserData } from '../../Hooks/UserDataHandler';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleSetting } from '../../redux/websiteSlice';
 
 
 const ModifyBook = () => {
@@ -28,18 +31,10 @@ const ModifyBook = () => {
         isBookFinished,
     } = useModifyBook();
 
-    const [settings, setSettings] = useState({
-        testMode: false,
-        useFineTunedModel: false,
-        useAdvancedContext: false
-    });
-
-    const toggleSetting = useCallback((settingName) => {
-        setSettings(prev => ({
-            ...prev,
-            [settingName]: !prev[settingName]
-        }));
-    }, []);
+    const credits = useSelector((state) => state.website.credits);
+    const settings = useSelector((state) => state.website.settings);
+    const [showAdvanced, setShowAdvanced] = useState(false);
+    const dispatch = useDispatch();   
 
     const pageClassname = (index) => {
         return `${index === 0 
@@ -122,6 +117,26 @@ const ModifyBook = () => {
 
     return (
         <div className={`mt-4 p-8 bg-gradient-to-b from-blue-50 to-blue-100 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+             {/* Credits display at the top */}
+             <div className="fixed top-2 right-6 z-10">
+                <div className={`px-2 py-1 rounded-full 
+                    ${credits > 0 ? 'bg-green-100/80' : 'bg-red-100/80'} 
+                    shadow-sm 
+                    backdrop-blur-sm
+                    font-mono text-sm
+                    transition-all duration-200`}
+                >
+                    {credits > 0 ? (
+                        <span className="text-green-700">
+                            {credits} credits
+                        </span>
+                    ) : (
+                        <span className="text-red-600">Out of credits!</span>
+                    )}
+                </div>
+            </div>
+
+            
             <div className={`flex-1 flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
@@ -163,7 +178,6 @@ const ModifyBook = () => {
                             <CreatePage 
                                 key="create-page" 
                                 classNameProp={pageClassname(1)} 
-                                creationSettings={settings}
                             />
                         ) : null
                     ].filter(Boolean)}
@@ -228,73 +242,86 @@ const ModifyBook = () => {
 
                 {/* Settings Panel */}
                 <div className="w-full max-w-md flex flex-col gap-4">
-                    {/* Test Mode Toggle */}
+                    {/* Creative Model Toggle */}
                     <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">Test Mode</span>
-                                <span className="text-sm text-gray-500">Show descriptions instead of generating images</span>
+                                <span className="text-lg font-children font-semibold text-gray-700">Creative Model</span>
+                                <span className="text-sm text-gray-500 mr-1">More creative images, but may include extra shading and details</span>
                             </div>
                             <div className="relative">
                                 <input
                                     type="checkbox"
-                                    checked={settings.testMode}
-                                    onChange={() => toggleSetting('testMode')}
+                                    checked={!settings.useFineTunedModel}
+                                    onChange={() => dispatch(toggleSetting('useFineTunedModel'))}
                                     className="sr-only"
                                 />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.testMode ? 'bg-red-500' : 'bg-gray-300'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.testMode ? 'transform translate-x-6' : ''}`}></div>
+                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useFineTunedModel ? 'bg-gray-300' : 'bg-purple-500'}`}>
+                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useFineTunedModel ? '' : 'transform translate-x-6'}`}></div>
                                 </div>
                             </div>
                         </label>
                     </div>
 
-                    {/* Fine-Tuned Model Toggle */}
-                    <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
-                        <label className="flex items-center justify-between cursor-pointer">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">Fine-Tuned Model</span>
-                                <span className="text-sm text-gray-500">Use more consistent but less creative image generation</span>
+                    {/* Advanced Options Dropdown */}
+                    <div className="flex flex-col gap-2">
+                        <button 
+                            onClick={() => setShowAdvanced(prev => !prev)}
+                            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 px-2"
+                        >
+                            <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-90' : ''}`} />
+                            Advanced Options
+                        </button>
+                        
+                        <div className={`flex flex-col gap-2 overflow-hidden transition-all duration-200 ${showAdvanced ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            {/* Test Mode Toggle */}
+                            <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
+                                <label className="flex items-center justify-between cursor-pointer">
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-children font-semibold text-gray-700">Test Mode</span>
+                                        <span className="text-sm text-gray-500">Show descriptions instead of generating images</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            checked={settings.testMode}
+                                            onChange={() => dispatch(toggleSetting('testMode'))}
+                                            className="sr-only"
+                                        />
+                                        <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.testMode ? 'bg-red-500' : 'bg-gray-300'}`}>
+                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.testMode ? 'transform translate-x-6' : ''}`}></div>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    checked={settings.useFineTunedModel}
-                                    onChange={() => toggleSetting('useFineTunedModel')}
-                                    className="sr-only"
-                                />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useFineTunedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useFineTunedModel ? 'transform translate-x-6' : ''}`}></div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
 
-                    {/* Advanced Context Toggle */}
-                    <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
-                        <label className="flex items-center justify-between cursor-pointer">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">Advanced Story Context</span>
-                                <span className="text-sm text-gray-500">Use more detailed story context for better continuity</span>
+                            {/* Advanced Context Toggle */}
+                            <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
+                                <label className="flex items-center justify-between cursor-pointer">
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-children font-semibold text-gray-700">Advanced Story Context</span>
+                                        <span className="text-sm text-gray-500">Use more detailed story context for better continuity</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            checked={settings.useAdvancedContext}
+                                            onChange={() => dispatch(toggleSetting('useAdvancedContext'))}
+                                            className="sr-only"
+                                        />
+                                        <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedContext ? 'bg-blue-500' : 'bg-gray-300'}`}>
+                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedContext ? 'transform translate-x-6' : ''}`}></div>
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    checked={settings.useAdvancedContext}
-                                    onChange={() => toggleSetting('useAdvancedContext')}
-                                    className="sr-only"
-                                />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedContext ? 'bg-blue-500' : 'bg-gray-300'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedContext ? 'transform translate-x-6' : ''}`}></div>
-                                </div>
-                            </div>
-                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Only render EditPage if book is not finished */}
-            {!isBookFinished && <EditPage creationSettings={settings} />}
+            {!isBookFinished && <EditPage />}
         </div>
     );
 };

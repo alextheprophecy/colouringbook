@@ -5,12 +5,12 @@ import { addPage, updateContext } from '../../redux/bookSlice';
 import { addNotification } from '../../redux/websiteSlice';
 import useImageGeneration from './useImageGeneration';
 
-const useCreatePage = (creationSettings) => {
+const useCreatePage = () => {
     const dispatch = useDispatch();
+    const settings = useSelector(state => state.website.settings);
     const [description, setDescription] = useState('');
     const { generateImage } = useImageGeneration();
     const { loadRequest } = useLoadRequest();
-    // Add selector to get isBookFinished state
     const isBookFinished = useSelector(state => state.book.isBookFinished);
 
     const handleDescriptionChange = (e) => setDescription(e.target.value);
@@ -36,7 +36,7 @@ const useCreatePage = (creationSettings) => {
 
         try {
             const { detailedDescription, updatedContext, ...imageSeedAndRest} = await loadRequest(
-                () => generateImage(description, creationSettings), 
+                () => generateImage(description, settings), 
                 "Creating image..."
             );
             dispatch(addPage({user_description: description, detailed_description: detailedDescription, ...imageSeedAndRest}));

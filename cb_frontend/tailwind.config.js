@@ -17,6 +17,9 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'paper': "url('/public/assets/textures/paper-texture.jpg')",
       },
+      boxShadow: {
+        'inner-lg': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
+      }
     },
   },
   plugins: [

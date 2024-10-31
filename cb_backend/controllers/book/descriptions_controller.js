@@ -20,56 +20,46 @@ const DescriptionsController = () => {
         NO_UPDATE: "NO_UPDATE"
     });
 
-    const selectiveUpdateBookContext = async (newPageDescription, currentContext, miniModel = false) => {
-        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to evaluate whether a new page description introduces an intrinsic change that needs to be reflected in the book context. 
-        
+    const shouldUpdateBookContext = async (enhancementPrompt, currentContext, miniModel = true) => {
+        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to evaluate whether a requested enhancement introduces an intrinsic change that needs to be reflected in the book context.
+            
         Guidelines:
-        1. If the new description introduces an intrinsic change (e.g., a permanent change to a character's appearance or a persistent setting change), then return an updated context object.
-        2. If the change is temporary and specific to this scene alone, return "NO_UPDATE" without modifying the context.
+        1. Return TRUE if the enhancement introduces:
+           - Permanent character appearance changes
+           - Persistent setting/environment changes
+           - New story-critical objects or elements
+           - Changes that will definitely affect future scenes
+           - e.g. a character wearing a new hat, or the environment changing to a new location
         
-        Examples of intrinsic changes:
-        - A character now has a new appearance (like wearing a permanent item of clothing).
-        - The setting changes in a way that affects future scenes (e.g., adding a prominent detail to the foreground, changing the environment).
-        
-        Examples of temporary changes:
-        - Changes in posture, expressions, or one-off actions specific to this scene.`;
-    
-        const userPrompt = `Given the new page description, determine if an intrinsic update to the given current context is needed:
-        - New page description:
-        ${newPageDescription}
+        2. Return FALSE if the enhancement only includes:
+           - Temporary poses or expressions
+           - One-time actions
+           - Scene-specific details
+           - Minor adjustments that won't carry forward
+           - e.g removing the tree from the background`;
 
-        - Current book context:
-        ${JSON.stringify(currentContext, null, 2)}      
+        const userPrompt = `Evaluate if this enhancement request requires updating the story context:
+        - Enhancement Request: "${enhancementPrompt}"
+        - Current Context: ${JSON.stringify(currentContext, null, 2)}
         
-        If an intrinsic update is needed, return an updated context object. Otherwise, return "NO_UPDATE".`;
-    
-        // Define the response format with a union
-        const responseFormat = z.object({
-            result: z.union([
-                z.literal("NO_UPDATE"),
-                contextObjectSchema
-            ])
-        });
-    
+        Return TRUE only if the enhancement introduces changes that should persist in future scenes.`;
+
+        const resultSchema = z.object({
+            result: z.boolean()
+        });       
+
         try {
-            const result = await (miniModel ? query_formatted_gpt4o_mini : query_formatted_gpt4o2024)(systemPrompt, userPrompt, responseFormat, "result");
-    
-            // Determine if an update is needed
-            if (result.result === "NO_UPDATE") {
-                console.log("NO_UPDATE");
-                return { status: UpdateStatus.NO_UPDATE, new_context: null}; // No intrinsic update
-            } else {
-                console.log("UPDATE_CONTEXT", result.result);
-                return { status: UpdateStatus.UPDATE_CONTEXT, new_context: contextObjectSchema.parse(result.result) }; // Return updated context
-            }
+            const result = await (miniModel ? query_formatted_gpt4o_mini : query_formatted_gpt4o2024) (systemPrompt, userPrompt, resultSchema, "result");
+            console.log('context update needed:', result.result);
+            return result.result;
         } catch (error) {
-            console.error("Error selectively updating book context:", error);
+            console.error("Error evaluating context update need:", error);
             throw error;
         }
     };
     
 
-    const enhancePageDescription = async (previousDescription, enhancementRequest, bookContext) => {
+    const enhancePageDescription = async (previousDescription, enhancementRequest, bookContext, miniModel = true) => {
         const sys_prompt = `You are an expert at refining and enhancing descriptions for black-and-white children's coloring book images. Your task is to make small, specific adjustments to an existing description based on a user request. Keep the original description intact, modifying only the relevant parts as specified in the enhancement request.
             Guidelines:
             1. Make only the changes specified in the enhancement request without altering any other part of the scene.
@@ -89,10 +79,10 @@ const DescriptionsController = () => {
         
         Make the necessary adjustments to the description without drastically changing the original scene or adding unnecessary details.`;
     
-        return query_gpt4o_mini(sys_prompt, usr_prompt);
+        return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
     };
     
-    const generateCreativeSceneComposition = async (sceneDescription, bookContext) => {
+    const generateCreativeSceneComposition = async (sceneDescription, bookContext, miniModel = true) => {
         const sys_prompt = `You are an expert in creating simple, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
             Guidelines:
             1. Use simple framing, like medium shots or close-ups, with clear focus on main characters or actions, like a movie storyboard.
@@ -106,7 +96,7 @@ const DescriptionsController = () => {
         
         Focus on making the scene clear, engaging, and easy for children to color. Think of it as a simple storyboard for a coloring book page.`;
     
-        return query_gpt4o_mini(sys_prompt, usr_prompt);
+        return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
     };
     
     const generateFinalImageDescription = async (compositionIdea, bookContext) => {
@@ -217,7 +207,7 @@ const DescriptionsController = () => {
         generateFinalImageDescription,
         parseContextInput,
         enhancePageDescription,
-        selectiveUpdateBookContext
+        shouldUpdateBookContext
     };
 }
 

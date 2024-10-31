@@ -33,13 +33,12 @@ const getUserBooks = (req, res) => {
 };
 
 const verifyCredits = (user, creditCost) => {
-    if(creditCost<=0) throw new Error('error negative credit cost')
+    if(creditCost<=0) throw new Error('Error negative credit cost')
 
     return User.findOneAndUpdate(
         {_id: user.id, credits: {$gte: creditCost}}, {"$inc": {credits: -creditCost}}, {new: true}
     ).then((updatedUser) => {
-        if(!updatedUser || updatedUser.credits < creditCost)
-            throw new Error('Insufficient funds!')        
+        if(!updatedUser || updatedUser.credits < creditCost) throw new Error('Insufficient funds!')        
         return updatedUser.credits
     })
 }

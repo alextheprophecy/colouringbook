@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 
 const useImageGeneration = () => {
     const { currentContext, bookId, currentPage } = useSelector(state => state.book);
+    const creationSettings = useSelector(state => state.website.settings);
 
-    const generateImage = async (description, creationSettings) => {
+    const generateImage = async (description) => {
         if (!description || description.trim() === '') {
             throw new Error('No description found');
         }            
-        
         try {            
             const response = await api.post('image/generatePageWithContext', {
                 sceneDescription: description, 
@@ -24,11 +24,10 @@ const useImageGeneration = () => {
         }
     };
 
-    const regenerateImage = async (detailedDescription, creationSettings) => {
+    const regenerateImage = async (detailedDescription) => {
         if (!detailedDescription || detailedDescription.trim() === '') {
             throw new Error('No detailed description found');
         }            
-
         try {            
             const response = await api.post('image/regeneratePage', {
                 detailedDescription, 
@@ -44,11 +43,10 @@ const useImageGeneration = () => {
         }
     };
 
-    const enhanceImage = async (currentDescription, userModifications, currentContext, creationSettings, currentPage) => {
+    const enhanceImage = async (currentDescription, userModifications, currentContext, currentPage) => {
         if (!currentDescription || !userModifications) {
             throw new Error('Missing required parameters for enhancement');
         }
-
         try {
             const response = await api.post('image/enhancePage', {
                 previousDescription: currentDescription,

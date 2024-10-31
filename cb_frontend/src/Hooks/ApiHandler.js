@@ -2,7 +2,7 @@ import axios from "axios";
 import { getUserToken, saveUserToken } from "./UserDataHandler";
 import { handleLogout } from "./LoginHandler";
 import store from '../redux/store';
-import { addNotification } from '../redux/websiteSlice';
+import { addNotification, updateCredits } from '../redux/websiteSlice';
 
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
@@ -14,7 +14,12 @@ api.interceptors.request.use((req) => {
 }, (err) => Promise.reject(err));
 
 api.interceptors.response.use(
-    res => res,
+    res => {
+        if (res.data?.credits !== undefined) {
+            store.dispatch(updateCredits(res.data.credits));
+        }
+        return res;
+    },
     error => {
         const { status } = error.response || {}
         const errCode = error.code

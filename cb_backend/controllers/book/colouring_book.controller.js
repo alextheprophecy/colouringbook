@@ -1,16 +1,29 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned} = require("../external_apis/replicate.controller");
 const Book2 = require("../../models/book2.model");
 const {getFileData, image_data, saveBookPDF, savePageData, getPDF} = require("../user/files.controller");
-const {updateBookContext, generatePageDescriptionGivenContext, selectiveUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
+const {updateBookContext, generatePageDescriptionGivenContext, shouldUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
+const {verifyCredits} = require("../user/user.controller");
 
 const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
 const USE_SCHNELL_MODEL = false
 
+const CREDIT_COSTS = {
+    GEN: 3,
+    REGEN: 3,
+    ENHANCE: 3
+}
+
 const CHILD_PROMPT = (description)=>`Children's detailed coloring book. ${description}. Only black outlines, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent coloring book.`
 const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
-const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed = randomSeed()}) => {
+const verifyPageCredits = async (user, generationType) => {    
+    const creditCost = CREDIT_COSTS[generationType];
+    if (!creditCost) throw new Error('Invalid generation type');
+    return await verifyCredits(user, creditCost);    
+};
+
+const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed = randomSeed()}) => { 
     let imageData;
     
     if (useFineTunedModel)
@@ -45,7 +58,10 @@ const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const book = req.book;  
     const { sceneDescription, currentContext, ...creationSettings} = req.body;
-    console.log('generating page with:', sceneDescription, creationSettings);
+
+    //VERIFY CREDITS
+    const credits = await verifyPageCredits(user, 'GEN').catch(error => res.status(403).json({ error: error.message }));
+
     if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
 
     const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
@@ -70,6 +86,7 @@ const generatePageWithContext = async (req, res) => {
             updatedContext, 
             image: imageResult.url, 
             seed: imageResult.seed,
+            credits: credits
         });
 
     } catch (error) {
@@ -82,6 +99,9 @@ const regeneratePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
     const { detailedDescription, currentPage, ...creationSettings } = req.body;
+    
+    //VERIFY CREDITS
+    const credits = await verifyPageCredits(user, 'REGEN').catch(error => res.status(403).json({ error: error.message }));
 
     const { testMode, ...generationSettings } = creationSettings;
     console.log('regenerating page test mode:', testMode);
@@ -99,6 +119,7 @@ const regeneratePage = async (req, res) => {
         res.status(200).json({ 
             image: imageResult.url, 
             seed: imageResult.seed,
+            credits: credits
         }); 
     } catch (error) {
         console.error('Error regenerating page:', error);
@@ -111,6 +132,9 @@ const enhancePage = async (req, res) => {
     const book = req.book;
     const { previousDescription, enhancementRequest, currentContext, currentPage, ...generationSettings } = req.body;
     
+    //VERIFY CREDITS
+    const credits = await verifyPageCredits(user, 'ENHANCE').catch(error => res.status(403).json({ error: error.message }));
+
     if (!previousDescription || !enhancementRequest) {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
@@ -123,8 +147,15 @@ const enhancePage = async (req, res) => {
             currentContext
         );
 
-        // Run image generation and context update in parallel
-        const [imageResult, contextUpdate] = await Promise.all([
+        console.log('enhancementRequest:', enhancementRequest);
+        console.log('currentContext:', currentContext);
+        console.log('enhancedDescription:', enhancedDescription);
+
+        // Check if context update is needed
+        const shouldUpdate = await shouldUpdateBookContext(enhancementRequest, currentContext);
+        
+        // Run image generation and conditionally update context
+        const [imageResult, updatedContext] = await Promise.all([
             _generateImage(
                 user, 
                 book, 
@@ -132,16 +163,15 @@ const enhancePage = async (req, res) => {
                 enhancedDescription,
                 generationSettings
             ),
-            selectiveUpdateBookContext(enhancedDescription, currentContext)
+            shouldUpdate ? updateBookContext(enhancedDescription, currentContext) : null
         ]);
-
-        const updatedContext = contextUpdate.status === 'UPDATE_CONTEXT' ? contextUpdate.new_context : null;
 
         res.status(200).json({ 
             enhancedDescription,
             updatedContext,
             image: imageResult.url,
-            seed: imageResult.seed
+            seed: imageResult.seed,
+            credits: credits
         });
     } catch (error) {
         console.error('Error enhancing page:', error);
