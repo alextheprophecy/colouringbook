@@ -15,9 +15,11 @@ import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 import CreateBook from "./Components/Views/CreateBook";
 import Popup from "./Components/Popup";
 import ErrorBoundaryWrapper from './Components/ErrorBoundary';
+import { useSelector } from 'react-redux';
+import Feedback from './Components/Feedback/feedback';
 
 const AppLayout = () => {
-
+    
     const resetScrollPosition = () => {
         window.scrollTo(0, 0);
     }
@@ -46,6 +48,7 @@ const AppLayout = () => {
         <ErrorBoundaryWrapper>
             <Popup />
             <BurgerMenu />
+            <Feedback />
             <div className="page-container">
               <main className="main-content">
                   <ScrollRestoration />

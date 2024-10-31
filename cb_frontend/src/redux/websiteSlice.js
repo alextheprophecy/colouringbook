@@ -4,13 +4,14 @@ import { getUserData } from '../Hooks/UserDataHandler';
 const initialState = {
   notifications: [],
   isPopupVisible: false,
+  askFeedback: false,
   credits: getUserData()?.credits || 0,
   settings: {
     testMode: false,
-    useFineTunedModel: false,
-    useAdvancedContext: false
+    useFineTunedModel: true,
+    useAdvancedContext: true
   }
-};
+}
 
 const websiteSlice = createSlice({
   name: 'website',
@@ -48,6 +49,9 @@ const websiteSlice = createSlice({
     },
     toggleSetting: (state, action) => {
       state.settings[action.payload] = !state.settings[action.payload];
+    },
+    setAskFeedback: (state, action) => {
+      state.askFeedback = action.payload;
     }
   },
 });
@@ -59,7 +63,8 @@ export const {
   updateCredits,
   decrementCredits, 
   incrementCredits,
-  toggleSetting
+  toggleSetting,
+  setAskFeedback
 } = websiteSlice.actions;
 
 export default websiteSlice.reducer;

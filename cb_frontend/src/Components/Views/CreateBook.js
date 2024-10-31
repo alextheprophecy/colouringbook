@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ModifyBook from "../CreateBook/ModifyBook";
 import Loading from '../CreateBook/Loading';
 import useCreateBook from '../../Hooks/CreateBook/useCreateBook';
-
+import Feedback from '../Feedback/feedback';
 const CreateBook = () => {
     const { isLoading, hasBookStarted } = useSelector(state => state.book);
     const credits = useSelector(state => state.website.credits);
@@ -23,6 +23,7 @@ const CreateBook = () => {
     return <>
         {isLoading && <Loading />}
         {!hasBookStarted ? (
+            <>
             <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4">
                 <div className="max-w-sm w-full bg-white p-6 rounded-lg shadow-lg">
                     <h1 className="text-2xl font-bold mb-4 text-center">Create Your Book</h1>
@@ -63,6 +64,7 @@ const CreateBook = () => {
                     </button>
                 </div>
             </div>
+            </>
         ) : (
             CreationContainer(<ModifyBook />)
         )}

@@ -1,68 +1,84 @@
 import api from '../../Hooks/ApiHandler';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addPage, updateContext, updatePage } from '../../redux/bookSlice';
+import { addNotification } from '../../redux/websiteSlice';
+import { useCallback } from 'react';
 
 const useImageGeneration = () => {
-    const { currentContext, bookId, currentPage } = useSelector(state => state.book);
+    const dispatch = useDispatch();
     const creationSettings = useSelector(state => state.website.settings);
 
-    const generateImage = async (description) => {
+    const generateImage = async (description, currentContext, bookId) => {
         if (!description || description.trim() === '') {
             throw new Error('No description found');
-        }            
-        try {            
-            const response = await api.post('image/generatePageWithContext', {
-                sceneDescription: description, 
-                currentContext, 
-                bookId, 
-                ...creationSettings
-            });
-            const { updatedContext, ...pageData } = response.data;
-            return { ...pageData, updatedContext };  
-        } catch (error) {
-            console.error('Error generating page:', error);
-            throw error;
-        }
-    };
+        }                             
+        const response = await api.post('image/generatePageWithContext', {
+            sceneDescription: description,  
+            currentContext, 
+            bookId, 
+            ...creationSettings
+        });        
+        const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
+        console.log('NEW IMAGE', {
+            userDescription: description, 
+            detailedDescription, 
+            ...imageSeedAndRest
+        });
+        dispatch(addPage({
+            userDescription: description, 
+            detailedDescription, 
+            ...imageSeedAndRest
+        }));
 
-    const regenerateImage = async (detailedDescription) => {
-        if (!detailedDescription || detailedDescription.trim() === '') {
-            throw new Error('No detailed description found');
-        }            
-        try {            
-            const response = await api.post('image/regeneratePage', {
-                detailedDescription, 
-                bookId, 
-                currentPage: currentPage-1,
-                ...creationSettings
-            });
-            const { image, seed } = response.data;
-            return { image, seed };  
-        } catch (error) {
-            console.error('Error regenerating page:', error);
-            throw error;
-        }
-    };
+        return dispatch(updateContext(updatedContext));        
+    }
 
-    const enhanceImage = async (currentDescription, userModifications, currentContext, currentPage) => {
-        if (!currentDescription || !userModifications) {
-            throw new Error('Missing required parameters for enhancement');
-        }
-        try {
-            const response = await api.post('image/enhancePage', {
-                previousDescription: currentDescription,
-                enhancementRequest: userModifications,
-                bookId,
-                currentContext,
-                currentPage: currentPage-1,
-                ...creationSettings
-            });
+    const regenerateImage = async (currentPage, pages, currentContext, bookId) => {   
+        console.log('regenerating image', currentPage, pages);
+        console.log('Context', currentContext);     
+        const detailedDescription = pages[currentPage]?.detailedDescription;
+        if (!detailedDescription) throw new Error('No detailed description found');
+        const response = await api.post('image/regeneratePage', {
+            detailedDescription, 
+            bookId, 
+            currentPage,
+            ...creationSettings
+        });
+        const { image, seed } = response.data;
+        
+        return dispatch(updatePage({index: currentPage, data: { image, seed }}));
+    }
 
-            return response.data;
-        } catch (error) {
-            console.error('Error enhancing image:', error);
-            throw error;
-        }
-    };
+    const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        
+        const currentDescription = pages[currentPage]?.detailedDescription;
+        const currentSeed = pages[currentPage]?.seed;
+        if (!currentDescription || !enhancementRequest) throw new Error('Missing required parameters for enhancement');
+            
+        const response = await api.post('image/enhancePage', {
+            previousDescription: currentDescription,
+            enhancementRequest,
+            bookId,
+            currentContext,                
+            currentPage: currentPage,
+            ...creationSettings,
+            seed: currentSeed
+        });
+        const { enhancedDescription, updatedContext, image, seed } = response.data;
+
+        console.log('NEW IMAGE', image, seed);
+        dispatch(updatePage({
+            index: currentPage,
+            data: { 
+                detailedDescription: enhancedDescription,
+                enhancementRequest,
+                image,
+                seed
+            }
+        }));
+        
+        if(updatedContext) return dispatch(updateContext(updatedContext));       
+        return true;
+    }
 
     return { generateImage, regenerateImage, enhanceImage };
 };

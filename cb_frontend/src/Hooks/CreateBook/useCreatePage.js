@@ -7,11 +7,10 @@ import useImageGeneration from './useImageGeneration';
 
 const useCreatePage = () => {
     const dispatch = useDispatch();
-    const settings = useSelector(state => state.website.settings);
     const [description, setDescription] = useState('');
     const { generateImage } = useImageGeneration();
     const { loadRequest } = useLoadRequest();
-    const isBookFinished = useSelector(state => state.book.isBookFinished);
+    const { isBookFinished, currentContext, bookId } = useSelector(state => state.book);
 
     const handleDescriptionChange = (e) => setDescription(e.target.value);
 
@@ -34,16 +33,13 @@ const useCreatePage = () => {
             return false;
         }
 
-        try {
-            const { detailedDescription, updatedContext, ...imageSeedAndRest} = await loadRequest(
-                () => generateImage(description, settings), 
+        try {   
+            await loadRequest(
+                () => generateImage(description, currentContext, bookId),
                 "Creating image..."
-            );
-            dispatch(addPage({user_description: description, detailed_description: detailedDescription, ...imageSeedAndRest}));
-            dispatch(updateContext(updatedContext));
-            return true;
+            )
         } catch (error) {
-            console.error('Error generating image:', error);
+            console.error('Error generating page:', error);
             dispatch(addNotification({
                 type: 'error',
                 message: error.message || 'Failed to generate image. Please try again.',

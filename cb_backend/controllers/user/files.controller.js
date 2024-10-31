@@ -24,11 +24,15 @@ const pdf_data = (user_email, book_id) => ({
     TTL: URL_TTL.PDF
 })
 
-const getPDF = (user, book) =>
-    getFileUrl(pdf_data(user.email, book.id))
+const getPDF = (user, book) => {
+    if(book.pageCount <= 0) return null;
+    return getFileUrl(pdf_data(user.email, book.id))
+}
 
-const getImage = (user, book, imageIndex) =>
-    getFileUrl(image_data(user.email, book.id, imageIndex))
+const getImage = (user, book, imageIndex) => {
+    if(book.pageCount <= imageIndex) return null;
+    return getFileUrl(image_data(user.email, book.id, imageIndex))
+}
 
 const saveBookPDF = async (imageBuffers, user, book) => {
     const pdfStream = imgToPDF(imageBuffers, imgToPDF.sizes.A4)
@@ -43,11 +47,8 @@ const savePageData = async (user, bookId, pageNumber, imageData) => {
     
     const versionKey = `${baseKey}/versions/p${pageNumber}/v_${timestamp}.png`;
     const currentKey = `${baseKey}/p${pageNumber}.png`;
-    //TODO: Upload both version and current
-    /* await Promise.all([
-        uploadBuffer(buffer, {key: versionKey}),
-        uploadBuffer(buffer, {key: currentKey})
-    ]); */
+    //TODO: versioning:         uploadStream(imageData, versionKey, 'image/png'),
+
     const [_, presignedUrl] = await Promise.all([
         uploadStream(imageData, currentKey, 'image/png'),
         getFileUrl({key: currentKey, TTL: URL_TTL.IMAGE})        

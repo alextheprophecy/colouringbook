@@ -46,14 +46,14 @@ const Popup = () => {
   if (!isPopupVisible) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-2 right-2 z-50 space-y-2">
       {notifications.map((notification) => (
         <div
           key={notification.id}
           className={`${getBackgroundColor(notification.type)} 
             border rounded-lg shadow-lg 
             transform transition-all duration-500 ease-in-out
-            max-w-md w-full p-4
+            max-w-sm w-full p-4
             flex items-start gap-3`}
         >
           {getIcon(notification.type)}

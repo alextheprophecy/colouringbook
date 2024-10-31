@@ -1,127 +1,127 @@
 /* Position and sizing of burger button */
-.bm-burger-button {
+.burger-button {
     position: fixed;
-    width: 36px;
-    height: 30px;
-    left: 36px;
-    top: 36px;
+    width: 2.5rem;
+    height: 2.5rem;
+    left: 1.5rem;
+    top: 1.5rem;
+    transition: all 200ms;
+}
+
+.burger-button:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Color/shape of burger icon bars */
-.bm-burger-bars {
-    background: #1E3A8A; /* Light sky blue to match playful crayon aesthetic */
-    border-radius: 3px; /* Rounded edges for a softer look */
+.burger-bars {
+    background: rgb(37, 99, 235);
+    border-radius: 4px;
+    height: 6px;
+    left: 25%;
+    right: 25%;
+    margin-top: -1px;
 }
 
-/* Color/shape of burger icon bars on hover */
-.bm-burger-bars-hover {
-    background: #FFB6C1; /* Light pink for a soft, playful hover effect */
+/* Individual menu items */
+.bm-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    background-color: rgb(37, 99, 235);
+    color: white;
+    font-family: "Children";
+    font-weight: 600;
+    font-size: 1.125rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 300ms ease-in-out;
+    width: 90%;
+}
+
+.bm-item:hover {
+    background-color: rgb(29, 78, 216);
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Menu background */
+.bm-menu {
+    background-color: rgba(249, 250, 251, 0.95);
+    backdrop-filter: blur(8px);
+    width: 270px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .burger-button {
+        width: 2rem;
+        height: 2rem;
+        left: 1rem;
+        top: 1rem;
+    }
 }
 
 /* Position and sizing of clickable cross button */
-.bm-cross-button {
+.cross-button {
     height: 30px;
     width: 30px;
 }
 
 /* Color/shape of close button cross */
-.bm-cross {
-    background: #FF6347; /* Soft tomato red for a crayon-like feel */
-}
-
-/* Sidebar wrapper styles */
-.bm-menu-wrap {
-    position: fixed;
-    height: 100%;
+.cross {
+    background: #FF6347;
 }
 
 /* General sidebar styles */
 .bm-menu {
-    padding: 2.5rem 1.5rem 0;
+    background: antiquewhite;
+    padding-top: 1.5rem;
     font-size: 1.5em;
-    width: 300px;
-
 }
 
 /* Morph shape necessary with bubble or elastic */
 .bm-morph-shape {
     fill: antiquewhite;
-    overflow: clip;
 }
 
 /* Wrapper for item list */
 .bm-item-list {
-    color: #3d3d3d; /* Darker color for text contrast */
-    overflow: clip;
-    line-height: 2rem;
-    padding: 0 5px 0 5px;
+    color: #3d3d3d;
+    padding: 0.8em;
 }
 
-/* Individual item */
-.bm-item {
-    display: inline-block;
-    color: white;
-    text-decoration: none;
-    padding: 5px 15px 5px 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    font-family: "Children";
-    font-weight: bold;
-    font-size: 1.8rem;
-    background-color: #00a4d7; /* Light sky blue background to match playful aesthetic */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Softer shadow for a playful touch */
-    transition: color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+/* The wrapper element for the menu */
+.burger-menu-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Menu Wrapper */
+.bm-menu-wrap {
+    position: fixed;
+    height: 100%;
+    background-color: antiquewhite;
     position: relative;
 }
 
-/* Hover effect on menu items */
-.bm-item:hover {
-    background-color:  #87CEEB;
-    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4); /* Slightly larger shadow on hover */
-}
-
-/* Active item */
-.bm-item:active {
-    background-color: #02779c;
-    box-shadow: inset 2px 2px 7px rgba(0, 0, 0, 0.5);
-}
-
-/* Line effect */
-.bm-item::after {
-    content: '';
+.bm-item-logout {
     position: absolute;
-    left: 50%;
-    bottom: -4px;
-    height: 3px;
-    width: 0;
-    background: white;
-    border-radius: 3px;
-    transition: width 0.3s ease, left 0.3s ease;
+    bottom: 2rem;
+    left: 1rem;
+    background-color: #dc2626;
+    width: auto;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+    margin-bottom: 0;
 }
 
-.bm-item:hover::after {
-    width: 100%;
-    left: 0;
-}
-
-
-
-/* Adjust the width of the menu on mobile screens */
-@media (max-width: 768px) {
-    .bm-burger-button {
-        width: 32px;
-        height: 28px;
-        left: 10px;
-        top: 20px;
-    }
-
-
-    .bm-item {
-        padding: 10px;
-    }
-
-    .bm-item::after {
-        content: none;
-    }
+.bm-item-logout:hover {
+    background-color: #b91c1c;
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 

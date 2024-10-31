@@ -4,7 +4,7 @@ import { getUserToken, saveUserToken } from "./UserDataHandler";
 import { handleLogout } from "./LoginHandler";
 import store from '../redux/store';
 import { addNotification, updateCredits } from '../redux/websiteSlice';
-
+import { updateUserCredits } from "./UserDataHandler";
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
@@ -16,14 +16,27 @@ const api = axios.create({
     }
 });
 
+const showErrorNotification = (errMsg) => {
+    store.dispatch(addNotification({
+        type: 'error',
+        message: errMsg,
+        duration: 5000
+    }));
+};
+
 api.interceptors.request.use((req) => {
     return setReqTokenHeaders(req, getUserToken())
 }, (err) => Promise.reject(err));
 
+
 api.interceptors.response.use(
     res => {
-        if (res.data?.credits !== undefined) {
-            store.dispatch(updateCredits(res.data.credits));
+        if (res.data?.credits !== undefined) {         
+            const { credits, ...restData } = res.data;
+            store.dispatch(updateCredits(credits));
+            updateUserCredits(credits);
+            console.log('restData from interceptor', restData);
+            res.data = restData;
         }
         return res;
     },
@@ -32,11 +45,7 @@ api.interceptors.response.use(
         const errCode = error.code
 
         if (errCode === 'ECONNABORTED') {
-            store.dispatch(addNotification({
-                type: 'error',
-                message: "Request timeout. Please try again.",
-                duration: 5000
-            }));
+            showErrorNotification("Request timeout. Please try again.");
             return Promise.reject(error);
         }
 
@@ -46,44 +55,15 @@ api.interceptors.response.use(
                     'An unexpected error occurred';
 
         switch (status) {
-            case 400:
-                store.dispatch(addNotification({
-                    type: 'error',
-                    message: errMsg,
-                    duration: 5000
-                }));
-                break;
             case 401:
                 if(errMsg.includes("Expired Token")) return refreshToken(error);
                 break;
             case 403:
-                store.dispatch(addNotification({
-                    type: 'error',
-                    message: errMsg,
-                    duration: 5000
-                }));
+                showErrorNotification(errMsg);
                 handleLogout();
                 break;
-            case 404:
-                store.dispatch(addNotification({
-                    type: 'error',
-                    message: errMsg,
-                    duration: 5000
-                }));
-                break;
-            case 500:
-                store.dispatch(addNotification({
-                    type: 'error',
-                    message: errMsg,
-                    duration: 5000
-                }));
-                break;
             default:
-                store.dispatch(addNotification({
-                    type: 'error',
-                    message: errMsg,
-                    duration: 5000
-                }));
+                showErrorNotification(errMsg);
                 break;
         }
 

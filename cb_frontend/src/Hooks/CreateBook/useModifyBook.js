@@ -1,7 +1,7 @@
 import { useRef, useCallback, useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPage, setIsEditing, finishBook} from '../../redux/bookSlice';
-import { addNotification } from '../../redux/websiteSlice';
+import { addNotification, setAskFeedback } from '../../redux/websiteSlice';
 import api from '../../Hooks/ApiHandler';
 import useLoadRequest from './useLoadRequest';
 
@@ -123,8 +123,7 @@ const useModifyBook = () => {
             
             setPdfUrl(data.bookPDF);
             window.open(data.bookPDF, '_blank');
-            dispatch(finishBook());
-            
+            dispatch(finishBook());            dispatch(setAskFeedback(true));
             dispatch(addNotification({
                 type: 'success',
                 message: 'Your book has been successfully generated!',

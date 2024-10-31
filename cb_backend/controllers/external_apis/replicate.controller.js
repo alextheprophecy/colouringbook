@@ -5,6 +5,9 @@ const DEFAULT_SCHNELL_SEEDS = [19129, 34895, 34135] //19129 good
 const DEFAULT_DEV_SEEDS = [19129, 34895, 34135, 23006, 98663, 42145] //19129 good, 98663-very good result, 42145 very nice
 //34135(a bit too much shading), 23006 -good
 //19129 more cartoonish
+
+const LORA_SEEDS = [9890, 17362/*really nice*/, 51337, 26610, 27398]
+
 const SAFETY_CHECKER = false
 
 const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {

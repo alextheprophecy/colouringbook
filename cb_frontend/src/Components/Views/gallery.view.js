@@ -5,12 +5,17 @@ import FlipBook from "../flip_book.component";
 import '../../Styles/gallery.css'
 import {getBookData, saveBookData} from "../../Hooks/UserDataHandler";
 import { RefreshCw, Download } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { setAskFeedback, addNotification } from '../../redux/websiteSlice';
 
-// Add this constant at the top of the file
-const MIN_LOADING_TIME = Object.freeze(1000); // 5 seconds for testing
+// Replace the single constant with two constants
+const LOADING_TIMES = Object.freeze({
+    INITIAL: 330,
+    BATCH: 2000
+});
 
 const SkeletonLoader = () => (
-    <div className="w-full max-w-4xl mx-auto mb-6 h-48 p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
+    <div className="w-full max-w-4xl mx-auto mb-6 h-32 p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
         <div className="animate-pulse h-full">
             <div className="flex justify-between items-center h-full">
                 {/* Left side content */}
@@ -32,8 +37,13 @@ const SkeletonLoader = () => (
 );
 
 const GalleryView = () =>  {
-    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
     const [processedBooks, setProcessedBooks] = useState([]);
+    const [totalBooks, setTotalBooks] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [loadingMoreSkeleton, setLoadingMoreSkeleton] = useState(false);
 
     // Helper function to preload an image
     const preloadImage = (url) => {
@@ -45,15 +55,18 @@ const GalleryView = () =>  {
         });
     };
 
-    const loadValues = async () => {
-        setLoading(true);
+    const loadMoreBooks = async () => {
+        setLoadingMore(true);
         const startTime = Date.now();
-        
+
         try {
-            const response = await api.get('user/getBooks');
+            const response = await api.get('user/getBooks', {
+                params: { page: currentPage + 1 }
+            });
+            
             if (!response) return;
             
-            const books = response.data;
+            const { books, totalCount } = response.data;
             
             // Preload all images in parallel
             const booksWithLoadedImages = await Promise.all(
@@ -64,36 +77,133 @@ const GalleryView = () =>  {
                         }
                         return book;
                     } catch (error) {
-                        // If image fails to load, return book without image
+                        console.warn(`Failed to load image for book ${book.id}`);
+                        return { ...book, coverImage: null };
+                    }
+                })
+            );
+            
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, LOADING_TIMES.BATCH - elapsedTime);
+            await new Promise(resolve => setTimeout(resolve, remainingTime));
+
+            // Save scroll position right before updating content
+            const currentScrollPosition = window.scrollY;
+
+            // Update state
+            setProcessedBooks(prev => [...prev, ...booksWithLoadedImages]);
+            setTotalBooks(totalCount);
+            setCurrentPage(prev => prev + 1);
+
+            // Restore scroll position after state updates
+            requestAnimationFrame(() => {
+                window.scrollTo({
+                    top: currentScrollPosition,
+                    behavior: 'instant'
+                });
+            });
+
+            // Update user data with the total book count
+            saveBookData({books: booksWithLoadedImages,
+                bookCount: totalCount
+            });
+
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.message || 'Failed to load more books. Please try again.',
+                duration: 5000
+            }));
+        } finally {
+            setLoadingMore(false);
+            setLoadingMoreSkeleton(false);
+        }
+    };
+
+    const loadValues = async () => {
+        setLoading(true);
+        const startTime = Date.now();
+        
+        try {
+            const response = await api.get('user/getBooks');
+            if (!response) return;
+            
+            const { books, totalCount } = response.data;
+            
+            const booksWithLoadedImages = await Promise.all(
+                books.map(async (book) => {
+                    try {
+                        if (book.coverImage) {
+                            await preloadImage(book.coverImage);
+                        }
+                        return book;
+                    } catch (error) {
                         console.warn(`Failed to load image for book ${book.id}`);
                         return { ...book, coverImage: null };
                     }
                 })
             );
 
-            // Calculate remaining time to meet minimum loading duration
             const elapsedTime = Date.now() - startTime;
-            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-            
-            // Wait for the remaining time if needed
+            const remainingTime = Math.max(0, LOADING_TIMES.BATCH - elapsedTime);
             await new Promise(resolve => setTimeout(resolve, remainingTime));
             
             setProcessedBooks(booksWithLoadedImages);
-            saveBookData(booksWithLoadedImages);
+            setTotalBooks(totalCount);
+            setCurrentPage(0);
+            saveBookData({books: booksWithLoadedImages,
+                bookCount: totalCount
+            });
         } catch (error) {
-            console.error('Error loading books:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: error.message || 'Failed to load books. Please try again.',
+                duration: 5000
+            }));
         } finally {
             setLoading(false);
+            dispatch(setAskFeedback(true));
         }
     };
 
-    useEffect(() => {
-        const books = getBookData()
-        if(books) setProcessedBooks(books)
-        else loadValues()
-    }, []);
+    const initializeGallery = async () => {
+        setLoading(true);
+        const startTime = Date.now();
 
-    
+        const books = getBookData().books;
+        if (books) {
+            // Preload images for existing books
+            const booksWithLoadedImages = await Promise.all(
+                books.map(async (book) => {
+                    try {
+                        if (book.coverImage) {
+                            await preloadImage(book.coverImage);
+                        }
+                        return book;
+                    } catch (error) {
+                        console.warn(`Failed to load image for book ${book.id}`);
+                        return { ...book, coverImage: null };
+                    }
+                })
+            );
+            
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = Math.max(0, LOADING_TIMES.INITIAL - elapsedTime);
+            await new Promise(resolve => setTimeout(resolve, remainingTime));
+            
+            setProcessedBooks(booksWithLoadedImages);            
+        } else {
+            // Only fetch from API if no cached books exist
+            await loadValues();
+            return;
+        }
+        
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        initializeGallery();
+    }, []);
 
     const downloadBook = (book) => {
         api.get('image/getBookPDF', {params: {bookId: book.id}}).then(r => {
@@ -109,6 +219,9 @@ const GalleryView = () =>  {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+
+            // Show feedback prompt after successful download
+            dispatch(setAskFeedback(true));
         })
     }
 
@@ -150,12 +263,44 @@ const GalleryView = () =>  {
         ));
     }
 
+    const renderBookCount = () => {
+        const hiddenBooks = getBookData().bookCount - processedBooks.length;
+        if (hiddenBooks <= 0) return null;
+
+        const skeletonCount = Math.min(hiddenBooks, 7); // Show max 7 skeletons
+        
+        return (
+            <>
+                {loadingMore ? (
+                    // Show skeletons when loading
+                    Array.from({ length: skeletonCount }).map((_, index) => (
+                        <SkeletonLoader key={`skeleton-${currentPage}-${index}`} />
+                    ))
+                ) : (
+                    // Show the "load more" button when not loading
+                    <button 
+                        onClick={loadMoreBooks}
+                        disabled={loadingMore}
+                        className="w-full max-w-4xl mx-auto mt-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm transition-colors duration-200"
+                    >
+                        <p className="text-center text-gray-600 flex items-center justify-center gap-2">
+                            {loadingMore ? (
+                                <RefreshCw className="w-4 h-4 animate-spin" />
+                            ) : null}
+                            + {hiddenBooks} more book{hiddenBooks === 1 ? '' : 's'} in your library
+                        </p>
+                    </button>
+                )}
+            </>
+        );
+    };
+
     return (
-        <div className="container mx-auto px-4 py-8 relative">
+        <div className="relative h-screen overflow-y-auto" id="gallery-container">
             {/* Refresh Button */}
             <button 
                 onClick={loadValues}
-                className="absolute top-4 right-4 p-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+                className="absolute top-4 right-6 p-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
                 title="Refresh books"
             >
                 <RefreshCw 
@@ -163,7 +308,7 @@ const GalleryView = () =>  {
                 />
             </button>
 
-            <div className="space-y-4 mt-16">
+            <div className="space-y-4 mt-16 w-[90vw] mx-auto">
                 {loading ? (
                     <>
                         <SkeletonLoader />
@@ -173,7 +318,10 @@ const GalleryView = () =>  {
                         <SkeletonLoader />
                     </>
                 ) : (
-                    showBooks()
+                    <>
+                        {showBooks()}
+                        {renderBookCount()}
+                    </>
                 )}
             </div>
         </div>

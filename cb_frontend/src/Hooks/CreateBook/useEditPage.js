@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePage, setIsEditing, updateContext } from '../../redux/bookSlice';
+import { updatePage, setIsEditing, updateContext} from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
 import { addNotification } from '../../redux/websiteSlice';
 
 const useEditPage = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing, currentContext } = useSelector(state => state.book);
+    const { pages, currentPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
     const settings = useSelector(state => state.website.settings);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
@@ -21,12 +21,10 @@ const useEditPage = () => {
     const [isEnhancing, setIsEnhancing] = useState(false);
 
     const formatPageDescription = (pageData) => {
-        console.log('pageData:', pageData.currentContext);
         if (!pageData) return ['No user description available', 'No detailed description available'];
-        const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
-        const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
+        const formattedUserDescription = pageData?.userDescription?.replace(/(\n\n)/g, '\n');
+        const formattedDetailedDescription = pageData?.detailedDescription?.replace(/(\n\n)/g, '\n');
         const compositionIdea = pageData?.compositionIdea || 'No composition idea available';
-        console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
         return [formattedUserDescription, formattedDetailedDescription, pageData.seed || '', currentContext || null, compositionIdea];
     }
 
@@ -48,7 +46,27 @@ const useEditPage = () => {
         } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages, handleClose]);
+    }, [isEditing, currentPage, pages, showDescription, bookId]);
+
+    
+    const handleRegenerate = useCallback(async () => {
+        try {
+            await loadRequest(
+                () => regenerateImage(currentPage, pages, currentContext, bookId),
+                "Regenrating image..."
+            )
+        } catch (error) {
+            dispatch(addNotification({
+                type: 'error',
+                message: error.message || 'Failed to regenerate image. Please try again.',
+                duration: 3000
+            }));
+            return false;
+        } finally {
+            handleClose();
+        }             
+    }, [currentPage, bookId, currentContext, pages]);
+
 
     const handleEnhance = useCallback(async () => {
         if (!editText.trim()) {
@@ -59,75 +77,21 @@ const useEditPage = () => {
             }));
             return;
         }
-
-        const detailedDescription = pages[currentPage]?.detailed_description;
-        if (!detailedDescription) {
+        try {
+            await loadRequest(
+                () => enhanceImage(editText, currentPage, pages, currentContext, bookId),
+                "Enhancing description..."
+            )
+        } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'No detailed description found. Please generate an image first.',
+                message: error.message || 'Failed to enhance description. Please try again.',
                 duration: 3000
             }));
-            return;
-        }
-
-        try {
-            const { enhancedDescription, updatedContext, image, seed } = await loadRequest(
-                () => enhanceImage(
-                    detailedDescription, 
-                    editText, 
-                    currentContext,
-                    {
-                        ...settings,
-                        seed: pages[currentPage]?.seed
-                    },
-                    currentPage
-                ),
-                "Enhancing description..."
-            );
-
-            // Update the page with enhanced description and new image
-            dispatch(updatePage({
-                index: currentPage,
-                data: { 
-                    detailed_description: enhancedDescription,
-                    enhancement_request: editText,
-                    image,
-                    seed
-                }
-            }));
-            
-            if(updatedContext) dispatch(updateContext(updatedContext));
-            console.log('updated context', updatedContext);
-            handleClose();
-
-        } catch (error) {
-            console.error('Error enhancing page:', error);
-            dispatch(addNotification({
-                type: 'error',
-                message: 'Failed to enhance page. Please try again.',
-                duration: 5000
-            }));
-        }
-    }, [editText, currentPage, pages, currentContext, settings, handleClose, dispatch]);
-
-    const handleRegenerate = useCallback(async () => {
-        const detailedDescription = pages[currentPage]?.detailed_description;
-        if (!detailedDescription) return alert('No detailed description found');
-        
-        console.log('Regenerating image...', detailedDescription);
-        try {
-            console.log('Regenerating image...');
-            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription, settings), "Regenerating image...");
-            dispatch(updatePage({index: currentPage, data: { image, seed }}));
-            return true;
-        } catch (error) {
-            console.error('Error regenerating image:', error);
-            return false;
         } finally {
-            setIsLoading(false);
-            handleClose();
-        }      
-    }, [currentPage, pages, handleClose]);
+            handleClose();   
+        }
+    }, [editText, currentPage, bookId, currentContext, pages]);
 
     return {
         editText,

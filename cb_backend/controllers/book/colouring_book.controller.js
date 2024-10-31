@@ -6,7 +6,7 @@ const {verifyCredits} = require("../user/user.controller");
 
 const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
-const USE_SCHNELL_MODEL = false
+const USE_SCHNELL_MODEL = true
 
 const CREDIT_COSTS = {
     GEN: 3,
@@ -82,8 +82,8 @@ const generatePageWithContext = async (req, res) => {
 
         res.status(200).json({ 
             detailedDescription: descriptions.finalDescription,
-            compositionIdea: descriptions.compositionIdea,
             updatedContext, 
+            compositionIdea: descriptions.compositionIdea,
             image: imageResult.url, 
             seed: imageResult.seed,
             credits: credits
@@ -99,12 +99,10 @@ const regeneratePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
     const { detailedDescription, currentPage, ...creationSettings } = req.body;
-    
+    const { testMode, ...generationSettings } = creationSettings;
+
     //VERIFY CREDITS
     const credits = await verifyPageCredits(user, 'REGEN').catch(error => res.status(403).json({ error: error.message }));
-
-    const { testMode, ...generationSettings } = creationSettings;
-    console.log('regenerating page test mode:', testMode);
 
     if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
     if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
@@ -130,14 +128,13 @@ const regeneratePage = async (req, res) => {
 const enhancePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
-    const { previousDescription, enhancementRequest, currentContext, currentPage, ...generationSettings } = req.body;
-    
+    const { previousDescription, enhancementRequest, currentContext, currentPage, ...creationSettings } = req.body;
+    const { testMode, ...generationSettings } = creationSettings;
+
     //VERIFY CREDITS
     const credits = await verifyPageCredits(user, 'ENHANCE').catch(error => res.status(403).json({ error: error.message }));
 
-    if (!previousDescription || !enhancementRequest) {
-        return res.status(400).json({ error: 'Missing required parameters' });
-    }
+    if (!previousDescription || !enhancementRequest) return res.status(400).json({ error: 'Missing required parameters' });
     
     try {
         // First get the enhanced description
@@ -146,11 +143,6 @@ const enhancePage = async (req, res) => {
             enhancementRequest,
             currentContext
         );
-
-        console.log('enhancementRequest:', enhancementRequest);
-        console.log('currentContext:', currentContext);
-        console.log('enhancedDescription:', enhancedDescription);
-
         // Check if context update is needed
         const shouldUpdate = await shouldUpdateBookContext(enhancementRequest, currentContext);
         

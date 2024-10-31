@@ -9,6 +9,7 @@ import CreatePage from './CreatePage';
 import { getUserData } from '../../Hooks/UserDataHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
+import Feedback from '../Feedback/feedback';
 
 
 const ModifyBook = () => {
@@ -117,8 +118,8 @@ const ModifyBook = () => {
 
     return (
         <div className={`mt-4 p-8 bg-gradient-to-b from-blue-50 to-blue-100 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
-             {/* Credits display at the top */}
-             <div className="fixed top-2 right-6 z-10">
+            {/* Credits display at the top */}
+            <div className="fixed top-2 right-6 z-10">
                 <div className={`px-2 py-1 rounded-full 
                     ${credits > 0 ? 'bg-green-100/80' : 'bg-red-100/80'} 
                     shadow-sm 

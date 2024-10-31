@@ -1,6 +1,6 @@
 const express =  require("express");
 const {Register,Login, RefreshToken, RegisterForm} = require("../controllers/user/login.controller");
-const {getUserBooks, verifyCredits, createBook} = require("../controllers/user/user.controller");
+const {getUserBooks, verifyCredits, createBook, feedback} = require("../controllers/user/user.controller");
 const {verifyToken} = require("../middleware/auth");
 const router = express.Router();
 
@@ -13,6 +13,7 @@ router.get('/refreshToken', RefreshToken)
 router.get('/getBooks', verifyToken, getUserBooks);
 router.post('/createBook', verifyToken, createBook)
 router.post('/verifyCredits', verifyToken, verifyCredits)
+router.post('/feedback', verifyToken, feedback)
 
 
 module.exports = router;
