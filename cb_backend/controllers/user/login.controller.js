@@ -1,7 +1,7 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
 
-const access_TTL = '10s'
+const access_TTL = '6h' //TODO: production change to 1h
 const refresh_TTL = '7d'
 
 const emailValidator = (email) => {
@@ -31,6 +31,7 @@ class UserControllers {
 
         if (!emailValidator(email)) return res.status(400).json('Enter a valid email');
         email = email.toLowerCase()
+        email = email.toLowerCase()
 
         User.findOne({ email: email })
             .then(existingUser => {
@@ -43,9 +44,7 @@ class UserControllers {
     }
 
     static Login = (req, res, next) => {
-        console.log('Loggin in')
         const { email, password } = req.body
-
 
         if (!email || !password) return res.status(400).json('Please provide email and password')
 
@@ -70,10 +69,12 @@ class UserControllers {
 
     static RefreshToken = (req, res) => {
         const cookies = req.cookies
-        console.log(cookies.refreshToken)
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
             if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
-            else res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+            else {
+                console.log("refreshed token")
+                res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+            }
         })
     }
 

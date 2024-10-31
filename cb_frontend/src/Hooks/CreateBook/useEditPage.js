@@ -1,0 +1,149 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { updatePage, setIsEditing, updateContext } from '../../redux/bookSlice';
+import useImageGeneration from './useImageGeneration';
+import useLoadRequest from './useLoadRequest';
+import { addNotification } from '../../redux/websiteSlice';
+
+const useEditPage = () => {
+    const dispatch = useDispatch();
+    const { pages, currentPage, isEditing, currentContext } = useSelector(state => state.book);
+    const settings = useSelector(state => state.website.settings);
+    const [editText, setEditText] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
+    const [showDescription, setShowDescription] = useState(false);
+    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available', 0]);
+    const { regenerateImage, enhanceImage } = useImageGeneration();
+    const [isLoading, setIsLoading] = useState(false);
+    const { loadRequest} = useLoadRequest();
+
+    const [isEnhancing, setIsEnhancing] = useState(false);
+
+    const formatPageDescription = (pageData) => {
+        console.log('pageData:', pageData.currentContext);
+        if (!pageData) return ['No user description available', 'No detailed description available'];
+        const formattedUserDescription = pageData?.user_description?.replace(/(\n\n)/g, '\n');
+        const formattedDetailedDescription = pageData?.detailed_description?.replace(/(\n\n)/g, '\n');
+        const compositionIdea = pageData?.compositionIdea || 'No composition idea available';
+        console.log('here are the descriptions', formattedUserDescription, formattedDetailedDescription, pageData);
+        return [formattedUserDescription, formattedDetailedDescription, pageData.seed || '', currentContext || null, compositionIdea];
+    }
+
+    const handleClose = useCallback(() => {
+        setEditText('');
+        setIsVisible(false);
+        setIsEnhancing(false);
+        dispatch(setIsEditing(false));
+    }, [dispatch]);
+
+    
+    useEffect(() => {
+        if (isEditing) {
+            //open the edit page
+            setShowDescription(false);
+            setSceneDescription(formatPageDescription(pages[currentPage]));
+            setCurrentImage(pages[currentPage]?.image || '');
+            setIsVisible(true)
+        } else {
+            handleClose();
+        }
+    }, [isEditing, currentPage, pages, handleClose]);
+
+    const handleEnhance = useCallback(async () => {
+        if (!editText.trim()) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Please enter enhancement instructions',
+                duration: 3000
+            }));
+            return;
+        }
+
+        const detailedDescription = pages[currentPage]?.detailed_description;
+        if (!detailedDescription) {
+            dispatch(addNotification({
+                type: 'error',
+                message: 'No detailed description found. Please generate an image first.',
+                duration: 3000
+            }));
+            return;
+        }
+
+        try {
+            const { enhancedDescription, updatedContext, image, seed } = await loadRequest(
+                () => enhanceImage(
+                    detailedDescription, 
+                    editText, 
+                    currentContext,
+                    {
+                        ...settings,
+                        seed: pages[currentPage]?.seed
+                    },
+                    currentPage
+                ),
+                "Enhancing description..."
+            );
+
+            // Update the page with enhanced description and new image
+            dispatch(updatePage({
+                index: currentPage,
+                data: { 
+                    detailed_description: enhancedDescription,
+                    enhancement_request: editText,
+                    image,
+                    seed
+                }
+            }));
+            
+            if(updatedContext) dispatch(updateContext(updatedContext));
+            console.log('updated context', updatedContext);
+            handleClose();
+
+        } catch (error) {
+            console.error('Error enhancing page:', error);
+            dispatch(addNotification({
+                type: 'error',
+                message: 'Failed to enhance page. Please try again.',
+                duration: 5000
+            }));
+        }
+    }, [editText, currentPage, pages, currentContext, settings, handleClose, dispatch]);
+
+    const handleRegenerate = useCallback(async () => {
+        const detailedDescription = pages[currentPage]?.detailed_description;
+        if (!detailedDescription) return alert('No detailed description found');
+        
+        console.log('Regenerating image...', detailedDescription);
+        try {
+            console.log('Regenerating image...');
+            const {image, seed} = await loadRequest(() => regenerateImage(detailedDescription, settings), "Regenerating image...");
+            dispatch(updatePage({index: currentPage, data: { image, seed }}));
+            return true;
+        } catch (error) {
+            console.error('Error regenerating image:', error);
+            return false;
+        } finally {
+            setIsLoading(false);
+            handleClose();
+        }      
+    }, [currentPage, pages, handleClose]);
+
+    return {
+        editText,
+        setEditText,
+        isVisible,
+        currentImage,
+        isLoading,
+        handleClose,
+        showDescription,
+        setShowDescription,
+        sceneDescription,
+        isEnhancing,
+        setIsEnhancing,
+        handleEnhance,
+        handleRegenerate
+    };
+};
+
+export default useEditPage;

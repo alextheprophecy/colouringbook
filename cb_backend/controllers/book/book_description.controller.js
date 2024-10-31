@@ -135,6 +135,7 @@ class AdvancedGenerator {
         The story will be split into ${pageCount} pages for a coloring book, with each scene forming a page. 
         Keep the story simple but engaging, ensuring clear progression and actions in every part of the story. 
         Make sure that each part of the story can be easily translated into an image with physical actions and activities.`
+
 /*
 
     static sys_AdvancedPages = (pageCount) =>
@@ -206,9 +207,37 @@ class AdvancedGenerator {
     }
 }
 
+const generateScenePageDescription = (sceneDescription, characters) => {
+    const characterDetails = `${characters.map(char => char.description).join(', ')}`
+     //characters.map(char => `${char.name}: ${char.description}`).join(', ');
 
+    const a= `You are an expert in creating detailed and visually engaging scenes for children's coloring books. 
+    Your task is to clearly describe a single scene based on the given description and characters. 
+    Ensure that each character's appearance, clothing, and positioning are clearly described, maintaining consistency with their descriptions. 
+    Focus on creating a snapshot-style image that captures the essence of the scene, with clear spatial relationships between characters and objects. 
+    Avoid any references to colors, dialogue, or abstract concepts. The description should be suitable for generating a black-and-white line-art coloring book image.`;
+
+    const sys_prompt = `You are an expert in generating clear, precise descriptions for generating a single black-and-white coloring book image.         
+        Your goal is to describe every element of the scene in easy-to-visualize terms, ensuring no assumptions are made about common terms, objects, or characters.        
+        Focus on essential visual elements: characters, their positions, clothing, and objects they interact with. 
+        Describe any actions, body postures, or gestures explicitly. Specify things such as the orientation of characters' bodies, the position of their limbs, and their interaction with the environment.
+        Maintain coherence with the characters’ appearance and environment based on the scene description, by repeating important physical characteristics.
+        Avoid references to colors, shading, dialogue, or abstract details. Stick to descriptions that will translate well into simple black-and-white, colorless line art.`
+
+    const usr_prompt = 
+        `Based on the scene: "${sceneDescription}" containing the characters: "${characterDetails}", provide a clear and detailed description for generating a black-and-white coloring book image.
+        The description should focus solely on visual elements such as character appearance, body positioning, physical actions, and interaction with the environment. 
+        Repeat the character's appearance, clothing, and positioning within this page; to ensure consistency and remind us what the characters look like. 
+        Avoid any references to color, dialogue, thoughts, feelings, shading, or overly complex scene details. 
+        The scene should be easy to understand, creating a simple, snapshot-style image for a child to color. Return only this scene description.`
+
+    return query_gpt4o2024(sys_prompt, usr_prompt)
+};
+
+// Export the function if needed
 module.exports = {
     pagesSimpleStory,
     pageSummary,
-    AdvancedGenerator
+    AdvancedGenerator,
+    generateScenePageDescription
 }

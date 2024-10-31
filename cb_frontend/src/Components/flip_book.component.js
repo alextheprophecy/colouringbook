@@ -1,18 +1,21 @@
 import HTMLFlipBook from 'react-pageflip';
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useRef, useState, React} from "react";
 import ScribbleText from "./UI/ui_scribble_text.component";
+import '../Styles/example_book.css';
+
 const BLANK_PAGE = 0 //placeholder for a blank page in pages of a book
-const FlipBook = ({title, pages_directory, pages = [], on_download, page_summaries}) => {
+const FlipBook = ({title, pages_directory, pages = [], on_download, page_summaries, zoomMobile=false}) => {
     const [currentPage, setCurrentPage] = useState(0); // Track the current page
     const flipBookRef = useRef(null);
-    console.log('pages:: ', pages)
 
     const bookLength = pages?.length ?? 0
 
-    console.log(page_summaries)
-    const _getImagePageHTML = (imageCompletePath, pNumber) => <img src={imageCompletePath} className={`no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}/>
-    const _getTextPageHTML = (text, pNumber) => <div className={`text-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}><br/>{text}</div>
-    const _getBlankPageHTML = (pNumber) => <div className={`blank-page no-select rounded-${pNumber % 2 === 1 ? 'r' : 'l'}`}></div>
+    const roundedClass = (pNumber) => `rounded-${(pNumber % 2 === 1 || zoomMobile) ? 'r' : 'l'}`
+
+    const _getImagePageHTML = (imageCompletePath, pNumber) =>
+         <img src={imageCompletePath} className={`no-select ${roundedClass(pNumber)}`} alt="page"/>
+    const _getTextPageHTML = (text, pNumber) => <div className={`text-page no-select ${roundedClass(pNumber)}`}><br/>{text}</div>
+    const _getBlankPageHTML = (pNumber) => <div className={`blank-page no-select ${roundedClass(pNumber)}`}></div>
 
     let mergedPages = [];
     if (page_summaries && page_summaries.length === bookLength) {
@@ -57,10 +60,8 @@ const FlipBook = ({title, pages_directory, pages = [], on_download, page_summari
                     PDF
                 </button>
             ) : ''}
-         <div className="flipbook-wrapper">
-
-            <HTMLFlipBook ref={flipBookRef} onFlip={onFlip} size={'stretch'}
-                          width={300} height={450}>
+         <div className="w-full bg-[red]">
+            <HTMLFlipBook ref={flipBookRef} width={300} height={450} onFlip={onFlip} size={'stretch'} >
                 {mergedPages.map((p, i) =>
                     p===BLANK_PAGE ? _getBlankPageHTML(i) :
                         ['.jpg', '.png'].some(ext => p.split('?')[0].endsWith(ext)) ? _getImagePageHTML(pages_directory + p, i) : _getTextPageHTML(p, i)

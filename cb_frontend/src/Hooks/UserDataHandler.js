@@ -27,6 +27,10 @@ const updateUserData = (newData) => {
     localStorage.setItem(USER_DATA, JSON.stringify({...getUserData(), ...newData}))
 }
 
+const updateUserCredits = (newCredits) => {
+    updateUserData({credits: newCredits})
+}
+
 /**
  * Retrieves the user data from localStorage.
  * @return {UserData|null} The user data object if available, otherwise null.
@@ -49,6 +53,7 @@ const saveUserToken = (tokenData) => localStorage.setItem(TOKEN_DATA, JSON.strin
 
 const getUserToken = () => JSON.parse(localStorage.getItem(TOKEN_DATA))
 
+
 export {
     getUserId,
     saveUserData,
@@ -61,5 +66,6 @@ export {
     saveUserToken,
     getUserToken,
     shouldShowIntro,
-    setShouldShowIntro
+    setShouldShowIntro,
+    updateUserCredits
 }

@@ -22,9 +22,15 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
-// Allow CORS for a specific origin with credentials //TODO: change!!!!!
+const developmentOrigins = [
+    "http://localhost:3000", // Development environment
+    "http://172.20.10.2:3000", // Production environment
+];
+
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_CORS_ORIGIN : 'http://localhost:3000', // Set the frontend origin here
+    origin: process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_CORS_ORIGIN 
+        : developmentOrigins, // Allow both localhost and IP in development
     credentials: true, // Allow credentials (cookies, authorization headers)
 }
 app.use(cors(corsOptions));
@@ -42,6 +48,9 @@ app.use((req, res) => {
 //listen to the port
 app.listen(PORT, ()=> {
     console.log(`listening to port ${PORT}`);
-    console.log(`accepting requests from ${process.env.FRONTEND_CORS_ORIGIN}`);
+    console.log(`accepting requests from 
+        ${process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_CORS_ORIGIN 
+        : developmentOrigins}`);
 
 })

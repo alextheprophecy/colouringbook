@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import CreationView from "./Components/Views/creation.view";
+import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
 import PlaygroundView from "./Components/Views/playground.view";
@@ -13,56 +12,129 @@ import MainView from "./Components/Views/main.view";
 import { AnimatePresence } from "framer-motion";
 import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
+import CreateBook from "./Components/Views/CreateBook";
+import Popup from "./Components/Popup";
+import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 
-function App() {
-    const routes = (
-        <Routes>
-            <Route exact path='/' element={<MainView />} />
-            <Route exact path='/create' element={<CreationView />} />
-            <Route exact path='/login' element={<LoginView />} />
-            <Route exact path='/gallery' element={<GalleryView />} />
-            <Route exact path='/playground' element={<PlaygroundView />} />
-            <Route exact path='/test' element={<ScribbleText />} />
-        </Routes>
-    );
+const AppLayout = () => {
 
-    return routes;
-}
+    const resetScrollPosition = () => {
+        window.scrollTo(0, 0);
+    }
 
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    useEffect(() => {
+        // Handle focusout scroll reset
+        const debouncedReset = debounce(resetScrollPosition, 100);
+        window.addEventListener('focusout', debouncedReset);
+        
+        return () => window.removeEventListener('focusout', debouncedReset);
+    }, [])
+    
+    return (
+        <ErrorBoundaryWrapper>
+            <Popup />
+            <BurgerMenu />
+            <div className="page-container">
+              <main className="main-content">
+                  <ScrollRestoration />
+                  <Outlet />
+              </main>
+            </div>
+        </ErrorBoundaryWrapper>
+    )
+};
+
+const NavbarLayout = () => (
+  <>
+    <Navbar />
+    <Outlet />
+  </>
+);
+
+const errorElement = () => (<ErrorBoundaryWrapper>
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+      <div className="flex flex-col space-y-2">
+        <button 
+          onClick={() => window.location.reload()} 
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+        >
+          Try again
+        </button>
+        <button 
+          onClick={() => window.location.href = '/'} 
+          className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
+        >
+          Go home
+        </button>
+      </div>
+    </div>
+  </div>
+</ErrorBoundaryWrapper>);
+
+const router = createBrowserRouter([
+  {
+    element: <ErrorBoundaryWrapper>
+      <AppLayout />
+    </ErrorBoundaryWrapper>,
+    errorElement: errorElement(),
+    children: [
+      {
+        element: <NavbarLayout />,
+        errorElement: <ErrorBoundaryWrapper><NavbarLayout /></ErrorBoundaryWrapper>,
+        children: [
+          { 
+            path: '/', 
+            element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/login', 
+            element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/playground', 
+            element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
+          },
+        ]
+      },
+      { 
+        path: '/create', 
+        element: <ErrorBoundaryWrapper><CreateBook /></ErrorBoundaryWrapper>,
+      },
+      { 
+        path: '/gallery', 
+        element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
+      },
+      { 
+        path: '/test', 
+        element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
+      },
+    ]
+  }
+]);
 export default function TranslatedApp() {
     const [showIntro, setShowIntro] = useState(shouldShowIntro);
-    useEffect(() => {
-        if (showIntro) {
-            const timer = setTimeout(() => {
-                setShowIntro(false);
-                setShouldShowIntro(false);
-            }, 2500);
-            return () => clearTimeout(timer);
-        }
-    }, [showIntro]);
-
-    const website = (
-        <>
-            <BurgerMenu />
-            <Navbar />
-            <Background>
-                <div className="page-container">
-                    <main className="main-content">
-                        <App />
-                    </main>
-                </div>
-            </Background>
-        </>
-    );
-
+   
+    
     return (
         <Suspense fallback="...loading page...">
-            <BrowserRouter>
-                {website}
-                <AnimatePresence>
-                    {showIntro && <IntroScreen />}
-                </AnimatePresence>
-            </BrowserRouter>
+            <RouterProvider router={router} />
+            {/* <AnimatePresence>
+                {showIntro && <IntroScreen />}
+            </AnimatePresence> */}
         </Suspense>
     );
 }

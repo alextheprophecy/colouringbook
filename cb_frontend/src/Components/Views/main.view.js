@@ -5,7 +5,7 @@ import {useState} from "react";
 import IntroScreen from "../UI/intro_screen.component";
 import {AnimatePresence} from "framer-motion";
 import ExamplesView from "./example_books.view";
-
+import Navbar from "../Navbar/navbar.component";
 const MainView = () => {
 
     return <div className={"main-container"}>

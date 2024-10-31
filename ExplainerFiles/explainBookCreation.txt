@@ -1,0 +1,22 @@
+This is the workflow for creating a book:
+    1. Start by adding a story description in CreatePage.js, which calls the API to generate an image.
+    2. Once the image is generated, it is displayed in PagePreview.js
+    3. if user clicks Edit, EditPage.js allows to edit the current pages in the book.
+    4. if user clicks Next, CreatePage.js is called again to generate the next image.
+    5. if user clicks Modify Book, ModifyBook.js allows to flip through the pages and edit them as needed.
+
+Important notes:
+    1. Throughout the creation, book data should be stored locally on the client side with session or local storage (it is also stored in the database with every api called)
+    2. With the data stored locally, the user can refresh the page and the data will still be there. (-> there will be a in creation page that will allow to save the data and continue later)
+    3. The book data is stored as an ordered array of page objects, where each page object is represented by:
+        {
+            generatedData = [
+                {
+                    image: "path/to/image1.jpg", //image generated
+                    description: "description1", //description of image
+                    detailedDescription: "detailed description1" //detailed generated description used to generate the image
+                }, 
+                {image: "path/to/image2.jpg", description: "description2", detailedDescription: "detailed description2"}] //array of generated data, each object contains an image, a description and a detailed description
+
+            chosenData: 1, //the index of the chosen image from the images array
+        }
