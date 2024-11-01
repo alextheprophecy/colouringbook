@@ -59,12 +59,10 @@ img, video, canvas, svg {
     height: auto;
 }
 
-/* General content styles */
-* {
+/* * {
     box-sizing: border-box;
 }
 
-/* Prevent horizontal scrolling on the body */
 body {
     overflow-x: hidden;
 }
@@ -74,5 +72,5 @@ body {
         background-size: contain;
     }
 
-}
+}  */
 

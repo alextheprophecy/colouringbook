@@ -2,8 +2,45 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ScribbleText from '../UI/ui_scribble_text.component';
 import FeatureCard from '../LandingPage/FeatureCard';
+import { ChevronDown } from 'lucide-react';
+import { scroller } from 'react-scroll';
 
 const MainView = () => {
+    // Add state for button visibility
+    const [isCreateButtonVisible, setIsCreateButtonVisible] = React.useState(false);
+
+    // Add scroll detection
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // Add a small delay before updating visibility
+                if (!entry.isIntersecting) {
+                    setTimeout(() => {
+                        setIsCreateButtonVisible(entry.isIntersecting);
+                    }, 100);
+                } else {
+                    setIsCreateButtonVisible(entry.isIntersecting);
+                }
+            },
+            {
+                root: null,
+                threshold: 0.1, // Lower threshold for smoother transition
+                rootMargin: '100px'
+            }
+        );
+
+        const targetButton = document.getElementById('start-creating-button');
+        if (targetButton) {
+            observer.observe(targetButton);
+        }
+
+        return () => {
+            if (targetButton) {
+                observer.unobserve(targetButton);
+            }
+        };
+    }, []);
+
     return (
         <div className="min-h-screen bg-paper from-blue-50 to-blue-100 relative">
             {/* Paper texture overlay with gradient */}
@@ -39,10 +76,23 @@ const MainView = () => {
                         </div>
                     </motion.div>
                     <motion.p 
-                        className="text-xl text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed"
+                        className="text-lg text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed -mt-1"
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.8, duration: 0.6 }}
+                        transition={{ 
+                            y: {
+                                type: "spring",
+                                stiffness: 100,
+                                damping: 8,  // Lower damping means more bounce
+                                mass: 0.5,   // Lower mass means faster movement
+                                delay: 1.2   // Add delay after title animation
+                            },
+                            opacity: {
+                                duration: 0.5,
+                                ease: "easeOut",
+                                delay: 1.2   // Match the delay for opacity
+                            }
+                        }}
                     >
                         <span className="text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                             Make colouring books from your own stories
@@ -51,7 +101,7 @@ const MainView = () => {
                 </div>
 
                 {/* Feature Cards */}
-                <div className="max-w-7xl mx-auto px-4 pb-20 space-y-12">
+                <div className="max-w-7xl mx-auto px-4 pb-16 -mt-4 space-y-12">
                     <FeatureCard
                         index={0}
                         imagePosition="left"
@@ -80,6 +130,8 @@ const MainView = () => {
                         viewport={{ once: true }}
                     >
                         <button 
+                            id="start-creating-button"
+                            name="start-creating-button"
                             className="px-8 py-4 bg-blue-500 hover:bg-blue-600 
                                 text-white rounded-lg 
                                 transition-all duration-300 ease-in-out 
@@ -93,6 +145,50 @@ const MainView = () => {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Floating tag */}
+            <motion.button
+                className="fixed bottom-8 
+                    inset-x-0  
+                    mx-auto    
+                    bg-blue-500 text-white px-6 py-3 rounded-full
+                    shadow-md hover:shadow-lg
+                    flex flex-col items-center gap-1
+                    z-50
+                    group
+                    w-fit"
+                onClick={() => {
+                    scroller.scrollTo('start-creating-button', {
+                        duration: 800,
+                        smooth: true,
+                        offset: -window.innerHeight / 3
+                    });
+                }}
+                initial={{ y: 0 }}
+                animate={{ 
+                    y: [0, 25, 0],
+                    opacity: isCreateButtonVisible ? 0 : 1,
+                    scale: isCreateButtonVisible ? 0.8 : 1,
+                }}
+                transition={{ 
+                    y: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    },
+                    opacity: {
+                        duration: 0.5,
+                        ease: "easeInOut"
+                    },
+                    scale: {
+                        duration: 0.5,
+                        ease: "easeInOut"
+                    }
+                }}
+            >
+                <span className="font-children font-semibold text-base whitespace-nowrap">Get Started</span>
+                <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300" />
+            </motion.button>
         </div>
     );
 }
