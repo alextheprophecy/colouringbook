@@ -20,16 +20,17 @@ const SkeletonLoader = () => (
             <div className="flex justify-between items-center h-full">
                 {/* Left side content */}
                 <div className="flex flex-col h-full justify-between">
-                    <div className="space-y-2">
-                        <div className="h-7 w-48 bg-gray-200 rounded"></div>
-                        <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                    <div>
+                        {/* Shorter title with two lines */}
+                        <div className="h-12 w-32 bg-gray-200 rounded"></div>
+                        <div className="h-4 w-32 bg-gray-200 rounded mt-2"></div>
                         <div className="h-4 w-24 bg-gray-200 rounded mt-2"></div>
                     </div>
                 </div>
-                {/* Right side content */}
-                <div className="flex flex-col h-full justify-between items-end">
-                    <div className="h-10 w-24 bg-gray-200 rounded"></div>
-                    <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                {/* Right side content - more compact grouping */}
+                <div className="flex flex-col h-full justify-center items-end gap-2">
+                    <div className="h-10 w-32 bg-gray-200 rounded"></div>
+                    <div className="h-4 w-24 bg-gray-200 rounded"></div>
                 </div>
             </div>
         </div>
@@ -40,10 +41,8 @@ const GalleryView = () =>  {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
     const [processedBooks, setProcessedBooks] = useState([]);
-    const [totalBooks, setTotalBooks] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [loadingMoreSkeleton, setLoadingMoreSkeleton] = useState(false);
 
     // Helper function to preload an image
     const preloadImage = (url) => {
@@ -92,7 +91,6 @@ const GalleryView = () =>  {
 
             // Update state
             setProcessedBooks(prev => [...prev, ...booksWithLoadedImages]);
-            setTotalBooks(totalCount);
             setCurrentPage(prev => prev + 1);
 
             // Restore scroll position after state updates
@@ -116,7 +114,6 @@ const GalleryView = () =>  {
             }));
         } finally {
             setLoadingMore(false);
-            setLoadingMoreSkeleton(false);
         }
     };
 
@@ -149,7 +146,6 @@ const GalleryView = () =>  {
             await new Promise(resolve => setTimeout(resolve, remainingTime));
             
             setProcessedBooks(booksWithLoadedImages);
-            setTotalBooks(totalCount);
             setCurrentPage(0);
             saveBookData({books: booksWithLoadedImages,
                 bookCount: totalCount
@@ -170,7 +166,7 @@ const GalleryView = () =>  {
         setLoading(true);
         const startTime = Date.now();
 
-        const books = getBookData().books;
+        const books = getBookData()?.books;
         if (books) {
             // Preload images for existing books
             const booksWithLoadedImages = await Promise.all(
@@ -239,13 +235,15 @@ const GalleryView = () =>  {
                 
                 {/* Content Overlay */}
                 <div className="relative z-10 flex justify-between items-center h-full">
-                    <div className="flex flex-col h-full justify-between">
-                        <div>
-                            <h2 className="text-2xl font-semibold text-gray-800">{book.title}</h2>
+                    <div className="flex flex-col h-full justify-center gap-2">
+                        <div className="overflow-hidden">
+                            <h2 className="text-l font-semibold text-gray-800 line-clamp-2">{book.title}</h2>
+                        </div>
+                        <div className="flex-shrink-0">
                             <p className="text-sm text-blue-800">
                                 {new Date(book.creationDate).toLocaleDateString()}
                             </p>
-                            <p className="text-sm text-gray-600 mt-2">{book.pageCount} page{book.pageCount === 1 ? '' : 's'}</p>
+                            <p className="text-sm text-gray-600">{book.pageCount} page{book.pageCount === 1 ? '' : 's'}</p>
                         </div>
                     </div>
                     <div className="flex flex-col h-full justify-center items-end gap-2">

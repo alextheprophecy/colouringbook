@@ -5,7 +5,7 @@ const Feedback = require("../../models/feedback.model");
 
 const getUserBooks = (req, res) => {
     const MAX_RETURNED_BOOKS = 7
-    const MAX_IMAGE_BOOKS = 7
+    const MAX_IMAGE_BOOKS = 5
     const user = req.user
     const page = parseInt(req.query.page) || 0
     const skip = page * MAX_RETURNED_BOOKS
@@ -21,7 +21,7 @@ const getUserBooks = (req, res) => {
     .then(async ([books, totalCount]) => {
         const books_data = await Promise.all(
             books.map(async (book, index) => {
-                const firstImage = /* page === 0 &&  */index < MAX_IMAGE_BOOKS ? 
+                const firstImage = page === 0 &&  index < MAX_IMAGE_BOOKS ? 
                     await getImage(user, book, 0) : null;
 
                 return {
