@@ -100,10 +100,6 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundaryWrapper><NavbarLayout /></ErrorBoundaryWrapper>,
         children: [
           { 
-            path: '/', 
-            element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
-          },
-          { 
             path: '/login', 
             element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
           },
@@ -112,6 +108,10 @@ const router = createBrowserRouter([
             element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
           },
         ]
+      },      
+      { 
+        path: '/', 
+        element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
       },
       { 
         path: '/create', 
