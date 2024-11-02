@@ -116,7 +116,7 @@ const MainView = () => {
                         title={t('home.feature-2-title')}
                         description={t('home.feature-2-description')}
                         directory="/assets/features_showcase/enhance"
-                        imageNames={['snakemario.jpg']}
+                        imageNames={['turtle/enhanced.png', 'donkey/enhanced.png']}
                     />
                     <FeatureCard
                         index={2}

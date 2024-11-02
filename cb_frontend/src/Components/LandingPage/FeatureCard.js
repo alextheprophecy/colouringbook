@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useState, useRef, useEffect } from 'react';
 
-const AUTOMATIC_SLIDE_INTERVAL = 1500;
+const BASE_SLIDE_INTERVAL = 1500;
+const INTERVAL_VARIANCE = 500;
 const INACTIVITY_DELAY = 4000;
 
 const slideVariants = {
@@ -36,14 +37,16 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
         
         if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
         
+        const randomInterval = BASE_SLIDE_INTERVAL + (Math.random() * INTERVAL_VARIANCE) + (index * 200);
+        
         autoSlideTimer.current = setInterval(() => {
             if (!isAnimating && isAutoSliding) {
                 setDirection(1);
                 setIsAnimating(true);
                 setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageNames.length);
             }
-        }, AUTOMATIC_SLIDE_INTERVAL);
-    }, [imageNames.length, isAnimating, isAutoSliding]);
+        }, randomInterval);
+    }, [imageNames.length, isAnimating, isAutoSliding, index]);
 
     const resetInactivityTimer = useCallback(() => {
         if (inactivityTimer.current) {
