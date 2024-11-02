@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration, Navigate } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
 import PlaygroundView from "./Components/Views/playground.view";
@@ -17,7 +17,15 @@ import Popup from "./Components/Popup";
 import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 import { useSelector } from 'react-redux';
 import Feedback from './Components/Feedback/feedback';
+import { isUserLoggedIn } from './Hooks/UserDataHandler';
 
+const ProtectedRoute = ({ children }) => {
+  if (!isUserLoggedIn()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 const AppLayout = () => {
     
     const resetScrollPosition = () => {
@@ -59,13 +67,6 @@ const AppLayout = () => {
     )
 };
 
-const NavbarLayout = () => (
-  <>
-    <Navbar />
-    <Outlet />
-  </>
-);
-
 const errorElement = () => (<ErrorBoundaryWrapper>
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center">
@@ -96,34 +97,33 @@ const router = createBrowserRouter([
     errorElement: errorElement(),
     children: [
       {
-        element: <NavbarLayout />,
-        errorElement: <ErrorBoundaryWrapper><NavbarLayout /></ErrorBoundaryWrapper>,
+        element: <ProtectedRoute><Outlet /></ProtectedRoute>,
         children: [
           { 
-            path: '/login', 
-            element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
+            path: '/create', 
+            element: <ErrorBoundaryWrapper><CreateBook /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/gallery', 
+            element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/test', 
+            element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
           },
           { 
             path: '/playground', 
             element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
           },
         ]
-      },      
+      },
+      { 
+        path: '/login', 
+        element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
+      },    
       { 
         path: '/', 
         element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/create', 
-        element: <ErrorBoundaryWrapper><CreateBook /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/gallery', 
-        element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/test', 
-        element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
       },
     ]
   }
