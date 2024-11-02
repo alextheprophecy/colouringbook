@@ -10,7 +10,6 @@
     "hooks": {
       "please-enter-a-book-title": "Por favor introduce el título de un libro.",
       "successfully-created-title": "Creado con éxito",
-      "creating-book": "",
       "failed-to-create-book-please-try-again": "No se pudo crear el libro. \nPor favor inténtalo de nuevo.",
       "please-enter-a-description-for-your-page": "Por favor ingresa una descripción para tu página",
       "creating-image": "Creando imagen...",
@@ -24,8 +23,6 @@
     "processing": "Procesando...",
     "download_pdf": "Descargar PDF",
     "finish_book": "Terminar libro",
-    "creative_model": "",
-    "creative_model_description": "",
     "advanced_options": "Opciones avanzadas",
     "test_mode": "Modo de prueba",
     "test_mode_description": "Mostrar descripciones en lugar de generar imágenes",
@@ -47,8 +44,6 @@
     "logout": "Cerrar sesión",
     "login": "Acceso",
     "create": "Crear",
-    "home": "",
-    "my-gallery": "",
     "password": "Contraseña",
     "email": "Correo electrónico"
   },

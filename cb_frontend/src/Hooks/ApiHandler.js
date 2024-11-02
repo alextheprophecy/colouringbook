@@ -5,6 +5,7 @@ import { handleLogout } from "./LoginHandler";
 import store from '../redux/store';
 import { addNotification, updateCredits } from '../redux/websiteSlice';
 import { updateUserCredits } from "./UserDataHandler";
+import i18n from '../i18n'; // Adjust the path based on your project structure
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
@@ -87,7 +88,7 @@ const refreshToken = async (error) => {
     } catch (refreshError) {
         store.dispatch(addNotification({
             type: 'error',
-            message: {t('error.api.session-expired')},
+            message: i18n.t('error.api.session-expired'), // Use i18n.t for translations
             duration: 5000
         }));
         handleLogout();

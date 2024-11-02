@@ -6,8 +6,6 @@
     "processing": "Elaborazione in corso...",
     "download_pdf": "Scarica PDF",
     "finish_book": "Completa il libro",
-    "creative_model": "",
-    "creative_model_description": "",
     "advanced_options": "Opzioni avanzate",
     "test_mode": "Modalità test",
     "test_mode_description": "Mostra descrizioni invece di generare immagini",
@@ -25,8 +23,7 @@
     "environment": "Ambiente:",
     "story-summary": "Riepilogo della storia:",
     "hooks": {
-      "regenrating-image": "Rigenerazione immagine...",
-      "enhancing-description": ""
+      "regenrating-image": "Rigenerazione immagine..."
     }
   },
   "creation": {
@@ -39,7 +36,6 @@
     "hooks": {
       "please-enter-a-book-title": "Inserisci il titolo del libro",
       "successfully-created-title": "Creato con successo",
-      "creating-book": "",
       "failed-to-create-book-please-try-again": "Impossibile creare il libro. \nPer favore riprova.",
       "please-enter-a-description-for-your-page": "Inserisci una descrizione per la tua pagina",
       "creating-image": "Creazione immagine...",
@@ -54,8 +50,6 @@
     "logout": "Esci",
     "login": "Login",
     "create": "Creare",
-    "home": "",
-    "my-gallery": "",
     "password": "Password",
     "email": "E-mail"
   },

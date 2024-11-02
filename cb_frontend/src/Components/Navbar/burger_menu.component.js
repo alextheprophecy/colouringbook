@@ -53,7 +53,7 @@ class BurgerMenu extends Component {
                     isOpen={this.state.isOpen}
                     onOpen={this.toggleMenu}
                     onClose={this.toggleMenu}
-                    burgerButtonClassName="fixed w-10 h-10 left-6 top-6 transition-all duration-200 hover:shadow-lg"
+                    burgerButtonClassName="fixed w-10 h-8 left-4 top-4 md:left-8 md:top-8 transition-all duration-200 hover:shadow-lg"
                     burgerBarClassName="bg-blue-500 rounded h-1 mx-auto my-0.5"
                     crossButtonClassName="flex items-center justify-center w-8 h-8 bg-red-500 rounded-full cursor-pointer"
                     crossClassName="bg-white w-5 h-0.5"

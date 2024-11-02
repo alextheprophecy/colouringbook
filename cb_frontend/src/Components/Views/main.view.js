@@ -107,17 +107,23 @@ const MainView = () => {
                         imagePosition="left"
                         title={t('home.feature-1-title')}
                         description={t('home.feature-1-description')}
+                        directory="/assets/features_showcase/creative"
+                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
                     />
                     <FeatureCard
                         index={1}
                         imagePosition="right"
                         title={t('home.feature-2-title')}
                         description={t('home.feature-2-description')}
+                        directory="/assets/features_showcase/enhance"
+                        imageNames={['snakemario.jpg']}
                     />
                     <FeatureCard
                         index={2}
                         imagePosition="left"
                         title={t('home.feature-3-title')}
+                        directory="/assets/features_showcase/simple"
+                        imageNames={['birthdayParty.png', 'download.png', 'im0.jpg', 'im2.jpg', 'im4.jpg', 'img2.jpg', 'mario spiderman playing chess.jpg', 'witches.png']}
                         description={t('home.feature-3-description')}
                     />
                     
@@ -147,12 +153,12 @@ const MainView = () => {
 
             {/* Floating tag */}
             <motion.button
-                className="fixed bottom-8 
+                className="fixed bottom-6
                     inset-x-0  
                     mx-auto    
-                    bg-blue-500 text-white px-6 py-3 rounded-full
+                    bg-blue-500 text-white px-6 py-2 rounded-full
                     shadow-md hover:shadow-lg
-                    flex flex-col items-center gap-1
+                    flex flex-col items-center
                     z-50
                     group
                     w-fit"
@@ -163,9 +169,9 @@ const MainView = () => {
                         offset: -window.innerHeight / 3
                     });
                 }}
-                initial={{ y: 0 }}
+                initial={{ y: 0, opacity: 0 }}
                 animate={{ 
-                    y: [0, 25, 0],
+                    y: [0, '7px', 0],
                     opacity: isCreateButtonVisible ? 0 : 1,
                     scale: isCreateButtonVisible ? 0.8 : 1,
                 }}
@@ -176,8 +182,9 @@ const MainView = () => {
                         ease: "easeInOut"
                     },
                     opacity: {
-                        duration: 0.5,
-                        ease: "easeInOut"
+                        duration: isCreateButtonVisible ? 0.5 : 1,
+                        ease: "easeInOut",
+                        delay: isCreateButtonVisible ? 0 : 2
                     },
                     scale: {
                         duration: 0.5,

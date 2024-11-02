@@ -26,32 +26,8 @@ const ProtectedRoute = ({ children }) => {
 
   return children;
 };
-const AppLayout = () => {
-    
-    const resetScrollPosition = () => {
-        window.scrollTo(0, 0);
-    }
 
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    useEffect(() => {
-        // Handle focusout scroll reset
-        const debouncedReset = debounce(resetScrollPosition, 100);
-        window.addEventListener('focusout', debouncedReset);
-        
-        return () => window.removeEventListener('focusout', debouncedReset);
-    }, [])
-    
+const AppLayout = () => {    
     return (
         <ErrorBoundaryWrapper>
             <Popup />
