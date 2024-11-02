@@ -4,12 +4,14 @@ import ModifyBook from "../CreateBook/ModifyBook";
 import Loading from '../CreateBook/Loading';
 import useCreateBook from '../../Hooks/CreateBook/useCreateBook';
 import Feedback from '../Feedback/feedback';
+import { useTranslation } from 'react-i18next';
+
 const CreateBook = () => {
     const { isLoading, hasBookStarted } = useSelector(state => state.book);
     const credits = useSelector(state => state.website.credits);
     const { createBook } = useCreateBook();
     const [title, setTitle] = useState('');
-
+    const { t } = useTranslation();
     const handleCreateBook = async () => {
         await createBook(title);
     };
@@ -26,7 +28,7 @@ const CreateBook = () => {
             <>
             <div className="flex flex-col items-center justify-center min-h-[100dvh] p-4">
                 <div className="max-w-sm w-full bg-white p-6 rounded-lg shadow-lg">
-                    <h1 className="text-2xl font-bold mb-4 text-center">Create Your Book</h1>
+                    <h1 className="text-2xl font-bold mb-4 text-center">{t('creation.create-your-book')}</h1>
                     <div className="text-center mb-4">
                         <div className={`inline-block px-2 py-1 rounded-full 
                             ${credits > 0 ? 'bg-green-100/80' : 'bg-red-100/80'} 
@@ -37,10 +39,10 @@ const CreateBook = () => {
                         >
                             {credits > 0 ? (
                                 <span className="text-green-700">
-                                    {credits} credits remaining
+                                    {credits} {t('creation.credits-remaining')}
                                 </span>
                             ) : (
-                                <span className="text-red-600">Out of credits!</span>
+                                <span className="text-red-600">{t('modifybook.credits.out_of_credits')}</span>
                             )}
                         </div>
                     </div>
@@ -48,7 +50,7 @@ const CreateBook = () => {
                         type="text" 
                         value={title} 
                         onChange={(e) => setTitle(e.target.value)} 
-                        placeholder="Enter book title" 
+                        placeholder={t('creation.enter-book-title')} 
                         className="mb-4 p-2 border border-gray-300 rounded w-full"
                     />
                     <button 
@@ -60,7 +62,7 @@ const CreateBook = () => {
                                 : 'bg-gray-300 cursor-not-allowed text-gray-500'}
                             transition-colors duration-200`}
                     >
-                        {credits >= 3 ? 'Start Creating' : 'Not Enough Credits'}
+                        {credits >= 3 ? t('creation.start-creating') : t('creation.not-enough-credits')}
                     </button>
                 </div>
             </div>

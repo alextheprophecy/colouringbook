@@ -1,17 +1,83 @@
 {
-    "examplebooks": {
-        "rabbits": "Un partido de f\u00fatbol donde los conejitos simp\u00e1ticos ganan contra los perros malvados",
-        "teamwork": "Felicidad, amistad, fantas\u00eda, hadas, gnomos, trabajo en equipo",
-        "batman-mario": "Batman y Mario jugando diferentes deportes juntos, felicidad, al aire libre",
-        "scenarios": "\u00a1Convierte cualquier escenario en una p\u00e1gina para colorear!",
-        "scpecific": "Da indicaciones espec\u00edficas para cada p\u00e1gina"
-    },
-    "creation": {
-        "option1": "Mejor calidad de imagen",
-        "option2": "Colorear m\u00e1s dif\u00edcil",
-        "option3": "Solo una p\u00e1gina",
-        "create": "Crea mi libro",
-        "warning1": "Please fill in the book description!",
-        "placeholder1": "Mario jugando con..."
+  "creation": {
+    "create": "Crea mi libro",
+    "a-goblin-in-a-forest-eating-a-mushroom": "Un duende en un bosque comiendo una seta...",
+    "not-enough-credits": "No hay suficientes créditos",
+    "credits-remaining": "créditos restantes",
+    "create-your-book": "Crea tu libro",
+    "enter-book-title": "Introduzca el título del libro",
+    "start-creating": "Empezar a crear",
+    "hooks": {
+      "please-enter-a-book-title": "Por favor introduce el título de un libro.",
+      "successfully-created-title": "Creado con éxito",
+      "creating-book": "",
+      "failed-to-create-book-please-try-again": "No se pudo crear el libro. \nPor favor inténtalo de nuevo.",
+      "please-enter-a-description-for-your-page": "Por favor ingresa una descripción para tu página",
+      "creating-image": "Creando imagen...",
+      "failed-to-generate-image-please-try-again": "No se pudo generar la imagen. \nPor favor inténtalo de nuevo."
     }
+  },
+  "modifybook": {
+    "credits": {
+      "out_of_credits": "¡Sin créditos!"
+    },
+    "processing": "Procesando...",
+    "download_pdf": "Descargar PDF",
+    "finish_book": "Terminar libro",
+    "creative_model": "",
+    "creative_model_description": "",
+    "advanced_options": "Opciones avanzadas",
+    "test_mode": "Modo de prueba",
+    "test_mode_description": "Mostrar descripciones en lugar de generar imágenes",
+    "advanced_story_context": "Contexto de historia avanzado",
+    "advanced_story_context_description": "Usar un contexto de historia más detallado para una mejor continuidad",
+    "generating-your-book": "Generando tu libro..."
+  },
+  "edition.context": "Contexto",
+  "edition.enhance-image": "Mejorar imagen",
+  "edition.last-seen-doing": "Visto por última vez haciendo:",
+  "edition.current-situation": "Situación actual:",
+  "edition.environment": "Ambiente:",
+  "edition.story-summary": "Resumen de la historia:",
+  "modification": {
+    "use-more-detailed-story-context-for-better-continuity": "Utilice un contexto de historia más detallado para una mejor continuidad",
+    "advanced-story-context": "Contexto avanzado de la historia"
+  },
+  "login": {
+    "logout": "Cerrar sesión",
+    "login": "Acceso",
+    "create": "Crear",
+    "home": "",
+    "my-gallery": "",
+    "password": "Contraseña",
+    "email": "Correo electrónico"
+  },
+  "home": {
+    "start-creating": "¡Empecemos!"
+  },
+  "error": {
+    "oops-something-went-wrong": "¡Ups! \nalgo salió mal",
+    "an-unexpected-error-occurred": "Ocurrió un error inesperado",
+    "try-again": "Intentar otra vez",
+    "cannot-create-new-pages-book-is-finished": "No se pueden crear páginas nuevas: el libro está terminado",
+    "failed-to-enhance-description-please-try-again": "No se pudo mejorar la descripción. \nPor favor inténtalo de nuevo.",
+    "failed-to-regenerate-image-please-try-again": "No se pudo regenerar la imagen. \nPor favor inténtalo de nuevo.",
+    "please-enter-enhancement-instructions": "Por favor ingrese las instrucciones de mejora",
+    "pdf-url-not-found": "URL del PDF no encontrada",
+    "no-pdf-url-received-from-server": "No se recibió ninguna URL de PDF del servidor",
+    "failed-to-finish-book-please-try-again": "No se pudo terminar el libro. \nPor favor inténtalo de nuevo.",
+    "api": {
+      "session-expired": "La sesión expiró. \nPor favor inicie sesión nuevamente.",
+      "request-timeout": "Solicitar tiempo de espera. \nPor favor inténtalo de nuevo."
+    }
+  },
+  "edition": {
+    "hooks": {
+      "regenrating-image": "Regenerando imagen...",
+      "enhancing-description": "Mejorando la descripción..."
+    }
+  },
+  "success": {
+    "your-book-has-been-successfully-generated": "¡Su libro se ha generado exitosamente!"
+  }
 }

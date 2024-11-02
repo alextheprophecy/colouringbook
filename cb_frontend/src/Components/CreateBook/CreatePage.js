@@ -1,8 +1,10 @@
 import React from 'react';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CreatePage = React.forwardRef(({classNameProp}, ref) => {  
+    const { t } = useTranslation();
     const {
         createImage,
         description,
@@ -26,7 +28,7 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                     text-gray-700 placeholder-gray-400
                                     font-children text-lg leading-relaxed
                                     shadow-[inset_0_0_10px_rgba(0,0,0,0.1)]"
-                            placeholder="A goblin in a forest eating a mushroom..."
+                            placeholder={t('creation.a-goblin-in-a-forest-eating-a-mushroom')}
                             value={description}
                             onChange={handleDescriptionChange}                                   
                         />
@@ -37,16 +39,16 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                 className="relative flex items-center gap-2 px-5 py-2 
                                         bg-green-500 hover:bg-green-600
                                         rounded-lg
-                                        shadow-md hover:shadow-lg 
+                                        shadow-md hover:shadow-lg W
                                         transform hover:scale-[1.02]
                                         transition-all duration-200
                                         mb-0.5"
                             >
                                 <Plus className="w-5 h-5 text-white" />
-                                <span className="text-white text-lg font-children font-semibold">Create Page</span>
+                                <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>
                             </button>
                             <span className="text-red-500 text-[10px] font-mono font-medium">
-                                -3 credits
+                                -3 {t('creation.credits-remaining')}
                             </span>
                         </div>
                     </div>

@@ -1,8 +1,9 @@
-import {useTranslation} from "react-i18next";
-import '../../Styles/Navbar/language_change.css'
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Globe } from "lucide-react";
 
 const locales = {
-    en_gb: { title: 'English' },
+    en: { title: 'English' },
     fr: { title: 'Francais' },
     de: { title: 'Deutsch' },
     it: { title: 'Italiano' },
@@ -10,14 +11,41 @@ const locales = {
 };
 
 const LanguageChange = () => {
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
+    const [isOpen, setIsOpen] = useState(false);
 
+    const toggleDropdown = () => setIsOpen(!isOpen);
 
-    return <span className={'bottom-right language_buttons_container'}>
-        {Object.keys(locales).map((locale) => (
-            <div key={locale}><button style={{ fontWeight: i18n.resolvedLanguage === locale ? 'bold' : 'normal' }} type="submit" onClick={() => i18n.changeLanguage(locale)}>
-                {locales[locale].title}
-            </button></div>
-        ))}</span>
-}
-export default LanguageChange
+    return (
+        <div className="relative">
+            <button
+                onClick={toggleDropdown}
+                className="language-button  bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
+            >
+                <Globe className="w-6 h-6" />
+            </button>
+            {isOpen && (
+                <div className="absolute top-12 left-0 bg-white shadow-lg rounded-md z-50">
+                    {Object.keys(locales).map((locale) => (
+                        <button
+                            key={locale}
+                            onClick={() => {
+                                i18n.changeLanguage(locale);
+                                setIsOpen(false);
+                            }}
+                            className={`block px-4 py-2 text-left w-full ${
+                                i18n.resolvedLanguage === locale
+                                    ? 'bg-blue-600 text-white font-bold'
+                                    : 'text-gray-800 hover:bg-gray-100'
+                            }`}
+                        >
+                            {locales[locale].title}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default LanguageChange;

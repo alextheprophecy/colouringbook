@@ -3,6 +3,7 @@ import {Ban, ChevronRight, Send, ArrowLeft, MessageSquare } from 'lucide-react';
 import api from '../../Hooks/ApiHandler';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotification, setAskFeedback } from '../../redux/websiteSlice';
+import { useTranslation } from 'react-i18next';
 
 const Feedback = () => {
     const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const Feedback = () => {
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useTranslation();
 
     // If askFeedback is false, don't render anything
     if (!askFeedback) return null;
@@ -43,14 +45,14 @@ const Feedback = () => {
 
             dispatch(addNotification({
                 type: 'success',
-                message: 'Thank you for your feedback!',
+                message: t('feedback.thank-you-for-your-feedback'),
                 duration: 3000
             }));
 
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.response?.data?.error || 'Failed to submit feedback. Please try again.',
+                message: error.response?.data?.error || t('feedback.failed-to-submit-feedback-please-try-again'),
                 duration: 5000
             }));
         } finally {
@@ -83,7 +85,7 @@ const Feedback = () => {
                 </>
             ) : (
                 <>
-                    <span>Send Feedback</span>
+                    <span>{t('feedback.send-feedback')}</span>
                     <Send className="w-4 h-4" />
                 </>
             )}
@@ -107,7 +109,7 @@ const Feedback = () => {
                     group
                     ${isOpen ? 'opacity-0' : 'opacity-100'}
                 `}
-                aria-label="Rate your experience"
+                aria-label={t('feedback.rate-your-experience')}
             >
                 <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
@@ -126,8 +128,7 @@ const Feedback = () => {
                     {!selectedEmoji ? (
                         <>
                             <h3 className="text-xl text-center font-children font-semibold text-gray-700 mb-2">
-                                How would you rate your experience?
-                            </h3>
+                                {t('feedback.how-would-you-rate-your-experience')} </h3>
                             
                             <div className="grid grid-cols-5 w-full">
                                 {emojis.map((item, index) => (
@@ -156,14 +157,14 @@ const Feedback = () => {
                                     <ArrowLeft className="w-5 h-5 text-gray-600" />
                                 </button>
                                 <h3 className="text-xl font-children font-semibold text-gray-700">
-                                    Feedback for {selectedEmoji.emoji}
+                                    {t('feedback.feedback-for')} {selectedEmoji.emoji}
                                 </h3>
                             </div>
 
                             <textarea
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                placeholder="Tell us more about your experience..."
+                                placeholder={t('feedback.tell-us-more-about-your-experience')}
                                 className="w-full h-32 p-3 border rounded-lg 
                                     focus:ring-2 focus:ring-amber-400
                                     focus:outline-none
@@ -191,7 +192,7 @@ const Feedback = () => {
                                 group"
                         >
                             <Ban className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                            <span>Not now</span>
+                            <span>{t('feedback.not-now')}</span>
                         </button>
                     )}
                 </div>

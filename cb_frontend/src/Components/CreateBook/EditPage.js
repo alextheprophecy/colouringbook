@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import Loading from './Loading';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
 import {Wand2, RotateCcw, Info } from 'lucide-react'; // Add Info to the imports
-
+import { useTranslation } from 'react-i18next';
 const EditPage = () => {
+    const { t } = useTranslation();
     const currentPage = useSelector((state) => state.book.currentPage);
     const settings = useSelector((state) => state.website.settings);
 
@@ -39,29 +40,29 @@ const EditPage = () => {
                     <div className="mb-4 relative max-h-[50vh]">
                         {showDescription ? (
                             <div className="max-h-[50vh] min-h-[300px] mx-[auto] bg-gray-100 rounded p-4 overflow-y-auto">
-                                <h3 className="text-lg font-bold mb-2">User Description</h3>
+                                <h3 className="text-lg font-bold mb-2">{t('edition.user-description')}</h3>
                                 <p className="text-sm mb-4">{sceneDescription[0]}</p>
                                 
-                                <h3 className="text-lg font-bold mb-2">Composition Idea</h3>
+                                <h3 className="text-lg font-bold mb-2">{t('edition.composition-idea')}</h3>
                                 <p className="text-sm mb-4 italic text-gray-700">{sceneDescription[4]}</p>
                                 
                                 <div className="flex justify-between items-center mb-2">
-                                    <h3 className="text-lg font-bold">API Description</h3>
+                                    <h3 className="text-lg font-bold">{t('edition.api-description')}</h3>
                                     <p className="text-m font-bold text-red-500">Seed: {sceneDescription[2]}</p>
                                 </div>
                                 <p className="text-sm mb-4">{sceneDescription[1]}</p>
                                 
-                                <h3 className="text-lg font-bold mb-2">Context</h3>
+                                <h3 className="text-lg font-bold mb-2">{t('edition.context')}</h3>
                                 {sceneDescription[3] && (
                                     <div className="text-sm">
                                         <div className="mb-2">
-                                            <span className="font-semibold">Story Summary:</span> {sceneDescription[3].storySummary}
+                                            <span className="font-semibold">{t('edition.story-summary')}</span> {sceneDescription[3].storySummary}
                                         </div>
                                         <div className="mb-2">
-                                            <span className="font-semibold">Environment:</span> {sceneDescription[3].environment}
+                                            <span className="font-semibold">{t('edition.environment')}</span> {sceneDescription[3].environment}
                                         </div>
                                         <div className="mb-2">
-                                            <span className="font-semibold">Current Situation:</span> {sceneDescription[3].currentSituation}
+                                            <span className="font-semibold">{t('edition.current-situation')}</span> {sceneDescription[3].currentSituation}
                                         </div>
                                         {sceneDescription[3].characters && (
                                             <div className="mb-2">
@@ -71,7 +72,7 @@ const EditPage = () => {
                                                         <li key={index}>
                                                             <span className="font-medium">{char.name}:</span> {char.description}
                                                             {char.lastSeenDoing && (
-                                                                <span className="italic"> (Last Seen doing: {char.lastSeenDoing})</span>
+                                                                <span className="italic"> ({t('edition.last-seen-doing')}{char.lastSeenDoing})</span>
                                                             )}
                                                         </li>
                                                     ))}
@@ -80,7 +81,7 @@ const EditPage = () => {
                                         )}
                                         {sceneDescription[3].keyObjects && sceneDescription[3].keyObjects.length > 0 && (
                                             <div>
-                                                <span className="font-semibold">Key Objects:</span>
+                                                <span className="font-semibold">{t('edition.key-objects')}</span>
                                                 <ul className="list-disc pl-4">
                                                     {sceneDescription[3].keyObjects.map((obj, index) => (
                                                         <li key={index}>{obj}</li>
@@ -96,7 +97,7 @@ const EditPage = () => {
                                 typeof currentImage === 'string' && (currentImage.startsWith('http') || currentImage.startsWith('blob')) ? (
                                     <img 
                                         src={currentImage} 
-                                        alt="Current Page" 
+                                        alt={t('edition.current-page')} 
                                         className="max-h-[50vh] min-h-[300px] mx-[auto] aspect-auto object-cover rounded"
                                     /> 
                                 ) : (
@@ -110,7 +111,7 @@ const EditPage = () => {
                             className="absolute bottom-2 right-[calc(5%+5px)] bg-white bg-opacity-75 text-black text-s px-2 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center"
                             onClick={() => setShowDescription(!showDescription)}
                         >
-                            {showDescription ? 'See Image' : <><Info className="w-4 h-4 inline-block mr-1" />Info </>}
+                            {showDescription ? t('edition.see-image') : <><Info className="w-4 h-4 inline-block mr-1" /> {t('edition.info')} </>}
                         </button>
                     </div>
                     {!isEnhancing ? (
@@ -128,10 +129,10 @@ const EditPage = () => {
                                         onClick={() => setIsEnhancing(true)}
                                     >
                                         <Wand2 className="w-6 h-6 flex-shrink-0"/> 
-                                        <span>Enhance</span>
+                                        <span>{t('edition.enhance')}</span>
                                     </button>
                                     <span className="text-red-500 text-[11px] font-mono font-medium">
-                                        -3 credits
+                                        -3 {t('edition.credits')}
                                     </span>
                                 </div>
                                 <div className="flex-1 flex flex-col items-center">
@@ -146,10 +147,10 @@ const EditPage = () => {
                                         onClick={handleRegenerate}
                                     >
                                         <RotateCcw className="w-6 h-6 flex-shrink-0"/>
-                                        <span>Regenerate</span>
+                                        <span>{t('edition.regenerate')}</span>
                                     </button>
                                     <span className="text-red-500 text-[11px] font-mono font-medium">
-                                        -3 credits
+                                        -3 {t('edition.credits')}
                                     </span>
                                 </div>
                             </div>
@@ -161,7 +162,7 @@ const EditPage = () => {
                                     font-children font-semibold tracking-wider"
                                 onClick={handleClose}
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                         </div>
                     ) : (
@@ -180,7 +181,7 @@ const EditPage = () => {
                                             px-4 pb-4 pt-3"
                                         value={editText}
                                         onChange={(e) => setEditText(e.target.value)}
-                                        placeholder="Examples:&#10;• Make the main character smile more&#10;• Add a tree on the left&#10;• Make the colors more vibrant"
+                                        placeholder={t('edition.examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant')}
                                     />
                                 </div>
                             </div>
@@ -192,7 +193,7 @@ const EditPage = () => {
                                         hover:scale-[1.02] shadow-sm hover:shadow-md"
                                     onClick={() => setIsEnhancing(false)}
                                 >
-                                    Cancel
+                                    {t('cancel')}
                                 </button>
                                 <button 
                                     className={`px-6 py-2.5 rounded-lg font-children font-semibold
@@ -204,7 +205,7 @@ const EditPage = () => {
                                     onClick={handleEnhance}
                                     disabled={editText.trim() === ''}
                                 >
-                                    Enhance Image
+                                    {t('edition.enhance-image')}
                                 </button>
                             </div>
                         </div>

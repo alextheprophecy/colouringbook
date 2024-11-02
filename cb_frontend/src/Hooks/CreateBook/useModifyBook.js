@@ -4,7 +4,7 @@ import { setCurrentPage, setIsEditing, finishBook} from '../../redux/bookSlice';
 import { addNotification, setAskFeedback } from '../../redux/websiteSlice';
 import api from '../../Hooks/ApiHandler';
 import useLoadRequest from './useLoadRequest';
-
+import { useTranslation } from 'react-i18next';
 export const FLIP_TIMES = Object.freeze({
     USER: 600,
     QUICK_DELAY: 10,
@@ -23,7 +23,7 @@ const useModifyBook = () => {
     const [isFinishing, setIsFinishing] = useState(false);
     const { loadRequest } = useLoadRequest();
     const [pdfUrl, setPdfUrl] = useState(null);
-
+    const { t } = useTranslation();
     const isOnCreationPage = useCallback(() => {
         return currentPage === pages.length
     }, [currentPage, pages.length]);
@@ -100,7 +100,7 @@ const useModifyBook = () => {
             if (!pdfUrl && !pages[0]?.pdfUrl) {
                 dispatch(addNotification({
                     type: 'error',
-                    message: 'PDF URL not found',
+                    message: t('error.pdf-url-not-found'),
                     duration: 3000
                 }));
                 return;
@@ -113,12 +113,12 @@ const useModifyBook = () => {
         try {
             const response = await loadRequest(
                 async () => await api.post('image/finishBook', { bookId }),
-                'Generating your book...'
+                t('modifybook.generating-your-book')
             );
             
             const data = response.data;
             if (!data?.bookPDF) {
-                throw new Error('No PDF URL received from server');
+                throw new Error(t('error.no-pdf-url-received-from-server'));
             }
             
             setPdfUrl(data.bookPDF);
@@ -126,7 +126,7 @@ const useModifyBook = () => {
             dispatch(finishBook());            dispatch(setAskFeedback(true));
             dispatch(addNotification({
                 type: 'success',
-                message: 'Your book has been successfully generated!',
+                message: t('success.your-book-has-been-successfully-generated'),
                 duration: 5000
             }));
 
@@ -134,7 +134,7 @@ const useModifyBook = () => {
             console.error('Error finishing book:', error);
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to finish book. Please try again.',
+                message: error.message || t('error.failed-to-finish-book-please-try-again'),
                 duration: 5000
             }));
         } finally {

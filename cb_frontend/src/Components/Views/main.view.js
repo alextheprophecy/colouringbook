@@ -4,11 +4,12 @@ import ScribbleText from '../UI/ui_scribble_text.component';
 import FeatureCard from '../LandingPage/FeatureCard';
 import { ChevronDown } from 'lucide-react';
 import { scroller } from 'react-scroll';
+import { useTranslation } from 'react-i18next';
 
 const MainView = () => {
     // Add state for button visibility
     const [isCreateButtonVisible, setIsCreateButtonVisible] = React.useState(false);
-
+    const { t } = useTranslation();
     // Add scroll detection
     React.useEffect(() => {
         const observer = new IntersectionObserver(
@@ -65,7 +66,7 @@ const MainView = () => {
                     >
                         <div className="transform-gpu flex justify-center w-full">
                             <ScribbleText
-                                text="Crayons"
+                                text={t('home.crayons')}
                                 sizeFactor={1.4}
                                 fillColor="#027a9f"
                                 strokeColor="#00a4d7"
@@ -95,8 +96,7 @@ const MainView = () => {
                         }}
                     >
                         <span className="text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                            Make colouring books from your own stories
-                        </span>
+                            {t('home.make-colouring-books-from-your-own-stories')} </span>
                     </motion.p>
                 </div>
 
@@ -105,20 +105,20 @@ const MainView = () => {
                     <FeatureCard
                         index={0}
                         imagePosition="left"
-                        title="AI-Powered Creation"
-                        description="Describe your story and watch as our AI transforms your words into beautiful coloring pages. Perfect for children's books, educational materials, or creative projects."
+                        title={t('home.feature-1-title')}
+                        description={t('home.feature-1-description')}
                     />
                     <FeatureCard
                         index={1}
                         imagePosition="right"
-                        title="Interactive Book Editor"
-                        description="Edit, enhance, and customize your coloring book pages with our intuitive editor. Add details, modify scenes, and create the perfect coloring experience."
+                        title={t('home.feature-2-title')}
+                        description={t('home.feature-2-description')}
                     />
                     <FeatureCard
                         index={2}
                         imagePosition="left"
-                        title="Instant PDF Download"
-                        description="Download your creation instantly as a PDF, ready for printing and coloring. Share your books with friends, family, or use them in your classroom."
+                        title={t('home.feature-3-title')}
+                        description={t('home.feature-3-description')}
                     />
                     
                     {/* CTA Button */}
@@ -140,8 +140,7 @@ const MainView = () => {
                                 flex items-center justify-center gap-2 mx-auto
                                 shadow-[0_4px_14px_0_rgb(0,118,255,39%)]"
                         >
-                            Start Creating
-                        </button>
+                            {t('home.start-creating')} </button>
                     </motion.div>
                 </div>
             </div>
@@ -186,7 +185,7 @@ const MainView = () => {
                     }
                 }}
             >
-                <span className="font-children font-semibold text-base whitespace-nowrap">Get Started</span>
+                <span className="font-children font-semibold text-base whitespace-nowrap">{t('home.get-started')}</span>
                 <ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300" />
             </motion.button>
         </div>

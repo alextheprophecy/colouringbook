@@ -6,7 +6,7 @@ import LogoutComponent from "../Navbar/logout.component";
 import '../../Styles/Navbar/login.css'
 
 const LoginView = () => {
-    const { t} = useTranslation()
+    const { t } = useTranslation()
     const [formData, setFormData] = useState({email: '',password: ''})
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -22,7 +22,7 @@ const LoginView = () => {
                     className="login-input"
                     type="text"
                     name="email"
-                    placeholder="Email"
+                    placeholder={t('login.email')}
                     onChange={handleChange}
                 />
             </div>
@@ -31,14 +31,14 @@ const LoginView = () => {
                     className="login-input"
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder={t('login.password')}
                     onChange={handleChange}
                 />
             </div>
             <input
                 className="login-submit"
                 type="submit"
-                value="Login"
+                value={t('login.login')}
             />
         </form>
 
