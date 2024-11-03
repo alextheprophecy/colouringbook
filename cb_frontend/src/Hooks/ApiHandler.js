@@ -44,17 +44,16 @@ api.interceptors.response.use(
     error => {
         const { status } = error.response || {}
         const errCode = error.code
-        const { t } = useTranslation();
 
         if (errCode === 'ECONNABORTED') {
-            showErrorNotification(t('error.api.request-timeout'));
+            showErrorNotification(i18n.t('error.api.request-timeout'));
             return Promise.reject(error);
         }
 
         let errMsg = error.response?.data?.error || 
                     error.response?.data || 
                     error.message || 
-                    t('error.an-unexpected-error-occurred');
+                    i18n.t('error.an-unexpected-error-occurred');
 
         switch (status) {
             case 401:
