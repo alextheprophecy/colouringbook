@@ -1,10 +1,11 @@
 import axios from "axios";
-
+import { useTranslation } from 'react-i18next';
 import { getUserToken, saveUserToken } from "./UserDataHandler";
 import { handleLogout } from "./LoginHandler";
 import store from '../redux/store';
 import { addNotification, updateCredits } from '../redux/websiteSlice';
 import { updateUserCredits } from "./UserDataHandler";
+import i18n from '../i18n'; // Adjust the path based on your project structure
 const localAddress = '172.20.10.2'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
@@ -43,20 +44,21 @@ api.interceptors.response.use(
     error => {
         const { status } = error.response || {}
         const errCode = error.code
+        const { t } = useTranslation();
 
         if (errCode === 'ECONNABORTED') {
-            showErrorNotification("Request timeout. Please try again.");
+            showErrorNotification(t('error.api.request-timeout'));
             return Promise.reject(error);
         }
 
         let errMsg = error.response?.data?.error || 
                     error.response?.data || 
                     error.message || 
-                    'An unexpected error occurred';
+                    t('error.an-unexpected-error-occurred');
 
         switch (status) {
             case 401:
-                if(errMsg.includes("Expired Token")) return refreshToken(error);
+                if(errMsg.includes('Expired Token')) return refreshToken(error);
                 break;
             case 403:
                 showErrorNotification(errMsg);
@@ -86,7 +88,7 @@ const refreshToken = async (error) => {
     } catch (refreshError) {
         store.dispatch(addNotification({
             type: 'error',
-            message: 'Session expired. Please login again.',
+            message: i18n.t('error.api.session-expired'), // Use i18n.t for translations
             duration: 5000
         }));
         handleLogout();

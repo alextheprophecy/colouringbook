@@ -10,10 +10,11 @@ import { getUserData } from '../../Hooks/UserDataHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
 import Feedback from '../Feedback/feedback';
+import { useTranslation } from 'react-i18next';
 
 
 const ModifyBook = () => {
-
+    const { t } = useTranslation();
     const MIN_WIDTH = Object.freeze(300);
      // Set minimum width as a constant
     const {
@@ -132,7 +133,7 @@ const ModifyBook = () => {
                             {credits} credits
                         </span>
                     ) : (
-                        <span className="text-red-600">Out of credits!</span>
+                        <span className="text-red-600">{t('modifybook.credits.out_of_credits')}</span>
                     )}
                 </div>
             </div>
@@ -165,7 +166,7 @@ const ModifyBook = () => {
                                 {typeof page.image === 'string' && (page.image.startsWith('http') || page.image.startsWith('blob')) ? (
                                     <img 
                                         src={page.image} 
-                                        alt={`Page ${index + 1}`}
+                                        alt={`{t('creation.page')} ${index + 1}`}
                                         className={pageClassname(index)}
                                     />
                                 ) : (
@@ -202,7 +203,7 @@ const ModifyBook = () => {
                         disabled={isOnCreationPage() || isFlipping}
                     >
                         <Plus className="w-5 h-5" />
-                        New page
+                        {t('creation.new-page')}
                     </button>
                 )}
 
@@ -222,19 +223,19 @@ const ModifyBook = () => {
                     {isFinishing ? (
                         <div className="flex items-center gap-2">
                             <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
-                            Processing...
+                            {t('modifybook.processing')}
                         </div>
                     ) : (
                         <>
                             {isBookFinished ? (
                                 <>
                                     <FileDown className="w-5 h-5" />
-                                    Download PDF
+                                    {t('modifybook.download_pdf')}
                                 </>
                             ) : (
                                 <>
                                     <Download className="w-5 h-5" />
-                                    Finish Book
+                                    {t('modifybook.finish_book')}
                                 </>
                             )}
                         </>
@@ -247,8 +248,8 @@ const ModifyBook = () => {
                     <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">Creative Model</span>
-                                <span className="text-sm text-gray-500 mr-1">More creative images, but may include extra shading and details</span>
+                                <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
+                                <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
                             </div>
                             <div className="relative">
                                 <input
@@ -271,7 +272,7 @@ const ModifyBook = () => {
                             className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 px-2"
                         >
                             <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-90' : ''}`} />
-                            Advanced Options
+                            {t('modifybook.advanced_options')}
                         </button>
                         
                         <div className={`flex flex-col gap-2 overflow-hidden transition-all duration-200 ${showAdvanced ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
@@ -279,8 +280,8 @@ const ModifyBook = () => {
                             <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                                 <label className="flex items-center justify-between cursor-pointer">
                                     <div className="flex flex-col">
-                                        <span className="text-lg font-children font-semibold text-gray-700">Test Mode</span>
-                                        <span className="text-sm text-gray-500">Show descriptions instead of generating images</span>
+                                        <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.test_mode')}</span>
+                                        <span className="text-sm text-gray-500">{t('modifybook.test_mode_description')}</span>
                                     </div>
                                     <div className="relative">
                                         <input
@@ -300,8 +301,8 @@ const ModifyBook = () => {
                             <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                                 <label className="flex items-center justify-between cursor-pointer">
                                     <div className="flex flex-col">
-                                        <span className="text-lg font-children font-semibold text-gray-700">Advanced Story Context</span>
-                                        <span className="text-sm text-gray-500">Use more detailed story context for better continuity</span>
+                                        <span className="text-lg font-children font-semibold text-gray-700">{t('modification.advanced-story-context')}</span>
+                                        <span className="text-sm text-gray-500">{t('modification.use-more-detailed-story-context-for-better-continuity')}</span>
                                     </div>
                                     <div className="relative">
                                         <input

@@ -25,6 +25,16 @@
             "env": {
                 "BROWSER": "none"
             }
+        },
+        {
+            "name": "Update Translations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cb_frontend/public/json-excel-translations-master/excelToJson.py",
+            "console": "integratedTerminal",
+            "args": ["-i", "../locales/translations.xlsx", "-o", "../locales"],
+            "cwd": "${workspaceFolder}/cb_frontend/public/json-excel-translations-master",
+            "python": "C:/Users/alexa/AppData/Local/Programs/Python/Python310/python.exe"
         }
     ]
 }

@@ -19,7 +19,13 @@ module.exports = {
       },
       boxShadow: {
         'inner-lg': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
-      }
+      },
+      keyframes: {
+        shine: {
+          '0%': { transform: 'translateX(-100%) skewX(-45deg)' },
+          '30%, 100%': { transform: 'translateX(400%) skewX(-45deg)' },
+        },
+      },
     },
   },
   plugins: [

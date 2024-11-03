@@ -12,7 +12,7 @@ const Profile = () => {
     }, []);
 
     return <div className={'top-right profile-container'}>
-        {isUserLoggedIn()?(credits?`${credits} credits`:'Out of credits!'):''}
+        {isUserLoggedIn()?(credits?`${credits} credits`:t('modifybook.credits.out_of_credits')):''}
     </div>
 }
 export default Profile

@@ -1,7 +1,7 @@
 const {Schema, model} = require("mongoose")
 const bcrypt = require("bcryptjs")
 
-const DEFAULT_CREDITS = 10*30*2
+const DEFAULT_CREDITS = 0
 
 const UserSchema = new Schema({
     full_name: {

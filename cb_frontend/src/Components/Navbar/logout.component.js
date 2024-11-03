@@ -5,7 +5,7 @@ const LoginForm = () => {
     const { t} = useTranslation()
 
     return <div>
-        <button onClick={() => handleLogout()}>Logout</button>
+        <button onClick={() => handleLogout()}>{t('login.logout')}</button>
     </div>
 
 }
