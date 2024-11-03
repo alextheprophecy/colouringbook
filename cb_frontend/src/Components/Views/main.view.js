@@ -113,29 +113,38 @@ const MainView = () => {
 
                 {/* Feature Cards */}
                 <div className="max-w-7xl mx-auto px-4 pb-16 -mt-4 space-y-12">
+                   
                     <FeatureCard
                         index={0}
-                        imagePosition="left"
-                        title={t('home.feature-1-title')}
-                        description={t('home.feature-1-description')}
-                        directory="/assets/features_showcase/creative"
-                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
-                    />
+                        imagePosition="right"
+                        title={t('home.feature-2-title')}
+                        description={t('home.feature-2-description')}
+                        directory="/assets/features_showcase/HauntedHouse"
+                        imageNames={['p0_2.png', 'p1.png', 'p2.png', 'p3.png', 'p4.png', 'p7.png']}
+                    />                    
                     <FeatureCard
                         index={1}
+                        imagePosition="left"
+                        title={t('home.feature-3-title')}
+                        directory="/assets/features_showcase/simple"
+                        imageNames={['birthdayParty.png', 'download.png', 'im0.jpg', 'im2.jpg', 'im4.jpg', 'img2.jpg', 'mario spiderman playing chess.jpg', 'witches.png']}
+                        description={t('home.feature-3-description')}
+                    />
+                    <FeatureCard
+                        index={2}
                         imagePosition="right"
                         title={t('home.feature-2-title')}
                         description={t('home.feature-2-description')}
                         directory="/assets/features_showcase/enhance"
                         imageNames={['turtle/enhanced.png', 'donkey/enhanced.png']}
                     />
-                    <FeatureCard
-                        index={2}
+                     <FeatureCard
+                        index={3}
                         imagePosition="left"
-                        title={t('home.feature-3-title')}
-                        directory="/assets/features_showcase/simple"
-                        imageNames={['birthdayParty.png', 'download.png', 'im0.jpg', 'im2.jpg', 'im4.jpg', 'img2.jpg', 'mario spiderman playing chess.jpg', 'witches.png']}
-                        description={t('home.feature-3-description')}
+                        title={t('home.feature-1-title')}
+                        description={t('home.feature-1-description')}
+                        directory="/assets/features_showcase/creative"
+                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
                     />
                     
                     {/* CTA Button */}

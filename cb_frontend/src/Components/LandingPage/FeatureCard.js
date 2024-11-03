@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useState, useRef, useEffect, React } from 'react';
 import PropTypes from 'prop-types';
-const BASE_SLIDE_INTERVAL = 1500;
+const BASE_SLIDE_INTERVAL = 1750;
 const INTERVAL_VARIANCE = 500;
 const INACTIVITY_DELAY = 4000;
 
