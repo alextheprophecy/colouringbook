@@ -45,10 +45,11 @@
     "login": "Acceso",
     "create": "Crear",
     "password": "Contraseña",
-    "email": "Correo electrónico"
+    "email": "Correo electrónico",
+    "welcome": "Iniciar sesión"
   },
   "home": {
-    "start-creating": "¡Empecemos!"
+    "start-creating": "Crea mi libro!"
   },
   "error": {
     "oops-something-went-wrong": "¡Ups! \nalgo salió mal",

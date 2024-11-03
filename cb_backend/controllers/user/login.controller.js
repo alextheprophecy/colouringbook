@@ -28,7 +28,7 @@ class UserControllers {
 
     static Register = (req, res, next) => {
         let { full_name, email, password } = req.body
-
+        console.log(email)
         if (!emailValidator(email)) return res.status(400).json('Enter a valid email');
         email = email.toLowerCase()
         email = email.toLowerCase()

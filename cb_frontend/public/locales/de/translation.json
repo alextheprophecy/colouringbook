@@ -51,10 +51,11 @@
     "login": "Login",
     "create": "Erstellen",
     "password": "Passwort",
-    "email": "E-Mail"
+    "email": "E-Mail",
+    "welcome": "anmelden"
   },
   "home": {
-    "start-creating": "Fangen wir an!"
+    "start-creating": "Erstelle mein Buch!"
   },
   "error": {
     "oops-something-went-wrong": "Hoppla! \nEtwas ist schief gelaufen",

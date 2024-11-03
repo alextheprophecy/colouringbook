@@ -20,12 +20,12 @@ const LanguageChange = () => {
         <div className="relative">
             <button
                 onClick={toggleDropdown}
-                className="language-button  bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
+                className="language-button bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
             >
                 <Globe className="w-6 h-6" />
             </button>
             {isOpen && (
-                <div className="absolute top-12 left-0 bg-white shadow-lg rounded-md z-50">
+                <div className="absolute top-12 left-0 bg-white shadow-lg rounded-md z-[100]">
                     {Object.keys(locales).map((locale) => (
                         <button
                             key={locale}
@@ -33,10 +33,10 @@ const LanguageChange = () => {
                                 i18n.changeLanguage(locale);
                                 setIsOpen(false);
                             }}
-                            className={`block px-4 py-2 text-left w-full ${
+                            className={`block px-4 py-2 text-left w-full hover:bg-gray-100 ${
                                 i18n.resolvedLanguage === locale
-                                    ? 'bg-blue-600 text-white font-bold'
-                                    : 'text-gray-800 hover:bg-gray-100'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-800'
                             }`}
                         >
                             {locales[locale].title}

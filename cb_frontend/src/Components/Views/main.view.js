@@ -2,11 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ScribbleText from '../UI/ui_scribble_text.component';
 import FeatureCard from '../LandingPage/FeatureCard';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 import { scroller } from 'react-scroll';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { isUserLoggedIn } from '../../Hooks/UserDataHandler';
 
 const MainView = () => {
+    const navigate = useNavigate();
     // Add state for button visibility
     const [isCreateButtonVisible, setIsCreateButtonVisible] = React.useState(false);
     const { t } = useTranslation();
@@ -42,12 +45,20 @@ const MainView = () => {
         };
     }, []);
 
+    const handleStartCreating = () => {
+        if (isUserLoggedIn()) {
+            navigate('/create');
+        } else {
+            navigate('/login');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-paper from-blue-50 to-blue-100 relative">
             {/* Paper texture overlay with gradient */}
             <div 
                 className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50 z-0"
-            />
+            />            
             
             {/* Content wrapper with relative positioning */}
             <div className="relative z-10">
@@ -135,18 +146,88 @@ const MainView = () => {
                         transition={{ delay: 0.5 }}
                         viewport={{ once: true }}
                     >
-                        <button 
-                            id="start-creating-button"
-                            name="start-creating-button"
-                            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 
-                                text-white rounded-lg 
-                                transition-all duration-300 ease-in-out 
-                                hover:scale-[1.02] hover:shadow-lg
-                                font-children font-semibold tracking-wider
-                                flex items-center justify-center gap-2 mx-auto
-                                shadow-[0_4px_14px_0_rgb(0,118,255,39%)]"
-                        >
-                            {t('home.start-creating')} </button>
+                        <div className="relative inline-block">
+                            {/* Bottom edge layer */}
+                            <div className={`absolute inset-x-0 bottom-0 h-4                                                                    
+                                bg-green-700/90
+                                rounded-b-xl translate-y-1/2 blur-[1px]
+                                transform-gpu transition-all duration-300 ease-out
+                                group-hover:translate-y-[60%] group-hover:blur-[2px]
+                                group-active:translate-y-[30%]`}
+                            />
+                            
+                            
+                            {/* Main button - keeping original size */}
+                            <motion.button 
+                                id="start-creating-button"
+                                name="start-creating-button"
+                                onClick={handleStartCreating}
+                                className={`group relative px-10 py-5                                  
+                                    bg-gradient-to-r from-green-500 via-green-600 to-green-500 
+                                    text-white rounded-xl
+                                    transition-all duration-300 ease-out
+                                    hover:scale-105 hover:-translate-y-1
+                                    font-children font-bold tracking-wider
+                                    flex items-center justify-center gap-2
+                                    min-w-[240px]
+                                    overflow-hidden
+                                    
+                                    /* Shine Effect */
+                                    after:absolute
+                                    after:content-['']
+                                    after:top-0
+                                    after:-left-[100%]
+                                    after:w-[75%]
+                                    after:h-full
+                                    after:bg-gradient-to-r
+                                    after:from-transparent
+                                    after:via-white/30
+                                    after:to-transparent
+                                    after:skew-x-[-45deg]
+                                    after:animate-[shine_4s_ease-in-out_infinite]
+                                    
+                                    /* Shadow styles with circular glow */
+                                    shadow-[0_8px_0_0_rgb(0,0,0,0.1),0_14px_20px_-5px_rgba(0,0,0,0.3),0_0_20px_2px_rgba(0,128,0,0.15)]
+                                    hover:shadow-[0_12px_0_0_rgb(0,0,0,0.1),0_18px_24px_-8px_rgba(0,0,0,0.4),0_0_25px_5px_rgba(0,128,0,0.2)]
+                                    active:shadow-[0_4px_0_0_rgb(0,0,0,0.1),0_8px_12px_-3px_rgba(0,0,0,0.3),0_0_15px_2px_rgba(0,128,0,0.15)]
+                                    
+                                    before:absolute before:inset-0
+                                    before:bg-gradient-to-b before:from-white/20 before:to-transparent
+                                    before:rounded-xl`}
+                            >
+                                
+                                <motion.span
+                                    className="relative z-10 text-xl text-yellow-400 "                   
+                                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                >
+                                    <ScribbleText
+                                        text={t('home.start-creating')}
+                                        roughness={0.45}                                        
+                                        fillColor="white"
+                                        strokeColor="white"
+                                        strokeWidth={0.9}
+                                        animate={true}
+                                        sizeFactor={0.25}
+                                    />
+                                </motion.span>                                
+                                
+                            </motion.button>
+
+                            
+                            {/* Sparkles wrapper - positioned relative to button */}
+                            <div className="absolute inset-0 pointer-events-none">
+                                <Sparkles className="absolute -top-3 -right-3 w-8 h-8 text-yellow-400 
+                                    drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] 
+                                    filter brightness-125
+                                    animate-[pulse_2s_ease-in-out_infinite]" 
+                                />
+                                <Sparkles className="absolute -bottom-3 -left-3 w-7 h-7 text-yellow-400 
+                                    drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]
+                                    filter brightness-125
+                                    animate-[pulse_2s_ease-in-out_infinite_0.5s]" 
+                                />
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>
@@ -161,7 +242,22 @@ const MainView = () => {
                     flex flex-col items-center
                     z-50
                     group
-                    w-fit"
+                    w-fit
+                    /* Shine Effect */
+                    after:absolute
+                    after:content-['']
+                    after:top-0
+                    after:-left-[100%]
+                    after:w-[75%]
+                    after:h-full
+                    after:bg-gradient-to-r
+                    after:from-transparent
+                    after:via-white/30
+                    after:to-transparent
+                    after:skew-x-[-45deg]
+                    after:animate-[shine_4s_ease-in-out_infinite]
+                    overflow-hidden
+                    "
                 onClick={() => {
                     scroller.scrollTo('start-creating-button', {
                         duration: 800,

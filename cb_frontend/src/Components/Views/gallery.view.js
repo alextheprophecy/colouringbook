@@ -3,7 +3,7 @@ import api from "../../Hooks/ApiHandler";
 import ExamplesView from "./example_books.view";
 import FlipBook from "../flip_book.component";
 import '../../Styles/gallery.css'
-import {getBookData, saveBookData} from "../../Hooks/UserDataHandler";
+import {getBookData, saveBookData, isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import { RefreshCw, Download } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { setAskFeedback, addNotification } from '../../redux/websiteSlice';
@@ -198,7 +198,9 @@ const GalleryView = () =>  {
     };
 
     useEffect(() => {
-        initializeGallery();
+        if (isUserLoggedIn()) initializeGallery();
+        else window.location.href = '/login';
+        
     }, []);
 
     const downloadBook = (book) => {
@@ -261,7 +263,10 @@ const GalleryView = () =>  {
     }
 
     const renderBookCount = () => {
-        const hiddenBooks = getBookData().bookCount - processedBooks.length;
+        const bookData = getBookData();
+        if (!bookData?.bookCount) return '';
+        
+        const hiddenBooks = bookData.bookCount - processedBooks.length;
         if (hiddenBooks <= 0) return null;
 
         const skeletonCount = Math.min(hiddenBooks, 7); // Show max 7 skeletons

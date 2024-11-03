@@ -32,14 +32,14 @@ class BurgerMenu extends Component {
     login_logout_button = () =>{
         const { t } = this.props;
         return isUserLoggedIn() ?
-            <span className="text-white bg-red-600 px-2 py-1 rounded absolute bottom-8 left-4 text-sm" onClick={() => handleLogout()}>{t('login.logout')}</span> :
-            this.getMenuLink('/login', t('login.login'));
+            <span className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 absolute bottom-0 left-0 rounded text-lg font-bold cursor-pointer" onClick={() => handleLogout()}>{t('login.logout')}</span> :
+            this.getMenuLink('/login', t('login.login'), 'bg-green-600 hover:bg-green-700');
 }
-    getMenuLink = (url, name) => (
+    getMenuLink = (url, name, customClass) => (
         <Link
             onClick={this.closeMenu}
             to={url}
-            className="flex items-center justify-center px-3 py-2 mb-3 rounded bg-blue-600 text-white font-bold text-lg shadow-md transition-transform transform hover:scale-105 hover:bg-blue-700"
+            className={`flex items-center justify-center px-3 py-2 rounded ${customClass || 'bg-blue-600 hover:bg-blue-700'} text-white font-bold text-lg shadow-md transition-transform transform hover:scale-105`}
         >
             {name}
         </Link>
@@ -60,13 +60,19 @@ class BurgerMenu extends Component {
                     menuClassName="bg-gray-900 p-6 backdrop-blur-lg w-64"
                     morphShapeClassName="fill-gray-900 w-72"
                     overlayClassName="bg-gray-900 backdrop-blur-lg"
-                    itemListClassName="text-white space-y-4"
+                    itemListClassName="flex flex-col text-white space-y-4"
                 >
-                    <LanguageChange />
-                    {this.getMenuLink('/', t('login.home'))}
-                    {isUserLoggedIn() ? this.getMenuLink('/create', t('login.create')) : ''}
-                    {isUserLoggedIn() ? this.getMenuLink('/gallery', t('login.my-gallery')) : ''}
-                    {this.login_logout_button()}
+                    <div className="relative z-[60] mb-16">
+                        <LanguageChange />
+                    </div>
+                    <div className="relative z-[50] flex flex-col space-y-4 h-full">
+                        <div className="flex flex-col space-y-4">
+                            {this.getMenuLink('/', t('login.home'))}
+                            {isUserLoggedIn() ? this.getMenuLink('/create', t('login.create')) : ''}
+                            {isUserLoggedIn() ? this.getMenuLink('/gallery', t('login.my-gallery')) : ''}
+                            {this.login_logout_button()}
+                        </div>   
+                    </div>
                 </Menu>
             </div>
         );

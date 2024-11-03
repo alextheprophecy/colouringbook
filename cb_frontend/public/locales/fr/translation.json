@@ -5,7 +5,7 @@
     "a-goblin-in-a-forest-eating-a-mushroom": "Un gobelin dans une forêt mangeant un champignon...",
     "not-enough-credits": "Pas assez de crédits",
     "credits-remaining": "crédits restants",
-    "create-your-book": "Créez votre livre",
+    "create-your-book": "Creer mon livre",
     "enter-book-title": "Entrez le titre du livre",
     "start-creating": "Commencer",
     "hooks": {
@@ -71,7 +71,9 @@
     "home": "Acceuil",
     "my-gallery": "Ma bibliothèque",
     "password": "Mot de passe",
-    "email": "E-mail"
+    "email": "E-mail",
+    "logging-in": "Connexion...",
+    "welcome": "Connexion"
   },
   "gallery": {
     "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
@@ -81,7 +83,7 @@
   },
   "home": {
     "get-started": "Commencer",
-    "start-creating": "Commencons !"
+    "start-creating": "Creer mon livre!"
   },
   "error": {
     "oops-something-went-wrong": "Oups ! \nQuelque chose s'est mal passé",

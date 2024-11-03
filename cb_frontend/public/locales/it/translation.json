@@ -51,10 +51,11 @@
     "login": "Login",
     "create": "Creare",
     "password": "Password",
-    "email": "E-mail"
+    "email": "E-mail",
+    "welcome": "Registrazione"
   },
   "home": {
-    "start-creating": "Iniziamo!"
+    "start-creating": "Crea il mio libro!"
   },
   "error": {
     "oops-something-went-wrong": "Ops! \nQualcosa è andato storto",

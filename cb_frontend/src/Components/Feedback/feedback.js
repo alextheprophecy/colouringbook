@@ -4,15 +4,23 @@ import api from '../../Hooks/ApiHandler';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotification, setAskFeedback } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 const Feedback = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const askFeedback = useSelector(state => state.website.askFeedback);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const [comment, setComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { t } = useTranslation();
+
+    // Get current route
+    const getCurrentRoute = () => {
+        const path = location.pathname;
+        return path === '/' ? 'home' : path.slice(1);
+    };
 
     // If askFeedback is false, don't render anything
     if (!askFeedback) return null;
@@ -30,9 +38,10 @@ const Feedback = () => {
         
         setIsSubmitting(true);
         try {
+            const route = getCurrentRoute();
             await api.post('/user/feedback', {
                 rating: selectedEmoji.rating,
-                comment: comment.trim()
+                comment: `[${route.toUpperCase()}] ${comment.trim()}`
             });
             
             // Reset states
@@ -40,9 +49,7 @@ const Feedback = () => {
             setSelectedEmoji(null);
             setComment('');
             
-            // Turn off feedback request
             dispatch(setAskFeedback(false));
-
             dispatch(addNotification({
                 type: 'success',
                 message: t('feedback.thank-you-for-your-feedback'),
