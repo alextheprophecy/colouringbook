@@ -79,7 +79,10 @@
     "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
     "download": "Télécharger",
     "more-books-in-your-library": "autres livres dans votre bibliothèque",
-    "refresh-books": "Actualiser les livres"
+    "refresh-books": "Actualiser les livres",
+    "no-books-yet": "Ta bibliotheque est vide...",
+    "start-your-creative-journey": "Remplissons là!",
+    "create-first-book": "Creer mon premier livre"
   },
   "home": {
     "get-started": "Commencer",

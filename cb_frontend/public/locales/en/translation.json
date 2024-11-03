@@ -107,7 +107,10 @@
     "failed-to-load-books-please-try-again": "Failed to load books. Please try again.",
     "download": "Download",
     "more-books-in-your-library": "more books in your library",
-    "refresh-books": "Refresh books"
+    "refresh-books": "Refresh books",
+    "no-books-yet": "Your gallery is empty...",
+    "start-your-creative-journey": "Let's fill it up!",
+    "create-first-book": "Create my first book"
   },
   "home": {
     "crayons": "Crayons",
