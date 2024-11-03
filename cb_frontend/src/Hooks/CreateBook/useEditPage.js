@@ -45,7 +45,7 @@ const useEditPage = () => {
         } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages, showDescription, bookId]);
+    }, [isEditing, currentPage, pages, bookId]);
 
     
     const handleRegenerate = useCallback(async () => {
