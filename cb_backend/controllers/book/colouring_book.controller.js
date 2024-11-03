@@ -23,7 +23,8 @@ const verifyPageCredits = async (user, generationType) => {
     return await verifyCredits(user, creditCost);    
 };
 
-const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed = randomSeed()}) => { 
+const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed}) => { 
+    if(!seed) seed = randomSeed();
     let imageData;
     
     if (useFineTunedModel)

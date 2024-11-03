@@ -10,7 +10,7 @@ const useCreatePage = () => {
     const [description, setDescription] = useState('');
     const { generateImage } = useImageGeneration();
     const { loadRequest } = useLoadRequest();
-    const { isBookFinished, currentContext, bookId } = useSelector(state => state.book);
+    const { isBookFinished, currentContext, bookId, pages } = useSelector(state => state.book);
     const { t } = useTranslation();
     const handleDescriptionChange = (e) => setDescription(e.target.value);
 
@@ -33,9 +33,12 @@ const useCreatePage = () => {
             return false;
         }
 
-        try {   
+        try { 
+            const lastPage = pages[pages.length - 1];
+            const lastSeed = lastPage?.seed;
+            console.log('lastSeed', lastSeed);         
             await loadRequest(
-                () => generateImage(description, currentContext, bookId),
+                () => generateImage(description, currentContext, bookId, lastSeed),
                 t('creation.hooks.creating-image')
             )
         } catch (error) {
