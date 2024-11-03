@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, React } from 'react';
 import '../../Styles/UI/number_input.css';
 
 const NumberInput = ({rangeMin = 1, rangeMax = 6, updateValue, defaultValue}) => {

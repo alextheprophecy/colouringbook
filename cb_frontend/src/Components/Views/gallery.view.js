@@ -1,7 +1,5 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, React} from "react";
 import api from "../../Hooks/ApiHandler";
-import ExamplesView from "./example_books.view";
-import FlipBook from "../flip_book.component";
 import '../../Styles/gallery.css'
 import {getBookData, saveBookData, isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import { RefreshCw, Download, Plus } from 'lucide-react';
@@ -198,9 +196,7 @@ const GalleryView = () =>  {
     };
 
     useEffect(() => {
-        if (isUserLoggedIn()) initializeGallery();
-        else window.location.href = '/login';
-        
+        if (isUserLoggedIn()) initializeGallery();        
     }, []);
 
     const downloadBook = (book) => {

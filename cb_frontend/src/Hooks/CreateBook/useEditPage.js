@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePage, setIsEditing, updateContext} from '../../redux/bookSlice';
+import { setIsEditing} from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
 import { addNotification } from '../../redux/websiteSlice';
@@ -8,14 +8,13 @@ import { useTranslation } from 'react-i18next';
 const useEditPage = () => {
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
-    const settings = useSelector(state => state.website.settings);
+
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [showDescription, setShowDescription] = useState(false);
     const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available', 0]);
     const { regenerateImage, enhanceImage } = useImageGeneration();
-    const [isLoading, setIsLoading] = useState(false);
     const { loadRequest} = useLoadRequest();
     const { t } = useTranslation();
     const [isEnhancing, setIsEnhancing] = useState(false);
@@ -98,7 +97,6 @@ const useEditPage = () => {
         setEditText,
         isVisible,
         currentImage,
-        isLoading,
         handleClose,
         showDescription,
         setShowDescription,

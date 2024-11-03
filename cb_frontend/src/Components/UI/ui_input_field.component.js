@@ -1,6 +1,6 @@
 import '../../Styles/UI/input_field.css'
-import {useEffect, useRef, useState} from "react";
-
+import {useEffect, useRef, useState, React} from "react";
+import PropTypes from 'prop-types';
 const InputField = ({ width, height, placeholder_text, updateValue}) => {
     const textareaRef = useRef(null)
     const [startHeight, setStartHeight] = useState('0px')
@@ -56,4 +56,10 @@ const InputField = ({ width, height, placeholder_text, updateValue}) => {
     );
 };
 
+InputField.propTypes = {
+    width: PropTypes.string,
+    height: PropTypes.string,
+    placeholder_text: PropTypes.string,
+    updateValue: PropTypes.func
+}
 export default InputField

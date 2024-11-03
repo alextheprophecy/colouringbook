@@ -1,15 +1,12 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, CirclePlus, Pencil, Plus, Download, FileDown } from 'lucide-react';
-import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
+import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown } from 'lucide-react';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
-import { useCallback, useState, useEffect } from 'react';
+import {useState } from 'react';
 import CreatePage from './CreatePage';
-import { getUserData } from '../../Hooks/UserDataHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
-import Feedback from '../Feedback/feedback';
 import { useTranslation } from 'react-i18next';
 
 

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCallback, useState, useRef, useEffect } from 'react';
-
+import { useCallback, useState, useRef, useEffect, React } from 'react';
+import PropTypes from 'prop-types';
 const BASE_SLIDE_INTERVAL = 1500;
 const INTERVAL_VARIANCE = 500;
 const INACTIVITY_DELAY = 4000;
@@ -197,6 +197,15 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
             </motion.div>
         </motion.div>
     );
+};
+
+FeatureCard.propTypes = {
+    imagePosition: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    index: PropTypes.number,
+    directory: PropTypes.string,
+    imageNames: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default FeatureCard;

@@ -1,18 +1,11 @@
 import { bubble as Menu } from 'react-burger-menu';
-import { Component } from "react";
+import { Component, React } from "react";
 import { Link } from "react-router-dom";
 import { isUserLoggedIn } from "../../Hooks/UserDataHandler";
 import { handleLogout } from "../../Hooks/LoginHandler";
 import { withTranslation } from 'react-i18next';
 import LanguageChange from './language_change.component';
-
-const locales = {
-    en_gb: { title: 'English' },
-    fr: { title: 'Francais' },
-    de: { title: 'Deutsch' },
-    it: { title: 'Italiano' },
-    es: { title: 'Español' },
-};
+import PropTypes from 'prop-types';
 
 class BurgerMenu extends Component {
  
@@ -78,5 +71,9 @@ class BurgerMenu extends Component {
         );
     }
 }
+
+BurgerMenu.propTypes = {
+    t: PropTypes.func.isRequired
+};
 
 export default withTranslation()(BurgerMenu);

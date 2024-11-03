@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -57,5 +58,12 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
         </div>
     );
 });
+
+
+CreatePage.propTypes = {
+    classNameProp: PropTypes.string
+}
+CreatePage.displayName = 'CreatePage';
+
 
 export default CreatePage;

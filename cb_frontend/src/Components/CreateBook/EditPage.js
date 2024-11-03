@@ -1,20 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Loading from './Loading';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
 import {Wand2, RotateCcw, Info } from 'lucide-react'; // Add Info to the imports
 import { useTranslation } from 'react-i18next';
 const EditPage = () => {
     const { t } = useTranslation();
     const currentPage = useSelector((state) => state.book.currentPage);
-    const settings = useSelector((state) => state.website.settings);
 
     const {
         editText,
         setEditText,
         isVisible,
         currentImage,
-        isLoading,
         handleClose,
         showDescription,
         setShowDescription,

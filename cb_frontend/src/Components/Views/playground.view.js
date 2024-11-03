@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, React} from "react";
 import api from "../../Hooks/ApiHandler";
 import '../../Styles/Creation/playground.css'
 const PlaygroundView = () => {
@@ -22,7 +22,7 @@ const PlaygroundView = () => {
     }
 
     const showBook = () => {
-        return bookDescr.map(d => <span className={'playground-text'}>{d}<br/><br/></span>)
+        return bookDescr.map(d => <span className={'playground-text'} key={d}>{d}<br/><br/></span>)
     }
 
     return     <div className={'playground-container'}>
