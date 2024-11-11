@@ -8,7 +8,7 @@ const initialState = {
   credits: getUserData()?.credits || 0,
   settings: {
     testMode: false,
-    useFineTunedModel: true,
+    useAdvancedModel: false,
     useAdvancedContext: true
   }
 }

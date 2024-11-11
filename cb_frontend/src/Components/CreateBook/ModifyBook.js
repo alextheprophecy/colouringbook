@@ -251,12 +251,12 @@ const ModifyBook = () => {
                             <div className="relative">
                                 <input
                                     type="checkbox"
-                                    checked={!settings.useFineTunedModel}
-                                    onChange={() => dispatch(toggleSetting('useFineTunedModel'))}
+                                    checked={settings.useAdvancedModel}
+                                    onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
                                     className="sr-only"
                                 />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useFineTunedModel ? 'bg-gray-300' : 'bg-purple-500'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useFineTunedModel ? '' : 'transform translate-x-6'}`}></div>
+                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
                                 </div>
                             </div>
                         </label>

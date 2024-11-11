@@ -49,7 +49,7 @@ const CreatePage = React.forwardRef(({classNameProp}, ref) => {
                                 <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>
                             </button>
                             <span className="text-red-500 text-[10px] font-mono font-medium">
-                                -3 {t('creation.credits-remaining')}
+                                -3 {t('edition.credits')}
                             </span>
                         </div>
                     </div>

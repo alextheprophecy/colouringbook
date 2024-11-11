@@ -83,33 +83,34 @@ const DescriptionsController = () => {
     };
     
     const generateCreativeSceneComposition = async (sceneDescription, bookContext, miniModel = true) => {
-        const sys_prompt = `You are an expert in creating simple, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
-            Guidelines:
-            1. Use simple framing, like medium shots or close-ups, with clear focus on main characters or actions, like a movie storyboard.
-            2. Avoid complex backgrounds and clutter. Use minimal backgrounds if they enhance the scene.
-            3. Ensure characters and objects are distinct and well-positioned, keeping the scene clean and easy to interpret.
-            4. Use the book context for continuity, but prioritize making each scene fun and visually clear for kids.`;
-    
-        const usr_prompt = `Using the provided scene and context, describe a simple, child-friendly composition idea:
-        - New scene: "${sceneDescription}".
-        - Book Context: "${JSON.stringify(bookContext)}".
+        const sys_prompt = `You are an expert in creating concise, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
+           Guidelines:    
+            1. **Snapshot Description**: Generate a brief description focusing on a single moment or action in the scene.            
+            2. **Visual Composition**: Describe only what is visually present, including characters, objects, and their interactions, without narrative exposition.            
+            3. **Story Coherence**: Ensure the scene aligns with the story's continuity without restating the entire context.            
+            4. **Selective Inclusion**: Include only necessary elements relevant to the current scene; omit characters or details not present in this specific moment.            
+            5. **Clear Visual Cues**: Provide specific visual details like character poses, expressions, and positions to aid in composing the image.            
+            6. **Simplicity**: Keep the composition straightforward and avoid unnecessary details that could clutter the image.            
+            Your output should be a medium-length description suitable for an illustrator to create a single coloring book page. Do not include additional explanations, framing, or meta-commentary.`;            
         
-        Focus on making the scene clear, engaging, and easy for children to color. Think of it as a simple storyboard for a coloring book page.`;
-    
+        const usr_prompt = `Using the provided scene description and book context, describe a simple, child-friendly composition idea for a single image:    
+            - **Scene Description**: "${sceneDescription}"
+            - **Book Context**: ${JSON.stringify(bookContext)}        
+            Focus on depicting what is visually present in the scene, providing a clear and concise description of the snapshot. Ensure the composition is engaging, easy for children to color, and coherent with the story.`;
+            
         return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
     };
     
-    const generateFinalImageDescription = async (compositionIdea, bookContext) => {
-        const sys_prompt = `You are creating a precise visual description for a black-and-white coloring book image based on a given composition idea and selected context. Emphasize clear, visual details without abstract concepts or unnecessary context.
     
+    const generateFinalImageDescription = async (compositionIdea, bookContext) => {
+        const sys_prompt = `You are creating a detailed visual description for a black-and-white coloring book image based on a given composition idea and selected context. Emphasize clear, visual details without abstract concepts or unnecessary context.
             Guidelines:
             1. Use only the necessary context (like character details and environment).
             2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment) in easy to visualize terms.
-            3 Detail actions, body postures, and gestures explicitly.
-            4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.
-            5. Craft the description to fit within a single coloring page.`;
+            3. Detail actions, body postures, and gestures explicitly. (e.g. "in the act of running, his left leg in the air infront of the other", "tumbling down the hill, his arms and legs outstretched and his body upside down" )
+            4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.`;
     
-        const usr_prompt = `Given the composition idea and context, generate a clear and precisevisual description:
+        const usr_prompt = `Given the composition idea and context, generate a clear and detailed visual description:
         - Composition Idea: "${compositionIdea}".
         - Relevant Context: "${JSON.stringify({
             characters: bookContext.characters,

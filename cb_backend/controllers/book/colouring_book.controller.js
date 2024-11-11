@@ -1,4 +1,4 @@
-const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned} = require("../external_apis/replicate.controller");
+const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned, queryFluxPro} = require("../external_apis/replicate.controller");
 const Book2 = require("../../models/book2.model");
 const {getFileData, image_data, saveBookPDF, savePageData, getPDF} = require("../user/files.controller");
 const {updateBookContext, generatePageDescriptionGivenContext, shouldUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
@@ -7,30 +7,31 @@ const {verifyCredits} = require("../user/user.controller");
 const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
 const USE_SCHNELL_MODEL = true
-
+const USE_FLUX_PRO_MODEL = false
 const CREDIT_COSTS = {
     GEN: 3,
-    REGEN: 3,
-    ENHANCE: 3
+    ADVANCED_GEN: 5,
+    REGEN: 5,
+    ENHANCE: 5
 }
 
-const CHILD_PROMPT = (description)=>`Children's detailed coloring book. ${description}. Only black outlines, colorless, no shadows, no shading, black and white, no missing limbs, no extra limbs, coherent coloring book.`
+const CHILD_PROMPT = (description)=>`Children's detailed black and white coloring page. ${description} Only black outlines, colorless, no shadows, no shading, black and white, coloring page.`
 const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
-const verifyPageCredits = async (user, generationType) => {    
-    const creditCost = CREDIT_COSTS[generationType];
+const verifyPageCredits = async (user, useAdvancedModel) => {
+    const creditCost = useAdvancedModel ? CREDIT_COSTS.ADVANCED_GEN : CREDIT_COSTS.GEN;
     if (!creditCost) throw new Error('Invalid generation type');
     return await verifyCredits(user, creditCost);    
 };
 
-const _generateImage = async (user, book, pageNumber, description, {useFineTunedModel = false, seed}) => { 
+const _generateImage = async (user, book, pageNumber, description, {useAdvancedModel = false, seed}) => { 
     if(!seed) seed = randomSeed();
     let imageData;
-    
-    if (useFineTunedModel)
-        imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
+
+    if (useAdvancedModel)      
+        imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
     else
-        imageData = await (USE_SCHNELL_MODEL?queryFluxSchnell:queryFluxBetter)(CHILD_PROMPT(description), seed);
+        imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
     
     const presignedUrl = await savePageData(user, book.id, pageNumber, imageData);
     return { url: presignedUrl, seed };
@@ -39,7 +40,7 @@ const _generateImage = async (user, book, pageNumber, description, {useFineTuned
 const _generateDescription = async (sceneDescription, currentContext, isTwoStepGeneration = TWO_STEP_DESCRIPTION_GENERATION) => {
     if (isTwoStepGeneration) {
         // New two-step generation process
-        const compositionIdea = await generateCreativeSceneComposition(sceneDescription, currentContext);
+        const compositionIdea = await generateCreativeSceneComposition(sceneDescription, currentContext, false);
         const finalDescription = await generateFinalImageDescription(compositionIdea, currentContext);
         return {
             compositionIdea,
@@ -59,13 +60,12 @@ const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const book = req.book;  
     const { sceneDescription, currentContext, ...creationSettings} = req.body;
+    const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, 'GEN').catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
-
-    const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
 
     try {
         const parsedContext = parseContextInput(currentContext);   
@@ -78,7 +78,7 @@ const generatePageWithContext = async (req, res) => {
         } else {
             [imageResult, _] = await Promise.all([
                 _generateImage(user, book, book.pageCount, descriptions.finalDescription, generationSettings),
-                Book2.findByIdAndUpdate(book.id, { $inc: { pageCount: 1 } })])            
+                Book2.findByIdAndUpdate(book.id, { $inc: { pageCount: 1 } })])
         }
 
         res.status(200).json({ 

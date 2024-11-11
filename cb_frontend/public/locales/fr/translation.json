@@ -26,7 +26,7 @@
     "download_pdf": "Télécharger le PDF",
     "finish_book": "Terminer le livre",
     "creative_model": "Qualite d'image",
-    "creative_model_description": "Activez pour des images plus propres, mais potentiellement moins adaptees au coloriage",
+    "creative_model_description": "Activez pour des images de meilleure qualité. Coute plus cher en crédits.",
     "advanced_options": "Options avancées",
     "test_mode": "Mode test",
     "test_mode_description": "Afficher les descriptions au lieu de générer des images",
@@ -47,7 +47,8 @@
     "hooks": {
       "regenrating-image": "Image régénérée...",
       "enhancing-description": "Amélioration de l'image"
-    }
+    },
+    "credits": "credits"
   },
   "cancel": "Annuler",
   "modification": {

@@ -1,30 +1,40 @@
 import api from '../../Hooks/ApiHandler';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPage, updateContext, updatePage } from '../../redux/bookSlice';
-import { addNotification } from '../../redux/websiteSlice';
-import { useCallback } from 'react';
+import { addPage, updateContext, updatePage, setSeeds } from '../../redux/bookSlice';
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
     const creationSettings = useSelector(state => state.website.settings);
 
     const generateImage = async (description, currentContext, bookId, seed=null) => {
-        if (!description || description.trim() === '') {
-            throw new Error('No description found');
-        }                             
+        if (!description || description.trim() === '') throw new Error('No description found');
+                                     
         const response = await api.post('image/generatePageWithContext', {
             sceneDescription: description,  
             currentContext, 
             bookId,
             seed,
             ... creationSettings
-        });        
+        });
+        
+        
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
         console.log('NEW IMAGE', {
             userDescription: description, 
             detailedDescription, 
             ...imageSeedAndRest
         });
+
+        if(creationSettings.useAdvancedModel){
+            dispatch(setSeeds({
+                advanced: imageSeedAndRest.seed
+            }));    
+        } else {
+            dispatch(setSeeds({
+                fineTuned: imageSeedAndRest.seed,
+            }));    
+        }
+        
         dispatch(addPage({
             userDescription: description, 
             detailedDescription, 
