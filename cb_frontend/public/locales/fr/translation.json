@@ -6,7 +6,7 @@
     "not-enough-credits": "Pas assez de crédits",
     "credits-remaining": "crédits restants",
     "create-your-book": "Creer mon livre",
-    "enter-book-title": "Entrez le titre du livre",
+    "enter-book-title": "L'aventure de ...",
     "start-creating": "Commencer",
     "hooks": {
       "please-enter-a-book-title": "Veuillez saisir le titre du livre",
@@ -16,7 +16,8 @@
       "please-enter-a-description-for-your-page": "Veuillez saisir une description pour votre page",
       "creating-image": "Création de l'image...",
       "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
-    }
+    },
+    "title": "Titre"
   },
   "modifybook": {
     "credits": {
@@ -34,7 +35,8 @@
       "title": "Contexte d'histoire avancé",
       "description": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité"
     },
-    "generating-your-book": "Génération de votre livre..."
+    "generating-your-book": "Génération de votre livre...",
+    "loading": "Chargement..."
   },
   "edition": {
     "context": "Contexte",
@@ -63,7 +65,8 @@
     "how-would-you-rate-your-experience": "Comment évalueriez-vous votre expérience ?",
     "feedback-for": "Commentaire pour",
     "tell-us-more-about-your-experience": "Parlez-nous de votre expérience...",
-    "not-now": "Plus tard"
+    "not-now": "Plus tard",
+    "give-feedback": "Donner un avis"
   },
   "login": {
     "logout": "Déconnexion",

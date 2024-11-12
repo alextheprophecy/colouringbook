@@ -5,7 +5,7 @@
     "a-goblin-in-a-forest-eating-a-mushroom": "A goblin in a forest eating a mushroom...",
     "create-your-book": "Create Your Book",
     "credits-remaining": "credits",
-    "enter-book-title": "Enter book title",
+    "enter-book-title": "Adventure book ...",
     "start-creating": "Start Creating",
     "not-enough-credits": "Not Enough Credits",
     "page": "Page",
@@ -18,7 +18,9 @@
       "creating-image": "Creating image...",
       "failed-to-generate-image-please-try-again": "Failed to generate image. Please try again."
     },
-    "feat": {}
+    "feat": {},
+    "new-book": "Create New Book",
+    "title": "Title"
   },
   "modifybook": {
     "credits": {
@@ -36,7 +38,8 @@
       "title": "Advanced Story Context",
       "description": "Use more detailed story context for better continuity"
     },
-    "generating-your-book": "Generating your book..."
+    "generating-your-book": "Generating your book...",
+    "loading": "Loading..."
   },
   "edition": {
     "context": "Context",

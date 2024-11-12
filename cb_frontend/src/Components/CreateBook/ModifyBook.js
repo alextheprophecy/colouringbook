@@ -1,7 +1,7 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown, BookOpen, BookCheck } from 'lucide-react';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 import {useState } from 'react';
 import CreatePage from './CreatePage';
@@ -209,13 +209,14 @@ const ModifyBook = () => {
                         ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
                         ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
+                        ${pages.length <= 1 ? 'hidden' : ''}
                         text-white py-3 px-6 rounded-lg 
                         transition-all duration-300 ease-in-out 
                         hover:scale-[1.02] shadow-md hover:shadow-lg
                         font-children font-semibold tracking-wider
                         flex items-center justify-center gap-2`}
                     onClick={handleFinishBook}
-                    disabled={isFinishing}
+                    disabled={isFinishing || pages.length <= 1}
                 >
                     {isFinishing ? (
                         <div className="flex items-center gap-2">
@@ -231,16 +232,44 @@ const ModifyBook = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Download className="w-5 h-5" />
+                                    <BookCheck className="w-5 h-5" />
                                     {t('modifybook.finish_book')}
                                 </>
                             )}
                         </>
                     )}
                 </button>
+                {isBookFinished && (
+                    <div className="flex flex-col gap-3 w-full max-w-md">
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="w-full bg-blue-500 hover:bg-blue-600 
+                                text-white py-3 px-6 rounded-lg 
+                                transition-all duration-300 ease-in-out 
+                                hover:scale-[1.02] shadow-md hover:shadow-lg
+                                font-children font-semibold tracking-wider
+                                flex items-center justify-center gap-2"
+                        >
+                            <Plus className="w-5 h-5" />
+                            {t('creation.new-book')}
+                        </button>
+                        
+                        <a 
+                            href="/gallery"
+                            className="w-full bg-purple-500 hover:bg-purple-600 
+                                text-white py-3 px-6 rounded-lg 
+                                transition-all duration-300 ease-in-out 
+                                hover:scale-[1.02] shadow-md hover:shadow-lg
+                                font-children font-semibold tracking-wider
+                                flex items-center justify-center gap-2"
+                        >
+                            <BookOpen className="w-5 h-5" />
+                            {t('login.my-gallery')}
+                        </a>
+                    </div>)}       
 
                 {/* Settings Panel */}
-                <div className="w-full max-w-md flex flex-col gap-4">
+                {!isBookFinished && (<div className="w-full max-w-md flex flex-col gap-4">
                     {/* Creative Model Toggle */}
                     <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                         <label className="flex items-center justify-between cursor-pointer">
@@ -316,7 +345,7 @@ const ModifyBook = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>)}
             </div>
 
             {/* Only render EditPage if book is not finished */}

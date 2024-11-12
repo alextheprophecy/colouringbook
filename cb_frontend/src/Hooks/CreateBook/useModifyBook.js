@@ -131,12 +131,7 @@ const useModifyBook = () => {
             }));
 
         } catch (error) {
-            console.error('Error finishing book:', error);
-            dispatch(addNotification({
-                type: 'error',
-                message: error.message || t('error.failed-to-finish-book-please-try-again'),
-                duration: 5000
-            }));
+            console.error('Error finishing book:', error);      
         } finally {
             setIsFinishing(false);
         }

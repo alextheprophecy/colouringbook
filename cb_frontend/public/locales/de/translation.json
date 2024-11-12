@@ -31,7 +31,7 @@
     "not-enough-credits": "Nicht genügend Credits",
     "credits-remaining": "Restguthaben",
     "create-your-book": "Erstellen Sie Ihr Buch",
-    "enter-book-title": "Buchtitel eingeben",
+    "enter-book-title": "Abenteuerbuch ...",
     "start-creating": "Beginnen",
     "hooks": {
       "please-enter-a-book-title": "Bitte geben Sie einen Buchtitel ein",
@@ -40,7 +40,8 @@
       "please-enter-a-description-for-your-page": "Bitte geben Sie eine Beschreibung für Ihre Seite ein",
       "creating-image": "Bild erstellung...",
       "failed-to-generate-image-please-try-again": "Bild konnte nicht generiert werden. \nBitte versuchen Sie es erneut."
-    }
+    },
+    "title": "Titel"
   },
   "modification": {
     "use-more-detailed-story-context-for-better-continuity": "Verwenden Sie einen detaillierteren Story-Kontext für eine bessere Kontinuität",
