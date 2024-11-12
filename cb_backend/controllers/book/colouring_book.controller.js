@@ -73,6 +73,8 @@ const generatePageWithContext = async (req, res) => {
         const descriptions = await _generateDescription(sceneDescription, parsedContext);
 
         let imageResult;
+        let updatedContext = null;
+        
         if (testMode) {
             imageResult = { url: descriptions.compositionIdea || descriptions.finalDescription, seed: null}            
         } else {
