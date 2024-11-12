@@ -15,7 +15,7 @@ const _book_key = (user_email, book_id) => {
 }
 
 const image_data = (user_email, book_id, imageIndex) => ({
-    key: `${_book_key(user_email, book_id)}/p${imageIndex}.png`, 
+    key: `${_book_key(user_email, book_id)}/page_${imageIndex}.png`, 
     TTL: URL_TTL.IMAGE
 })
 
@@ -42,19 +42,19 @@ const saveBookPDF = async (imageBuffers, user, book) => {
 }
 
 const savePageData = async (user, bookId, pageNumber, imageData) => {
-    const baseKey = _book_key(user.email, bookId);
-    const timestamp = Date.now();
+    const currentKey = image_data(user.email, bookId, pageNumber).key;
     
-    const versionKey = `${baseKey}/versions/p${pageNumber}/v_${timestamp}.png`;
-    const currentKey = `${baseKey}/p${pageNumber}.png`;
-    //TODO: versioning:         uploadStream(imageData, versionKey, 'image/png'),
-
-    const [_, presignedUrl] = await Promise.all([
+    // Upload current version
+    const [uploadResult, presignedUrl] = await Promise.all([
         uploadStream(imageData, currentKey, 'image/png'),
         getFileUrl({key: currentKey, TTL: URL_TTL.IMAGE})        
     ]);
 
-    return presignedUrl;
+    // Return the version ID from the upload result
+    return {
+        url: presignedUrl,
+        versionId: uploadResult.VersionId
+    };
 }
 
 module.exports = {

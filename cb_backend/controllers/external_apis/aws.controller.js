@@ -10,17 +10,18 @@ const BUCKET_NAME='colouringbookpages'
 const getFileUrl = ({key, TTL=3600}) =>
     getSignedUrl(client, new GetObjectCommand({Bucket: BUCKET_NAME, Key: key}), {expiresIn: TTL})
 
-const getFileData = async (key) => {
+const getFileData = async (key, versionId = null) => {
     const command = new GetObjectCommand({
         Bucket: BUCKET_NAME,
-        Key: key
+        Key: key,
+        ...(versionId && { VersionId: versionId })
     })
     const response = await client.send(command)
     const imageStream = response.Body
     return new Promise((resolve, reject) => {
         const chunks = []
-        imageStream.on('data', (chunk) => chunks.push(chunk))  // Collect image data in chunks
-        imageStream.on('end', () => resolve(Buffer.concat(chunks)))  // Return as a buffer
+        imageStream.on('data', (chunk) => chunks.push(chunk))
+        imageStream.on('end', () => resolve(Buffer.concat(chunks)))
         imageStream.on('error', reject)
     })
 }
@@ -54,6 +55,7 @@ const uploadStream = (stream, key, contentType) => {
             Key: key,
             Body: stream,
             ContentType: contentType,
+            VersionId: 'null'
         },
     })
     return upload.done()
@@ -70,10 +72,20 @@ const uploadBuffer = (buffer, {key}) => {
     return client.send(params);
 }
 
+const getFileUrlWithVersion = async ({key, versionId, TTL=3600}) => {
+    const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME, 
+        Key: key,
+        VersionId: versionId
+    });
+    return getSignedUrl(client, command, {expiresIn: TTL});
+}
+
 module.exports = {
     getFileUrl,
     getFileData,
     uploadFromBase64URI,
     uploadStream,
-    uploadBuffer
+    uploadBuffer,
+    getFileUrlWithVersion
 }

@@ -33,8 +33,8 @@ const _generateImage = async (user, book, pageNumber, description, {useAdvancedM
     else
         imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
     
-    const presignedUrl = await savePageData(user, book.id, pageNumber, imageData);
-    return { url: presignedUrl, seed };
+    const { url, versionId } = await savePageData(user, book.id, pageNumber, imageData);
+    return { url, seed, versionId };
 };
 
 const _generateDescription = async (sceneDescription, currentContext, isTwoStepGeneration = TWO_STEP_DESCRIPTION_GENERATION) => {
@@ -70,14 +70,14 @@ const generatePageWithContext = async (req, res) => {
     try {
         const parsedContext = parseContextInput(currentContext);   
         const descriptions = await _generateDescription(sceneDescription, parsedContext);
-        const updatedContext = await updateBookContext(descriptions.finalDescription, parsedContext, miniModel=!useAdvancedContext);
 
         let imageResult;
         if (testMode) {
             imageResult = { url: descriptions.compositionIdea || descriptions.finalDescription, seed: null}            
         } else {
-            [imageResult, _] = await Promise.all([
+            [imageResult, updatedContext, _] = await Promise.all([
                 _generateImage(user, book, book.pageCount, descriptions.finalDescription, generationSettings),
+                updateBookContext(descriptions.finalDescription, parsedContext, miniModel=!useAdvancedContext),
                 Book2.findByIdAndUpdate(book.id, { $inc: { pageCount: 1 } })])
         }
 
@@ -144,10 +144,7 @@ const enhancePage = async (req, res) => {
             enhancementRequest,
             currentContext
         );
-        // Check if context update is needed
-        const shouldUpdate = await shouldUpdateBookContext(enhancementRequest, currentContext);
-        
-        // Run image generation and conditionally update context
+
         const [imageResult, updatedContext] = await Promise.all([
             _generateImage(
                 user, 
@@ -156,7 +153,10 @@ const enhancePage = async (req, res) => {
                 enhancedDescription,
                 generationSettings
             ),
-            shouldUpdate ? updateBookContext(enhancedDescription, currentContext) : null
+            (async () => {
+                const shouldUpdate = await shouldUpdateBookContext(enhancementRequest, currentContext);
+                return shouldUpdate ? await updateBookContext(enhancedDescription, currentContext) : null;
+            })()
         ]);
 
         res.status(200).json({ 
@@ -175,20 +175,40 @@ const enhancePage = async (req, res) => {
 const getBookPDF = async (req, res) => {
     const user = req.user;
     const book = req.book;
-    console.log('getting book pdf for book:', book);
+    
     try {
+        // If PDF already exists, return its URL
         if (book.finished) {
             const pdfUrl = await getPDF(user, book);
-            return res.status(200).send(pdfUrl);
+            return res.status(200).json({ bookPDF: pdfUrl });
         }
-        if (book.pageCount === 0) return res.status(400).json({ error: 'Cannot finish a book with no pages' });        
+        // If book has no pages, return error
+        if (book.pageCount === 0) {
+            return res.status(400).json({ error: 'Cannot get PDF for a book with no pages' });
+        }
+        // Generate PDF if it doesn't exist
+        const pdfUrl = await generateBookPDF(req, res);
+        res.status(200).json({ bookPDF: pdfUrl });
+    } catch (error) {
+        console.error('Error in getBookPDF:', error);
+        res.status(500).json({ error: 'Failed to get book PDF' });
+    }
+};
+
+const generateBookPDF = async (req, res) => {
+    const user = req.user;
+    const book = req.book;
+
+    try {
+        if (book.pageCount === 0) {
+            return res.status(400).json({ error: 'Cannot generate PDF for a book with no pages' });
+        }
 
         const _genBookPDF = (user, book) =>
             Promise.all(
                 Array.from({length: book.pageCount}, (_, i) => 
                     getFileData(image_data(user.email, book.id, i).key))
-            ).then(imageBuffers => saveBookPDF(imageBuffers, user, book));
-        
+            ).then(imageBuffers => saveBookPDF(imageBuffers, user, book));   
         
         // Generate PDF, update book status, and get presigned URL concurrently
         const [uploadResult, updatedBook, pdfUrl] = await Promise.all([
@@ -212,10 +232,10 @@ const getBookPDF = async (req, res) => {
     }
 };
 
-
 module.exports = {
     generatePageWithContext,
     regeneratePage,
     enhancePage,
     getBookPDF,
+    generateBookPDF
 }

@@ -107,8 +107,9 @@ const DescriptionsController = () => {
             Guidelines:
             1. Use only the necessary context (like character details and environment).
             2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment) in easy to visualize terms.
-            3. Detail actions, body postures, and gestures explicitly. (e.g. "in the act of running, his left leg in the air infront of the other", "tumbling down the hill, his arms and legs outstretched and his body upside down" )
-            4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.`;
+            3. Detail actions, body postures, and gestures explicitly. (e.g. "in the act of running, his left leg in the air infront of the other", "tumbling down the hill, his arms and legs outstretched and his body upside down", "the goalie is diving to the left with his arms stretched out, but the ball is behind him in the bottom right corner of the goal" )
+            4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.
+            5. ONLY mention what is visible in the image, no need to precise any past details or anything besides the description of the visible scene.`;
     
         const usr_prompt = `Given the composition idea and context, generate a clear and detailed visual description:
         - Composition Idea: "${compositionIdea}".
