@@ -1,13 +1,14 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown, BookOpen, BookCheck } from 'lucide-react';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 import {useState } from 'react';
 import CreatePage from './CreatePage';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
+import { setCurrentPage, setIsEditing, finishBook, editPage } from '../../redux/bookSlice';
 
 
 const ModifyBook = () => {
@@ -28,6 +29,9 @@ const ModifyBook = () => {
         handleFinishBook,
         isFinishing,
         isBookFinished,
+        isSinglePage,
+        handleCreatePageMouseEnter,
+        handleCreatePageMouseLeave
     } = useModifyBook();
 
     const credits = useSelector((state) => state.website.credits);
@@ -38,7 +42,8 @@ const ModifyBook = () => {
     const pageClassname = (index) => {
         return `${index === 0 
             ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
-            : 'rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
+            : (isSinglePage || index%2===0) ? ('rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
+            : ('rounded-[3px] rounded-tr-[45%_5%] rounded-br-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
         } mx-auto w-full h-full object-cover`;
     };        
 
@@ -85,37 +90,67 @@ const ModifyBook = () => {
                 </button>
             )}
             
-            {/* Only show edit button if book is not finished */}
+            {/* Edit buttons - show one or two depending on isSinglePage */}
             {!isOnCreationPage() && currentPage > 0 && !isFlipping && !isBookFinished && (
-                <button 
-                    className={`absolute right-[-5px] bottom-0
-                            w-16 h-16
-                            bg-white/80
-                            shadow-lg hover:shadow-xl
-                            rounded-tl-full
-                            group
-                            overflow-hidden
-                            origin-bottom-right
-                            ring-1 ring-blue-200
-                            z-10`}
-                   
-                    onClick={() => {console.log('edit');
-                        setIsEditing(true)}}
-                    disabled={isFlipping}
-                >
-                    <Pencil 
-                        className={`absolute bottom-2 right-2
-                                h-8 w-8 
-                                text-blue-600 group-hover:text-blue-800
-                                cursor-pointer`}
-                    />
-                </button>
+                <>
+                    {/* Left page edit button */}
+                    {(!isSinglePage && currentPage >= 1) && (
+                        <button 
+                            className={`absolute left-[-5px] bottom-0
+                                    w-16 h-16
+                                    bg-white/80
+                                    shadow-lg hover:shadow-xl
+                                    rounded-tr-full
+                                    group
+                                    overflow-hidden
+                                    origin-bottom-left
+                                    ring-1 ring-blue-200
+                                    z-10`}
+                            onClick={() => {
+                                dispatch(editPage(currentPage));                                                      
+                            }}
+                            disabled={isFlipping}
+                        >
+                            <Pencil 
+                                className={`absolute bottom-2 left-2
+                                        h-8 w-8 
+                                        text-blue-600 group-hover:text-blue-800
+                                        cursor-pointer`}
+                            />
+                        </button>
+                    )}
+
+                    {/* Right page edit button */}
+                    <button 
+                        className={`absolute right-[-5px] bottom-0
+                                w-16 h-16
+                                bg-white/80
+                                shadow-lg hover:shadow-xl
+                                rounded-tl-full
+                                group
+                                overflow-hidden
+                                origin-bottom-right
+                                ring-1 ring-blue-200
+                                z-10`}
+                        onClick={() => {
+                            dispatch(editPage(isSinglePage ? currentPage : currentPage+1));                           
+                        }}
+                        disabled={isFlipping}
+                    >
+                        <Pencil 
+                            className={`absolute bottom-2 right-2
+                                    h-8 w-8 
+                                    text-blue-600 group-hover:text-blue-800
+                                    cursor-pointer`}
+                        />
+                    </button>
+                </>
             )}
         </>
-    );
+    );   
 
     return (
-        <div className={`mt-4 p-8 bg-gradient-to-b from-blue-50 to-blue-100 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+        <div className={`mt-4 p-8 bg-blue-50 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
             {/* Credits display at the top */}
             <div className="fixed top-2 right-6 z-10">
                 <div className={`px-2 py-1 rounded-full 
@@ -176,9 +211,12 @@ const ModifyBook = () => {
                         !isBookFinished ? (
                             <CreatePage 
                                 key="create-page" 
-                                classNameProp={pageClassname(1)} 
+                                classNameProp={pageClassname(pages.length)}
+                                onMouseEnter={handleCreatePageMouseEnter}
+                                onMouseLeave={handleCreatePageMouseLeave}
                             />
-                        ) : null
+                        ) : null,
+                        (!isSinglePage && pages.length%2===1)? <div className="bg-blue-50"/> : null
                     ].filter(Boolean)}
 
                 </HTMLFlipBook>
@@ -209,13 +247,14 @@ const ModifyBook = () => {
                         ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
                         ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
+                        ${pages.length <= 1 ? 'hidden' : ''}
                         text-white py-3 px-6 rounded-lg 
                         transition-all duration-300 ease-in-out 
                         hover:scale-[1.02] shadow-md hover:shadow-lg
                         font-children font-semibold tracking-wider
                         flex items-center justify-center gap-2`}
                     onClick={handleFinishBook}
-                    disabled={isFinishing}
+                    disabled={isFinishing || pages.length <= 1}
                 >
                     {isFinishing ? (
                         <div className="flex items-center gap-2">
@@ -231,16 +270,44 @@ const ModifyBook = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Download className="w-5 h-5" />
+                                    <BookCheck className="w-5 h-5" />
                                     {t('modifybook.finish_book')}
                                 </>
                             )}
                         </>
                     )}
                 </button>
+                {isBookFinished && (
+                    <div className="flex flex-col gap-3 w-full max-w-md">
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="w-full bg-blue-500 hover:bg-blue-600 
+                                text-white py-3 px-6 rounded-lg 
+                                transition-all duration-300 ease-in-out 
+                                hover:scale-[1.02] shadow-md hover:shadow-lg
+                                font-children font-semibold tracking-wider
+                                flex items-center justify-center gap-2"
+                        >
+                            <Plus className="w-5 h-5" />
+                            {t('creation.new-book')}
+                        </button>
+                        
+                        <a 
+                            href="/gallery"
+                            className="w-full bg-purple-500 hover:bg-purple-600 
+                                text-white py-3 px-6 rounded-lg 
+                                transition-all duration-300 ease-in-out 
+                                hover:scale-[1.02] shadow-md hover:shadow-lg
+                                font-children font-semibold tracking-wider
+                                flex items-center justify-center gap-2"
+                        >
+                            <BookOpen className="w-5 h-5" />
+                            {t('login.my-gallery')}
+                        </a>
+                    </div>)}       
 
                 {/* Settings Panel */}
-                <div className="w-full max-w-md flex flex-col gap-4">
+                {!isBookFinished && (<div className="w-full max-w-md flex flex-col gap-4">
                     {/* Creative Model Toggle */}
                     <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
                         <label className="flex items-center justify-between cursor-pointer">
@@ -251,12 +318,12 @@ const ModifyBook = () => {
                             <div className="relative">
                                 <input
                                     type="checkbox"
-                                    checked={!settings.useFineTunedModel}
-                                    onChange={() => dispatch(toggleSetting('useFineTunedModel'))}
+                                    checked={settings.useAdvancedModel}
+                                    onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
                                     className="sr-only"
                                 />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useFineTunedModel ? 'bg-gray-300' : 'bg-purple-500'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useFineTunedModel ? '' : 'transform translate-x-6'}`}></div>
+                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
                                 </div>
                             </div>
                         </label>
@@ -316,7 +383,7 @@ const ModifyBook = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>)}
             </div>
 
             {/* Only render EditPage if book is not finished */}

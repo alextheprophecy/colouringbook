@@ -5,7 +5,7 @@
     "a-goblin-in-a-forest-eating-a-mushroom": "A goblin in a forest eating a mushroom...",
     "create-your-book": "Create Your Book",
     "credits-remaining": "credits",
-    "enter-book-title": "Enter book title",
+    "enter-book-title": "Adventure book ...",
     "start-creating": "Start Creating",
     "not-enough-credits": "Not Enough Credits",
     "page": "Page",
@@ -17,7 +17,10 @@
       "please-enter-a-description-for-your-page": "Please enter a description for your page",
       "creating-image": "Creating image...",
       "failed-to-generate-image-please-try-again": "Failed to generate image. Please try again."
-    }
+    },
+    "feat": {},
+    "new-book": "Create New Book",
+    "title": "Title"
   },
   "modifybook": {
     "credits": {
@@ -27,7 +30,7 @@
     "download_pdf": "Download PDF",
     "finish_book": "Finish Book",
     "creative_model": "Image Quality",
-    "creative_model_description": "Activate for cleaner images. Might however be less adapted for colouring in",
+    "creative_model_description": "Activate for better quality. Costs more credits however.",
     "advanced_options": "Advanced Options",
     "test_mode": "Test Mode",
     "test_mode_description": "Show descriptions instead of generating images",
@@ -35,7 +38,8 @@
       "title": "Advanced Story Context",
       "description": "Use more detailed story context for better continuity"
     },
-    "generating-your-book": "Generating your book..."
+    "generating-your-book": "Generating your book...",
+    "loading": "Loading..."
   },
   "edition": {
     "context": "Context",
@@ -73,7 +77,8 @@
     "how-would-you-rate-your-experience": "How would you rate your experience?",
     "feedback-for": "Feedback for",
     "tell-us-more-about-your-experience": "Tell us more about your experience...",
-    "not-now": "Not now"
+    "not-now": "Not now",
+    "give-feedback": "Give feedback"
   },
   "login": {
     "logout": "Logout",
@@ -115,14 +120,28 @@
   "home": {
     "crayons": "Crayons",
     "make-colouring-books-from-your-own-stories": "Make colouring books from your own stories",
-    "feature-1-title": "AI-Powered Creation",
-    "feature-1-description": "Describe your story and watch as our AI transforms your words into beautiful coloring pages. Perfect for children's books, educational materials, or creative projects.",
-    "feature-2-title": "Interactive Book Editor",
-    "feature-2-description": "Edit, enhance, and customize your coloring book pages with our intuitive editor. Add details, modify scenes, and create the perfect coloring experience.",
-    "feature-3-title": "Instant PDF Download",
-    "feature-3-description": "Download your creation instantly as a PDF, ready for printing and coloring. Share your books with friends, family, or use them in your classroom.",
     "start-creating": "Create my book!",
-    "get-started": "Get Started"
+    "get-started": "Get Started",
+    "feature-1": {
+      "title": "Story Memory",
+      "description": "Our magical AI remembers every part of your story! From the friends you meet to the treasures you find, the book follows your story telling!"
+    },
+    "feature-2": {
+      "title": "Your Story",
+      "description": "Go anywhere, do anything! Take your character from climbing mountains to flying jets to walking on the moon. Every choice makes a brand-new journey only you can create!"
+    },
+    "feature-3": {
+      "title": "Your Characters",
+      "description": "Create any character you can imagine! Bring your wildest ideas to life!"
+    },
+    "feature-4": {
+      "title": "Magic Redraws",
+      "description": "Modify each page with just a few words! Add a hero’s hat, a magical sword, or anything else you imagine. "
+    },
+    "feature-5": {
+      "title": "Easy & Fast",
+      "description": "Make your own coloring book in minutes! They are ready to print colour when completed! Your adventures are always saved to your profile!"
+    }
   },
   "success": {
     "your-book-has-been-successfully-generated": "Your book has been successfully generated!"

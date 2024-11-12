@@ -4,7 +4,7 @@
     "i18n-ally.sourceLanguage": "en",
     "i18n-ally.enabledFrameworks": ["react", "general"], // Use general framework if no package file exists
     "i18n-ally.keystyle": "nested", // Adjust based on your key style, can be "nested" or "flat"
-    "i18n-ally.extract.keyPrefix": "error.api.",
+    "i18n-ally.extract.keyPrefix": "home.feature-",
     "i18n-ally.enabled": true,
     "i18n-ally.extract.autoDetect": true // Force enable the extension even without a package file
 }

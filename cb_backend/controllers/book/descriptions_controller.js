@@ -21,28 +21,25 @@ const DescriptionsController = () => {
     });
 
     const shouldUpdateBookContext = async (enhancementPrompt, currentContext, miniModel = true) => {
-        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to evaluate whether a requested enhancement introduces an intrinsic change that needs to be reflected in the book context.
-            
-        Guidelines:
-        1. Return TRUE if the enhancement introduces:
-           - Permanent character appearance changes
-           - Persistent setting/environment changes
-           - New story-critical objects or elements
-           - Changes that will definitely affect future scenes
-           - e.g. a character wearing a new hat, or the environment changing to a new location
+        const systemPrompt = `You are an expert in children's storybook continuity. Decide if an enhancement should update the book context.
         
-        2. Return FALSE if the enhancement only includes:
-           - Temporary poses or expressions
-           - One-time actions
-           - Scene-specific details
-           - Minor adjustments that won't carry forward
-           - e.g removing the tree from the background`;
-
-        const userPrompt = `Evaluate if this enhancement request requires updating the story context:
-        - Enhancement Request: "${enhancementPrompt}"
+        Guidelines:
+        1. Return TRUE if the change:
+           - Permanently alters a character’s appearance
+           - Modifies the setting or environment long-term
+           - Adds story-critical objects or elements
+           - Affects future scenes (e.g., new food item, new setting)
+        
+        2. Return FALSE if the change is temporary or minor:
+           - Temporary expressions or poses
+           - Background adjustments (e.g., moving a tree)
+           - One-time actions with no lasting impact`;
+        
+            const userPrompt = `Should this enhancement update the story context?
+        - Enhancement: "${enhancementPrompt}"
         - Current Context: ${JSON.stringify(currentContext, null, 2)}
         
-        Return TRUE only if the enhancement introduces changes that should persist in future scenes.`;
+        Return TRUE if it introduces lasting changes; otherwise, return FALSE.`;
 
         const resultSchema = z.object({
             result: z.boolean()
@@ -83,33 +80,35 @@ const DescriptionsController = () => {
     };
     
     const generateCreativeSceneComposition = async (sceneDescription, bookContext, miniModel = true) => {
-        const sys_prompt = `You are an expert in creating simple, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
-            Guidelines:
-            1. Use simple framing, like medium shots or close-ups, with clear focus on main characters or actions, like a movie storyboard.
-            2. Avoid complex backgrounds and clutter. Use minimal backgrounds if they enhance the scene.
-            3. Ensure characters and objects are distinct and well-positioned, keeping the scene clean and easy to interpret.
-            4. Use the book context for continuity, but prioritize making each scene fun and visually clear for kids.`;
-    
-        const usr_prompt = `Using the provided scene and context, describe a simple, child-friendly composition idea:
-        - New scene: "${sceneDescription}".
-        - Book Context: "${JSON.stringify(bookContext)}".
+        const sys_prompt = `You are an expert in creating concise, engaging scene compositions for black-and-white children's coloring books. Your goal is to design visually clear and uncluttered scenes that are easy for children to color and understand.
+           Guidelines:    
+            1. **Snapshot Description**: Generate a brief description focusing on a single moment or action in the scene.            
+            2. **Visual Composition**: Describe only what is visually present, including characters, objects, and their interactions, without narrative exposition.            
+            3. **Story Coherence**: Ensure the scene aligns with the story's continuity without restating the entire context.            
+            4. **Selective Inclusion**: Include only necessary elements relevant to the current scene; omit characters or details not present in this specific moment.            
+            5. **Clear Visual Cues**: Provide specific visual details like character poses, expressions, and positions to aid in composing the image.            
+            6. **Simplicity**: Keep the composition straightforward and avoid unnecessary details that could clutter the image.            
+            Your output should be a medium-length description suitable for an illustrator to create a single coloring book page. Do not include additional explanations, framing, or meta-commentary.`;            
         
-        Focus on making the scene clear, engaging, and easy for children to color. Think of it as a simple storyboard for a coloring book page.`;
-    
+        const usr_prompt = `Using the provided scene description and book context, describe a simple, child-friendly composition idea for a single image:    
+            - **Scene Description**: "${sceneDescription}"
+            - **Book Context**: ${JSON.stringify(bookContext)}        
+            Focus on depicting what is visually present in the scene, providing a clear and concise description of the snapshot. Ensure the composition is engaging, easy for children to color, and coherent with the story.`;
+            
         return (miniModel ? query_gpt4o_mini : query_gpt4o2024)(sys_prompt, usr_prompt);
     };
     
-    const generateFinalImageDescription = async (compositionIdea, bookContext) => {
-        const sys_prompt = `You are creating a precise visual description for a black-and-white coloring book image based on a given composition idea and selected context. Emphasize clear, visual details without abstract concepts or unnecessary context.
     
+    const generateFinalImageDescription = async (compositionIdea, bookContext) => {
+        const sys_prompt = `You are creating a detailed visual description for a black-and-white coloring book image based on a given composition idea and selected context. Emphasize clear, visual details without abstract concepts or unnecessary context.
             Guidelines:
             1. Use only the necessary context (like character details and environment).
             2. Describe the visual elements (e.g., character appearance, positioning, actions, and environment) in easy to visualize terms.
-            3 Detail actions, body postures, and gestures explicitly.
+            3. Detail actions, body postures, and gestures explicitly. (e.g. "in the act of running, his left leg in the air infront of the other", "tumbling down the hill, his arms and legs outstretched and his body upside down", "the goalie is diving to the left with his arms stretched out, but the ball is behind him in the bottom right corner of the goal" )
             4. Avoid mentioning color, shading, abstract concepts, or any complex details outside of the scene.
-            5. Craft the description to fit within a single coloring page.`;
+            5. ONLY mention what is visible in the image, no need to precise any past details or anything besides the description of the visible scene.`;
     
-        const usr_prompt = `Given the composition idea and context, generate a clear and precisevisual description:
+        const usr_prompt = `Given the composition idea and context, generate a clear and detailed visual description:
         - Composition Idea: "${compositionIdea}".
         - Relevant Context: "${JSON.stringify({
             characters: bookContext.characters,

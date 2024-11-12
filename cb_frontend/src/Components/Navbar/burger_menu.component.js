@@ -6,9 +6,11 @@ import { handleLogout } from "../../Hooks/LoginHandler";
 import { withTranslation } from 'react-i18next';
 import LanguageChange from './language_change.component';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { setAskFeedback } from '../../redux/websiteSlice';
+import { MessageSquare } from 'lucide-react';
 
 class BurgerMenu extends Component {
- 
     constructor(props) {
         super(props);
         this.state = { isOpen: false };
@@ -27,7 +29,12 @@ class BurgerMenu extends Component {
         return isUserLoggedIn() ?
             <span className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 absolute bottom-0 left-0 rounded text-lg font-bold cursor-pointer" onClick={() => handleLogout()}>{t('login.logout')}</span> :
             this.getMenuLink('/login', t('login.login'), 'bg-green-600 hover:bg-green-700');
-}
+    }
+    handleFeedback = () => {
+        this.props.setAskFeedback(true);
+        this.closeMenu();
+    }
+
     getMenuLink = (url, name, customClass) => (
         <Link
             onClick={this.closeMenu}
@@ -61,8 +68,17 @@ class BurgerMenu extends Component {
                     <div className="relative z-[50] flex flex-col space-y-4 h-full">
                         <div className="flex flex-col space-y-4">
                             {this.getMenuLink('/', t('login.home'))}
-                            {isUserLoggedIn() ? this.getMenuLink('/create', t('login.create')) : ''}
-                            {isUserLoggedIn() ? this.getMenuLink('/gallery', t('login.my-gallery')) : ''}
+                            {isUserLoggedIn() && this.getMenuLink('/create', t('login.create'))}
+                            {isUserLoggedIn() && this.getMenuLink('/gallery', t('login.my-gallery'))}
+                            {isUserLoggedIn() && <button
+                                onClick={this.handleFeedback}
+                                className="flex items-center justify-center gap-2 px-3 py-2 rounded 
+                                    bg-green-600/70 hover:bg-green-700/70 text-white font-bold text-lg 
+                                    shadow-md transition-transform transform hover:scale-105"
+                            >
+                                <MessageSquare className="w-5 h-5" />
+                                {t('feedback.give-feedback')}
+                            </button>}
                             {this.login_logout_button()}
                         </div>   
                     </div>
@@ -73,7 +89,12 @@ class BurgerMenu extends Component {
 }
 
 BurgerMenu.propTypes = {
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    setAskFeedback: PropTypes.func.isRequired
 };
 
-export default withTranslation()(BurgerMenu);
+const mapDispatchToProps = {
+    setAskFeedback
+};
+
+export default connect(null, mapDispatchToProps)(withTranslation()(BurgerMenu));
