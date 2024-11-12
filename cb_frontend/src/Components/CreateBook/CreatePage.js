@@ -27,7 +27,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
             className="page-element"   
         >
             {/* Border layer */}
-            <div className={`${classNameProp} absolute inset-0 bg-amber-200`} />
+            <div className={`${classNameProp} absolute inset-0 bg-[#93C5FD]`} />
             
             {/* Content layer */}
             <div className={`${classNameProp} shadow-none  absolute inset-0 bg-white scale-[0.993]`}>                            

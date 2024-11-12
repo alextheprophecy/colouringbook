@@ -17,7 +17,8 @@
       "creating-image": "Création de l'image...",
       "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
     },
-    "title": "Titre"
+    "title": "Titre",
+    "dont-refresh": "Merci de ne pas actualiser la page !"
   },
   "modifybook": {
     "credits": {

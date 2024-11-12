@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
+import { useTranslation } from 'react-i18next';
 const Loading = () => {
-    const {loadingText, isLoading} = useSelector((state) => state.website);
+    const { t } = useTranslation();
+    const {loadingText, isLoading, dontRefreshWarning} = useSelector((state) => state.website);
     console.log('WE AREA :', loadingText, isLoading);
     if (!isLoading) return null;
 
@@ -14,6 +15,11 @@ const Loading = () => {
                         <p className="text-lg font-semibold mb-4 text-center">{loadingText}</p>
                     )}
                     <div className="w-16 h-16 border-8 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+                    {dontRefreshWarning && (
+                        <p className="mt-4 text-red-500 font-semibold text-center">
+                            {t('creation.dont-refresh')}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

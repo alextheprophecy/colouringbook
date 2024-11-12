@@ -34,7 +34,7 @@ const useCreateBook = () => {
                 }));
                 
                 return book;
-            }, `${t('creation.hooks.creating-book')} ${title}`);
+            }, `${t('creation.hooks.creating-book')} ${title}`, false);
             
             return true;
         } catch (error) {

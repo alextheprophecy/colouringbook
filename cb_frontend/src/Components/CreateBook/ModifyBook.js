@@ -226,7 +226,7 @@ const ModifyBook = () => {
                                 onMouseLeave={handleCreatePageMouseLeave}
                             />
                         ) : null,
-                        (!isSinglePage && pages.length%2===0) ? <div className="bg-blue-50"/> : null
+                        (!isSinglePage && pages.length%2===0) ? <div className={`${pageClassname(1)} bg-[#93C5FD]`}/> : null
                     ].filter(Boolean)}
 
                 </HTMLFlipBook>

@@ -40,7 +40,8 @@
       "please-enter-a-description-for-your-page": "Inserisci una descrizione per la tua pagina",
       "creating-image": "Creazione immagine...",
       "failed-to-generate-image-please-try-again": "Impossibile generare l'immagine. \nPer favore riprova."
-    }
+    },
+    "dont-refresh": "Per favore non aggiornare la pagina!"
   },
   "modification": {
     "use-more-detailed-story-context-for-better-continuity": "Utilizza un contesto narrativo più dettagliato per una migliore continuità",

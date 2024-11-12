@@ -14,7 +14,8 @@
       "please-enter-a-description-for-your-page": "Por favor ingresa una descripción para tu página",
       "creating-image": "Creando imagen...",
       "failed-to-generate-image-please-try-again": "No se pudo generar la imagen. \nPor favor inténtalo de nuevo."
-    }
+    },
+    "dont-refresh": "¡Por favor no actualices la página!"
   },
   "modifybook": {
     "credits": {

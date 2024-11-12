@@ -41,7 +41,8 @@
       "creating-image": "Bild erstellung...",
       "failed-to-generate-image-please-try-again": "Bild konnte nicht generiert werden. \nBitte versuchen Sie es erneut."
     },
-    "title": "Titel"
+    "title": "Titel",
+    "dont-refresh": "Bitte aktualisieren Sie die Seite nicht!"
   },
   "modification": {
     "use-more-detailed-story-context-for-better-continuity": "Verwenden Sie einen detaillierteren Story-Kontext für eine bessere Kontinuität",

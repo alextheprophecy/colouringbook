@@ -20,7 +20,8 @@
     },
     "feat": {},
     "new-book": "Create New Book",
-    "title": "Title"
+    "title": "Title",
+    "dont-refresh": "Please do not refresh the page!"
   },
   "modifybook": {
     "credits": {
