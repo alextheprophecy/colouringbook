@@ -101,7 +101,7 @@ const router = createBrowserRouter([
   }
 ]);
 export default function TranslatedApp() {
-    const [showIntro, setShowIntro] = useState(shouldShowIntro);
+    //const [showIntro, setShowIntro] = useState(shouldShowIntro);
    
     
     return (

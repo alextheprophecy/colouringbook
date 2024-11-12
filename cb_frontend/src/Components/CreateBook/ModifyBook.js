@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
 import { setCurrentPage, setIsEditing, finishBook, editPage } from '../../redux/bookSlice';
-
+import EditButton from './UI/EditButton';
 
 const ModifyBook = () => {
     const { t } = useTranslation();
@@ -95,56 +95,21 @@ const ModifyBook = () => {
                 <>
                     {/* Left page edit button */}
                     {(!isSinglePage && currentPage > 1 && (currentPage != pages.length+1)) && (
-                        <button 
-                            className={`absolute left-0 bottom-0                                    
-                                    w-16 h-16
-                                    bg-white/80
-                                    shadow-lg hover:shadow-xl
-                                    rounded-tr-full
-                                    group
-                                    overflow-hidden
-                                    origin-bottom-left
-                                    ring-1 ring-blue-200
-                                    z-10`}
-                            onClick={() => {
-                                dispatch(editPage(currentPage-1));                                                      
-                            }}
+                        <EditButton 
+                            position="left"
+                            onClick={() => dispatch(editPage(currentPage-1))}
                             disabled={isFlipping}
-                        >
-                            <Pencil 
-                                className={`absolute bottom-2 left-2
-                                        h-8 w-8 
-                                        text-blue-600 group-hover:text-blue-800
-                                        cursor-pointer`}
-                            />
-                        </button>
+                        />
                     )}
 
                     {/* Right page edit button */}
-                    {!isOnCreationPage() && <button 
-                        className={`absolute bottom-0
-                                sm:right-0 right-[-5px]
-                                w-16 h-16
-                                bg-white/80
-                                shadow-lg hover:shadow-xl
-                                rounded-tl-full
-                                group
-                                overflow-hidden
-                                origin-bottom-right
-                                ring-1 ring-blue-200
-                                z-10`}
-                        onClick={() => {
-                            dispatch(editPage(currentPage));                           
-                        }}
-                        disabled={isFlipping}
-                    >
-                        <Pencil 
-                            className={`absolute bottom-2 right-2
-                                    h-8 w-8 
-                                    text-blue-600 group-hover:text-blue-800
-                                    cursor-pointer`}
+                    {!isOnCreationPage() && (
+                        <EditButton 
+                            position="right"
+                            onClick={() => dispatch(editPage(currentPage))}
+                            disabled={isFlipping}
                         />
-                    </button>}
+                    )}
                 </>
             )}
         </>
