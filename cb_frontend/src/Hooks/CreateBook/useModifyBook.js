@@ -17,7 +17,8 @@ export const FLIP_TIMES = Object.freeze({
 
 const useModifyBook = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, bookId, isBookFinished} = useSelector(state => state.book);
+    const { pages, currentPage, bookId, isBookFinished, seeds, title, currentContext} = useSelector(state => state.book);
+    const bookData = useSelector(state => state.book);
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
     const [isFinishing, setIsFinishing] = useState(false);
@@ -112,7 +113,10 @@ const useModifyBook = () => {
         setIsFinishing(true);
         try {
             const response = await loadRequest(
-                async () => await api.post('image/finishBook', { bookId }),
+                async () => await api.post('image/finishBook', {
+                    bookId,
+                    bookData: {title, seeds, pages: {count: pages.length, content: pages.map(p => ({...p, image: null}))}, currentContext} 
+                }),
                 t('modifybook.generating-your-book')
             );
             

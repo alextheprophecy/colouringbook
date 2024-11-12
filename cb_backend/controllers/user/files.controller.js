@@ -24,6 +24,11 @@ const pdf_data = (user_email, book_id) => ({
     TTL: URL_TTL.PDF
 })
 
+const log_data = (user_email, book_id) => ({
+    key: `${_book_key(user_email, book_id)}/book_data.txt`, 
+    TTL: URL_TTL.PDF
+})
+
 const getPDF = (user, book) => {
     if(book.pageCount <= 0) return null;
     return getFileUrl(pdf_data(user.email, book.id))
@@ -63,5 +68,6 @@ module.exports = {
     savePageData,
     image_data,
     getFileData,
-    getImage
+    getImage,
+    log_data
 }

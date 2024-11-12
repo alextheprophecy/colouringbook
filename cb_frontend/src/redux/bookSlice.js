@@ -39,9 +39,9 @@ const bookSlice = createSlice({
       state.pages.push(action.payload);
     },
     updatePage: (state, action) => {
-      const { index, data } = action.payload;
-      console.log("Updating page", index, data);
-      console.log(action.payload);
+      const { index, data, isRegeneration, isEnhancement } = action.payload;
+      if (isRegeneration) data.regenerateCount = (state.pages[index].regenerateCount ?? 0) + 1;
+      else if (isEnhancement) data.enhanceCount = (state.pages[index].enhanceCount ?? 0) + 1;    
       state.pages[index] = { ...state.pages[index], ...data };
     },
     updateContext: (state, action) => {
@@ -66,15 +66,14 @@ const bookSlice = createSlice({
       state.pages.push(firstPage(titleInput));
       state.hasBookStarted = true;
       state.bookId = action.payload.bookId;
-      state.title = titleInput;
-      
+      state.title = titleInput;      
     },
     finishBook: (state) => {
       state.isBookFinished = true;
     },
     setSeeds: (state, action) => {
       state.seeds = { ...state.seeds, ...action.payload};
-    }
+    },
   },
 });
 

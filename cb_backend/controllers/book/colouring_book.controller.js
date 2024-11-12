@@ -1,8 +1,9 @@
 const {queryFluxSchnell, queryFluxBetter, randomSavedSeed, randomSeed, queryFineTuned, queryFluxPro} = require("../external_apis/replicate.controller");
 const Book2 = require("../../models/book2.model");
-const {getFileData, image_data, saveBookPDF, savePageData, getPDF} = require("../user/files.controller");
-const {updateBookContext, generatePageDescriptionGivenContext, shouldUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
+const {getFileData, image_data, saveBookPDF, savePageData, getPDF, log_data} = require("../user/files.controller");
+const {updateBookContext, shouldUpdateBookContext, enhancePageDescription, generateConcisePageDescription, parseContextInput, generateCreativeSceneComposition, generateFinalImageDescription} = require("./descriptions_controller");
 const {verifyCredits} = require("../user/user.controller");
+const {uploadBuffer} = require("../external_apis/aws.controller");
 
 const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
@@ -195,6 +196,47 @@ const getBookPDF = async (req, res) => {
     }
 };
 
+const finishBook = async (req, res) => {
+    const user = req.user;
+    const book = req.book;
+    const { bookData } = req.body;
+
+    try {
+        if (book.pageCount === 0) {
+            return res.status(400).json({ error: 'Cannot finish a book with no pages' });
+        }
+        // Create log content
+        const logContent = JSON.stringify(bookData, null, 2);
+
+        // Upload log file and generate PDF in parallel
+        const [uploadResult, pdfUrl] = await Promise.all([
+            // Upload log file
+            uploadBuffer(
+                Buffer.from(logContent),
+                {   
+                    key: log_data(user.email, book.id).key,
+                    contentType:'text/plain'
+                }
+            ),
+            // Generate PDF
+            generateBookPDF(req, res)
+        ]);
+
+        if (!uploadResult || !pdfUrl) {
+            throw new Error('Failed to finish book - error saving data');
+        }
+
+        res.status(200).json({ 
+            bookPDF: pdfUrl,
+            message: 'Book finished successfully'
+        });
+
+    } catch (error) {
+        console.error('Error in finishBook:', error);
+        res.status(500).json({ error: 'Failed to finish book' });
+    }
+};
+
 const generateBookPDF = async (req, res) => {
     const user = req.user;
     const book = req.book;
@@ -237,5 +279,5 @@ module.exports = {
     regeneratePage,
     enhancePage,
     getBookPDF,
-    generateBookPDF
+    finishBook
 }

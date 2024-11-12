@@ -61,9 +61,9 @@ const uploadStream = (stream, key, contentType) => {
     return upload.done()
 }
 
-const uploadBuffer = (buffer, {key}) => {
+const uploadBuffer = (buffer, {key, contentType = 'image/png'}) => {
     const params = new PutObjectCommand({
-        ContentType: 'image/png',
+        ContentType: contentType,
         Bucket: BUCKET_NAME,
         Body: buffer,
         Key: key

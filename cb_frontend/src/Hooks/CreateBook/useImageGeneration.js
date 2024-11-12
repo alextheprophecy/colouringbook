@@ -56,7 +56,7 @@ const useImageGeneration = () => {
         });
         const { image, seed } = response.data;
         
-        return dispatch(updatePage({index: currentPage, data: { image, seed }}));
+        return dispatch(updatePage({index: currentPage, data: { image, seed }, isRegeneration: true}));
     }
 
     const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        
@@ -83,7 +83,8 @@ const useImageGeneration = () => {
                 enhancementRequest,
                 image,
                 seed
-            }
+            },
+            isEnhancement: true
         }));
         
         if(updatedContext) return dispatch(updateContext(updatedContext));       
