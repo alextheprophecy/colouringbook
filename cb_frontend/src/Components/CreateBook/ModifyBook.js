@@ -116,7 +116,7 @@ const ModifyBook = () => {
     );   
 
     return (
-        <div className={`mt-4 p-8  bg-blue-50 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
             {/* Credits display at the top */}
             <div className="fixed top-2 right-6 z-10">
                 <div className={`px-2 py-1 rounded-lg 

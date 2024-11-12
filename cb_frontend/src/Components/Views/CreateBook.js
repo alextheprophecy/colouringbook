@@ -19,20 +19,19 @@ const CreateBook = () => {
     };
 
     const CreationContainer = (children) => (
-        <div className={`${isLoading ? 'pointer-events-none opacity-50' : ''} w-[90vw] mt-[0] ml-[5vw] mr-[5vw]`}>
+        <div className={`${isLoading ? 'pointer-events-none opacity-50' : ''} w-[90vw] mt-[0] ml-[5vw] mr-[5vw] z-20`}>
             {children}
         </div>
     );
     
     return (
         <>
-            {isLoading && <Loading />}
-            {!hasBookStarted ? (
-                <div className="min-h-screen flex items-center justify-center bg-paper relative">
-                    {/* Paper texture overlay with gradient */}
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />
-                    
-                    <div className="w-full max-w-md mx-4 p-8 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl relative">
+            {isLoading && <Loading />}            
+            <div className="min-h-screen flex items-center justify-center relative">
+                {/* Paper texture overlay with gradient */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />                    
+                {!hasBookStarted ? (
+                    <div className="w-full max-w-md mx-4 p-8 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl relative z-20">
                         <div className="mb-8 flex justify-center">
                             <ScribbleText
                                 text={t('creation.create-your-book')}
@@ -96,12 +95,13 @@ const CreateBook = () => {
                             >
                                 {credits >= 3 ? t('creation.start-creating') : t('creation.not-enough-credits')}
                             </button>
-                        </div>
-                    </div>
-                </div>
-            ) : (
+                        </div>                                           
+                    </div>) : (
                 CreationContainer(<ModifyBook />)
             )}
+
+            </div>
+            
         </>
     );
 };

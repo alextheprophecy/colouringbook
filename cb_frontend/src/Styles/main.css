@@ -10,8 +10,8 @@ body, html {
     padding: 0;
     overscroll-behavior: contain;
     touch-action: pan-y;
-    background: url('/public/assets/textures/paper-texture.jpg') repeat top center;
-    background-size: cover;
+    @apply bg-paper bg-repeat bg-center;
+    background-size: contain; /* Default size for desktop */
 }
 
 /* Page container */

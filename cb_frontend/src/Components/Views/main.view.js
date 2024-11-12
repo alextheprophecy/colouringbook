@@ -54,7 +54,7 @@ const MainView = () => {
     };
 
     return (
-        <div className="min-h-screen bg-paper from-blue-50 to-blue-100 relative">
+        <div className="min-h-screen from-blue-50 to-blue-100 relative">
             {/* Paper texture overlay with gradient */}
             <div 
                 className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50 z-0"
