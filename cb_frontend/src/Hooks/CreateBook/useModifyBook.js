@@ -25,6 +25,8 @@ const useModifyBook = () => {
     const { loadRequest } = useLoadRequest();
     const [pdfUrl, setPdfUrl] = useState(null);
     const { t } = useTranslation();
+    const [isSinglePage, setIsSinglePage] = useState(false);
+
     const isOnCreationPage = useCallback(() => {
         return currentPage === pages.length
     }, [currentPage, pages.length]);
@@ -35,7 +37,7 @@ const useModifyBook = () => {
         const book = getBookInstance();
         if (currentPage >= targetPage || !book || isFlipping) return;
         const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)
-       
+        updateOrientation();
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
 
@@ -89,6 +91,11 @@ const useModifyBook = () => {
        dispatch(setCurrentPage(e.data));        
     }, [dispatch]);
 
+    const updateOrientation = () => {
+        const book = getBookInstance();
+        if (book) setIsSinglePage(book.getOrientation() === 'portrait');
+    };
+
     useEffect(() => {
         const book = getBookInstance();
         if (book) book.getSettings().useMouseEvents = !isOnCreationPage();
@@ -139,8 +146,8 @@ const useModifyBook = () => {
         } finally {
             setIsFinishing(false);
         }
-    };
-
+    };   
+    
     return {
         flipBookRef,
         pages,
@@ -159,6 +166,7 @@ const useModifyBook = () => {
         isFinishing,
         isBookFinished,
         pdfUrl,
+        isSinglePage,
     };
 };
 

@@ -28,6 +28,7 @@ const ModifyBook = () => {
         handleFinishBook,
         isFinishing,
         isBookFinished,
+        isSinglePage,
     } = useModifyBook();
 
     const credits = useSelector((state) => state.website.credits);
@@ -38,7 +39,8 @@ const ModifyBook = () => {
     const pageClassname = (index) => {
         return `${index === 0 
             ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
-            : 'rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]'
+            : (isSinglePage || index%2===0) ? ('rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
+            : ('rounded-[3px] rounded-tr-[45%_5%] rounded-br-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
         } mx-auto w-full h-full object-cover`;
     };        
 
@@ -176,7 +178,7 @@ const ModifyBook = () => {
                         !isBookFinished ? (
                             <CreatePage 
                                 key="create-page" 
-                                classNameProp={pageClassname(1)} 
+                                classNameProp={pageClassname(pages.length)} 
                             />
                         ) : null
                     ].filter(Boolean)}
