@@ -29,21 +29,26 @@ const useModifyBook = () => {
     const [selectedCreationPage, setSelectedCreationPage] = useState(false);
     
     const isOnCreationPage = useCallback(() => {
-        return currentPage === pages.length
-    }, [currentPage, pages.length]);
+        console.log('isOnCreationPage', currentPage, pages.length);
+        return currentPage >= pages.length;
+    }, [currentPage, pages.length, isSinglePage]);
     
     const isOnSelectedCreationPage = useCallback(() => {
-        console.log('isOnSelectedCreationPage', currentPage >= pages.length - (isSinglePage ? 0 : 1));
-        return (pages.length%2===0) ? (selectedCreationPage && currentPage >= pages.length - (isSinglePage ? 0 : 1)) : currentPage >= pages.length - (isSinglePage ? 0 : 1)
+        const extraPage = !isSinglePage ? 1 : 0;
+        return (pages.length % 2 === 1) ? 
+            (selectedCreationPage && currentPage >= pages.length - (isSinglePage ? -1 : 0) + extraPage) : 
+            currentPage >= pages.length - (isSinglePage ? -1 : 0) + extraPage;
     }, [currentPage, pages.length, selectedCreationPage, isSinglePage]);
 
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
-    const startAnimation = useCallback((targetPage = pages.length-1, quickFlip = false) => {
+    const startAnimation = useCallback((targetPage = pages.length, quickFlip = false) => {
+        const extraPage = !isSinglePage ? 1 : 0;
+        const adjustedTargetPage = targetPage + extraPage;
+        console.log('startAnimation', adjustedTargetPage);
         const book = getBookInstance();
-        if (currentPage >= targetPage || !book || isFlipping) return;
-        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)
-        updateOrientation();
+        if (currentPage >= adjustedTargetPage || !book || isFlipping) return;
+        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)        
         setIsFlipping(true);
         book.getSettings().disableFlipByClick = true;
 
@@ -52,8 +57,8 @@ const useModifyBook = () => {
             const flipSpeed = quickFlip ? (currentPageIndex === 0 ? FLIP_TIMES.QUICK_COVER : FLIP_TIMES.QUICK_FLIP) : (currentPageIndex === 0 ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP);
     
             book.getSettings().flippingTime = flipSpeed
-
-            if (currentPageIndex < targetPage) {
+            console.log('we are at', currentPageIndex, adjustedTargetPage);
+            if (currentPageIndex < adjustedTargetPage) {
                 book.flipNext('top');
                 currentPageIndex++;
                 
@@ -70,18 +75,18 @@ const useModifyBook = () => {
         };
 
         setTimeout(flipThroughPages, startDelay);
-    }, [isFlipping, currentPage, pages.length]);
+    }, [isFlipping, currentPage, pages.length, isSinglePage]);
 
     const handlePageNavigation = {
         next: useCallback(() => {
             const book = getBookInstance();
             if (!isFlipping && book) {
-                book.getSettings().flippingTime = currentPage===0?FLIP_TIMES.ANIMATION_COVER:FLIP_TIMES.ANIMATION_FLIP
+                const extraPage = !isSinglePage ? 1 : 0;
+                book.getSettings().flippingTime = currentPage === 0 ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP;
                 book.getSettings().disableFlipByClick = isOnCreationPage();
-                if(!isOnCreationPage()) book.flipNext('top');
+                if (!isOnCreationPage() && currentPage < pages.length + extraPage) book.flipNext('top');
             }
-
-        }, [isOnCreationPage, isFlipping, currentPage]),
+        }, [isOnCreationPage, isFlipping, currentPage, pages.length, isSinglePage]),
 
         previous: useCallback(() => {
             const book = getBookInstance();
@@ -156,25 +161,16 @@ const useModifyBook = () => {
     };   
 
     const handleCreatePageMouseEnter = () => {
-        if (!isSinglePage) {            
-            const book = getBookInstance();
-            if (book){
-                console.log('handleCreatePageMouseEnter', flipBookRef.current);
-                setSelectedCreationPage(true);
-            } 
-        }
-    };
+        if (isSinglePage) return           
+        const book = getBookInstance();
+        if (book) setSelectedCreationPage(true);          
+    }
 
     const handleCreatePageMouseLeave = () => {
-        if (!isSinglePage) {
-            const book = getBookInstance();
-            if (book){
-                console.log('handleCreatePageMouseLeave', flipBookRef.current);
-                setSelectedCreationPage(false);
-
-            }
-        }
-    };
+        if (isSinglePage) return;
+        const book = getBookInstance();
+        if (book) setSelectedCreationPage(false);
+    }
     
     return {
         flipBookRef,
@@ -188,15 +184,17 @@ const useModifyBook = () => {
         setIsEditing: (value) => dispatch(setIsEditing(value)),
         getCurrentPageImage: () => pages[currentPage]?.image || `https://placehold.co/400x600?text=Page+${currentPage + 1}`,
         flipToCreationPage: useCallback(() => {
-            startAnimation(pages.length, true);
-        }, [startAnimation, pages.length]),
+            const extraPage = !isSinglePage ? 1 : 0;
+            startAnimation(pages.length + extraPage, true);
+        }, [startAnimation, pages.length, isSinglePage]),
         handleFinishBook,
         isFinishing,
         isBookFinished,
         pdfUrl,
         isSinglePage,
         handleCreatePageMouseEnter,
-        handleCreatePageMouseLeave
+        handleCreatePageMouseLeave,
+        updateOrientation
     };
 };
 

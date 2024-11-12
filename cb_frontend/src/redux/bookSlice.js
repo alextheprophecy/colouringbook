@@ -13,7 +13,7 @@ const pagesExample = [
 const firstPage = (title="Coloring \n book") => {
   const text = encodeURIComponent(title); // Encode the text to preserve newlines
   return ({
-    image: `https://placehold.co/400x600/f1e6cf/000000?text=${text}`, 
+    image: `https://placehold.co/400x600/93C5FD/000000?text=${text}`, 
     description: "Book Cover"
   })
 }

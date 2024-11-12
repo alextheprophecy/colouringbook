@@ -3,7 +3,7 @@ import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
 import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown, BookOpen, BookCheck } from 'lucide-react';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
-import {useState } from 'react';
+import {useState, useCallback } from 'react';
 import CreatePage from './CreatePage';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
@@ -24,14 +24,14 @@ const ModifyBook = () => {
         startAnimation,
         handlePageNavigation,
         onFlip,
-        setIsEditing,
         flipToCreationPage,
         handleFinishBook,
         isFinishing,
         isBookFinished,
         isSinglePage,
         handleCreatePageMouseEnter,
-        handleCreatePageMouseLeave
+        handleCreatePageMouseLeave,
+        updateOrientation
     } = useModifyBook();
 
     const credits = useSelector((state) => state.website.credits);
@@ -42,7 +42,7 @@ const ModifyBook = () => {
     const pageClassname = (index) => {
         return `${index === 0 
             ? 'rounded-[3px] rounded-tl-[45%_3%] rounded-br-[45%_1%] shadow-[1px_0_0_#d1d1d1,2px_0_0_#d4d4d4,3px_0_0_#d7d7d7,4px_0_0_#dadada,0_1px_0_#d1d1d1,0_2px_0_#d4d4d4,0_3px_0_#d7d7d7,0_4px_0_#dadada,0_5px_0_#dadada,0_6px_0_#dadada,4px_6px_0_#dadada,5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35)] relative right-[4px] bottom-[6px]' 
-            : (isSinglePage || index%2===0) ? ('rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
+            : (isSinglePage || index%2===1) ? ('rounded-[3px] rounded-tl-[45%_5%] rounded-bl-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
             : ('rounded-[3px] rounded-tr-[45%_5%] rounded-br-[40%_3%] shadow-[5px_5px_5px_rgba(0,0,0,0.3),8px_8px_7px_rgba(0,0,0,0.35),0px_8px_5px_rgba(0,0,0,0.35)]')
         } mx-auto w-full h-full object-cover`;
     };        
@@ -91,12 +91,12 @@ const ModifyBook = () => {
             )}
             
             {/* Edit buttons - show one or two depending on isSinglePage */}
-            {!isOnCreationPage() && currentPage > 0 && !isFlipping && !isBookFinished && (
+            {currentPage > 0 && !isFlipping && !isBookFinished && (
                 <>
                     {/* Left page edit button */}
-                    {(!isSinglePage && currentPage >= 1) && (
+                    {(!isSinglePage && currentPage > 1 && (currentPage != pages.length+1)) && (
                         <button 
-                            className={`absolute left-[-5px] bottom-0
+                            className={`absolute left-0 bottom-0                                    
                                     w-16 h-16
                                     bg-white/80
                                     shadow-lg hover:shadow-xl
@@ -107,7 +107,7 @@ const ModifyBook = () => {
                                     ring-1 ring-blue-200
                                     z-10`}
                             onClick={() => {
-                                dispatch(editPage(currentPage));                                                      
+                                dispatch(editPage(currentPage-1));                                                      
                             }}
                             disabled={isFlipping}
                         >
@@ -121,8 +121,9 @@ const ModifyBook = () => {
                     )}
 
                     {/* Right page edit button */}
-                    <button 
-                        className={`absolute right-[-5px] bottom-0
+                    {!isOnCreationPage() && <button 
+                        className={`absolute bottom-0
+                                sm:right-0 right-[-5px]
                                 w-16 h-16
                                 bg-white/80
                                 shadow-lg hover:shadow-xl
@@ -133,7 +134,7 @@ const ModifyBook = () => {
                                 ring-1 ring-blue-200
                                 z-10`}
                         onClick={() => {
-                            dispatch(editPage(isSinglePage ? currentPage : currentPage+1));                           
+                            dispatch(editPage(currentPage));                           
                         }}
                         disabled={isFlipping}
                     >
@@ -143,7 +144,7 @@ const ModifyBook = () => {
                                     text-blue-600 group-hover:text-blue-800
                                     cursor-pointer`}
                         />
-                    </button>
+                    </button>}
                 </>
             )}
         </>
@@ -190,11 +191,14 @@ const ModifyBook = () => {
                     showCover={true}
                     flippingTime={FLIP_TIMES.USER}
                     startPage={currentPage}
-                    onInit={() => startAnimation(pages.length-1)}  // For initial animation
+                    onInit={() => {
+                        updateOrientation();
+                        pages.length==1 && startAnimation(pages.length-1)
+                    }}  // For initial animation
                 >
                     {[
-                        ...pages.map((page, index) => (
-                            <div key={index} className="page-element">
+                        ...pages.map((page, index) => [
+                            <div key={`page-${index}`} className="page-element">
                                 {typeof page.image === 'string' && (page.image.startsWith('http') || page.image.startsWith('blob')) ? (
                                     <img 
                                         src={page.image} 
@@ -206,8 +210,14 @@ const ModifyBook = () => {
                                         <p className="whitespace-pre-wrap">{page.image}</p>
                                     </div>
                                 )}
-                            </div>
-                        )),
+                            </div>,
+                            // Add blank page after cover (index 0)
+                            !isSinglePage && index === 0 && (
+                                <div key="blank-after-cover" className="page-element">
+                                    <div className={`${pageClassname(2)} bg-blue-300`}></div>
+                                </div>
+                            )
+                        ]).flat(),
                         !isBookFinished ? (
                             <CreatePage 
                                 key="create-page" 
@@ -216,7 +226,7 @@ const ModifyBook = () => {
                                 onMouseLeave={handleCreatePageMouseLeave}
                             />
                         ) : null,
-                        (!isSinglePage && pages.length%2===1)? <div className="bg-blue-50"/> : null
+                        (!isSinglePage && pages.length%2===0) ? <div className="bg-blue-50"/> : null
                     ].filter(Boolean)}
 
                 </HTMLFlipBook>
