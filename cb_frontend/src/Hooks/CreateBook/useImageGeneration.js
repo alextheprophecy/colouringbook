@@ -15,8 +15,7 @@ const useImageGeneration = () => {
             bookId,
             seed,
             ... creationSettings
-        });
-        
+        });        
         
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
         console.log('NEW IMAGE', {
@@ -52,7 +51,7 @@ const useImageGeneration = () => {
         const response = await api.post('image/regeneratePage', {
             detailedDescription, 
             bookId, 
-            currentPage,
+            currentPage: currentPage-1,
             ...creationSettings
         });
         const { image, seed } = response.data;
@@ -64,13 +63,13 @@ const useImageGeneration = () => {
         const currentDescription = pages[currentPage]?.detailedDescription;
         const currentSeed = pages[currentPage]?.seed;
         if (!currentDescription || !enhancementRequest) throw new Error('Missing required parameters for enhancement');
-            
+
         const response = await api.post('image/enhancePage', {
             previousDescription: currentDescription,
             enhancementRequest,
             bookId,
             currentContext,                
-            currentPage: currentPage,
+            currentPage: currentPage-1,
             ...creationSettings,
             seed: currentSeed
         });

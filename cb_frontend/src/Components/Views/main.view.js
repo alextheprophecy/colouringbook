@@ -126,8 +126,8 @@ const MainView = () => {
                         index={1}
                         imagePosition="left"
                         title={t('home.feature-3.title')}
-                        directory="/assets/features_showcase/simple"
-                        imageNames={['birthdayParty.png', 'download.png', 'im0.jpg', 'im2.jpg', 'im4.jpg', 'img2.jpg', 'mario spiderman playing chess.jpg', 'witches.png']}
+                        directory="/assets/features_showcase/creative"
+                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'squirrel-girqffe.jpg', 'snakemario.jpg', 'mosquito.jpg']}
                         description={t('home.feature-3.description')}
                     />
                     <FeatureCard
@@ -143,16 +143,16 @@ const MainView = () => {
                         imagePosition="left"
                         title={t('home.feature-1.title')}
                         description={t('home.feature-1.description')}
-                        directory="/assets/features_showcase/creative"
-                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
+                        directory="/assets/features_showcase/book-football-rabbits"
+                        imageNames={['out-0.jpg', 'pic4.jpg',  'pic2.jpg', 'pic3.jpg',  'pic6.jpg', 'pic7.jpg', 'pic5.jpg']}
                     />
                     <FeatureCard
                         index={4}
                         imagePosition="right"
                         title={t('home.feature-5.title')}
                         description={t('home.feature-5.description')}
-                        directory="/assets/features_showcase/creative"
-                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
+                        directory="/assets/features_showcase/simple"
+                        imageNames={['birthdayParty.png', 'chess_game.jpg','img2.jpg',  'im0.jpg', 'im2.jpg', 'witches.png', 'img16.jpg', 'im1.jpg', 'im5.jpg']}
                     />
                     
                     {/* CTA Button */}

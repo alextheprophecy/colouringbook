@@ -2,8 +2,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useState, useRef, useEffect, React } from 'react';
 import PropTypes from 'prop-types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-const BASE_SLIDE_INTERVAL = 1750;
-const INTERVAL_VARIANCE = 500;
+import ScribbleText from '../UI/ui_scribble_text.component';
+const BASE_SLIDE_INTERVAL = 2000;
+const INTERVAL_VARIANCE = 250;
 const INACTIVITY_DELAY = 4000;
 
 const slideVariants = {
@@ -171,7 +172,7 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                 </button>
             </div>
             <motion.div 
-                className="w-full md:w-1/2 space-y-4 text-center md:text-left"
+                className="w-full md:w-1/2 space-y-4 text-center md:text-left flex flex-col"
                 initial={{ 
                     y: 30,
                     opacity: 0 
@@ -187,12 +188,19 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                         delay: index * 0.2 + 0.25,
                     }
                 }}
-                viewport={{ once: true }}
-            >
-                <h2 className="text-2xl font-children font-semibold text-gray-800">
-                    {title}
-                </h2>
-                <p className="text-gray-600">
+                viewport={{ once: true }}>
+                    <div className="flex justify-center">
+                        <ScribbleText
+                            text={title}
+                            sizeFactor={0.4}
+                            fillColor="#1f2937"  // text-gray-800 equivalent
+                            strokeColor="#374151" // slightly lighter for stroke
+                            roughness={0.6}
+                            strokeWidth={1.5}
+                            animate={true}
+                        />
+                    </div>
+                <p className="text-gray-600 min-h-[4rem] flex items-center md:items-start justify-center md:justify-start">
                     {description}
                 </p>
             </motion.div>

@@ -308,7 +308,7 @@ const GalleryView = () =>  {
                 />
             </button>
 
-            <div className="space-y-4 mt-16 w-[90vw] mx-auto">
+            <div className="space-y-4 mt-16 w-[90vw] mx-auto pb-8">
                 {loading ? (
                     <>
                         <SkeletonLoader />

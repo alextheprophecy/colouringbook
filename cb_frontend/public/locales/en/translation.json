@@ -74,7 +74,8 @@
     "how-would-you-rate-your-experience": "How would you rate your experience?",
     "feedback-for": "Feedback for",
     "tell-us-more-about-your-experience": "Tell us more about your experience...",
-    "not-now": "Not now"
+    "not-now": "Not now",
+    "give-feedback": "Give feedback"
   },
   "login": {
     "logout": "Logout",
@@ -119,24 +120,24 @@
     "start-creating": "Create my book!",
     "get-started": "Get Started",
     "feature-1": {
-      "title": "Smart Story Memory",
-      "description": "Our magical AI remembers every part of your story! From the friends you meet to the treasures you find, each new page keeps it all just right, so your adventure always makes sense!"
+      "title": "Story Memory",
+      "description": "Our magical AI remembers every part of your story! From the friends you meet to the treasures you find, the book follows your story telling!"
     },
     "feature-2": {
-      "title": "Your Story, Your Adventure",
+      "title": "Your Story",
       "description": "Go anywhere, do anything! Take your character from climbing mountains to flying jets to walking on the moon. Every choice makes a brand-new journey only you can create!"
     },
     "feature-3": {
-      "title": "Custom Coloring Characters",
-      "description": "Create any character you can imagine! How about a teddy bear with a superhero cape, an athletic slice of pizza with strong arms, or a smart shark that teaches math? Bring your wildest ideas to life!"
+      "title": "Your Characters",
+      "description": "Create any character you can imagine! Bring your wildest ideas to life!"
     },
     "feature-4": {
       "title": "Magic Redraws",
-      "description": "Change up the story with just a few words! Add a hero’s hat, a magical sword, or anything else you imagine. Watch the page transform to match your ideas!"
+      "description": "Modify each page with just a few words! Add a hero’s hat, a magical sword, or anything else you imagine. "
     },
     "feature-5": {
-      "title": "Quick, Easy & Saved Forever",
-      "description": "Make your own coloring book in minutes! Save your favorites, download them as PDFs, or share them anytime. Your adventures are always saved to your profile!"
+      "title": "Easy & Fast",
+      "description": "Make your own coloring book in minutes! They are ready to print colour when completed! Your adventures are always saved to your profile!"
     }
   },
   "success": {
