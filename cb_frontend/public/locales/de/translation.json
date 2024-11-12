@@ -1,17 +1,79 @@
 {
-    "examplebooks": {
-        "rabbits": "Ein Fu\u00dfballspiel, bei dem die netten Kaninchen gegen die b\u00f6sen Hunde gewinnen",
-        "teamwork": "Gl\u00fcck, Freundschaft, Fantasie, Feen, Zwerge, Teamarbeit",
-        "batman-mario": "Batman und Mario spielen gemeinsam verschiedene Sportarten, Gl\u00fcck, drau\u00dfen",
-        "scenarios": "Verwandle jedes Szenario in eine Ausmalseite!",
-        "scpecific": "Geben Sie spezifische Anweisungen f\u00fcr jede Seite"
+  "modifybook": {
+    "credits": {
+      "out_of_credits": "Keine Guthaben mehr!"
     },
-    "creation": {
-        "option1": "Bessere Bildqualit\u00e4t",
-        "option2": "Schwierigeres Ausmalen",
-        "option3": "Nur eine Seite",
-        "create": "Erstelle mein Buch",
-        "warning1": "Please fill in the book description!",
-        "placeholder1": "Mario spielt mit..."
+    "processing": "Verarbeitung...",
+    "download_pdf": "PDF herunterladen",
+    "finish_book": "Buch abschließen",
+    "advanced_options": "Erweiterte Optionen",
+    "test_mode": "Testmodus",
+    "test_mode_description": "Zeige Beschreibungen anstelle von Bildern",
+    "advanced_story_context": {
+      "title": "Erweiterter Story-Kontext",
+      "description": "Verwenden Sie einen detaillierteren Story-Kontext für bessere Kontinuität"
+    },
+    "generating-your-book": "Generieren Sie Ihr Buch..."
+  },
+  "edition": {
+    "context": "Kontext",
+    "enhance-image": "Bild verbessern",
+    "last-seen-doing": "Zuletzt gesehen dabei:",
+    "current-situation": "Aktuelle Situation:",
+    "environment": "Umfeld:",
+    "story-summary": "Zusammenfassung der Geschichte:",
+    "hooks": {
+      "regenrating-image": "Bild wird neu generiert..."
     }
+  },
+  "creation": {
+    "a-goblin-in-a-forest-eating-a-mushroom": "Ein Kobold im Wald, der einen Pilz frisst ...",
+    "not-enough-credits": "Nicht genügend Credits",
+    "credits-remaining": "Restguthaben",
+    "create-your-book": "Erstellen Sie Ihr Buch",
+    "enter-book-title": "Buchtitel eingeben",
+    "start-creating": "Beginnen",
+    "hooks": {
+      "please-enter-a-book-title": "Bitte geben Sie einen Buchtitel ein",
+      "successfully-created-title": "Erfolgreich erstellt",
+      "failed-to-create-book-please-try-again": "Buch konnte nicht erstellt werden. \nBitte versuchen Sie es erneut.",
+      "please-enter-a-description-for-your-page": "Bitte geben Sie eine Beschreibung für Ihre Seite ein",
+      "creating-image": "Bild erstellung...",
+      "failed-to-generate-image-please-try-again": "Bild konnte nicht generiert werden. \nBitte versuchen Sie es erneut."
+    }
+  },
+  "modification": {
+    "use-more-detailed-story-context-for-better-continuity": "Verwenden Sie einen detaillierteren Story-Kontext für eine bessere Kontinuität",
+    "advanced-story-context": "Erweiterter Story-Kontext"
+  },
+  "login": {
+    "logout": "Abmelden",
+    "login": "Login",
+    "create": "Erstellen",
+    "password": "Passwort",
+    "email": "E-Mail",
+    "welcome": "anmelden"
+  },
+  "home": {
+    "start-creating": "Erstelle mein Buch!"
+  },
+  "error": {
+    "oops-something-went-wrong": "Hoppla! \nEtwas ist schief gelaufen",
+    "an-unexpected-error-occurred": "Es ist ein unerwarteter Fehler aufgetreten",
+    "try-again": "Versuchen Sie es erneut",
+    "cannot-create-new-pages-book-is-finished": "Es können keine neuen Seiten erstellt werden: Das Buch ist fertig",
+    "failed-to-enhance-description-please-try-again": "Die Beschreibung konnte nicht verbessert werden. \nBitte versuchen Sie es erneut.",
+    "failed-to-regenerate-image-please-try-again": "Das Bild konnte nicht neu generiert werden. \nBitte versuchen Sie es erneut.",
+    "please-enter-enhancement-instructions": "Bitte geben Sie Erweiterungsanweisungen ein",
+    "pdf-url-not-found": "PDF-URL nicht gefunden",
+    "no-pdf-url-received-from-server": "Keine PDF-URL vom Server empfangen",
+    "failed-to-finish-book-please-try-again": "Das Buch konnte nicht fertiggestellt werden. \nBitte versuchen Sie es erneut.",
+    "api": {
+      "session-expired": "Sitzung abgelaufen. \nBitte melden Sie sich erneut an.",
+      "request-timeout": "Timeout anfordern. \nBitte versuchen Sie es erneut."
+    }
+  },
+  "success": {
+    "your-book-has-been-successfully-generated": "Ihr Buch wurde erfolgreich generiert!"
+  }
 }

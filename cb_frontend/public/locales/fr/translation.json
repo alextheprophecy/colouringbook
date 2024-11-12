@@ -1,26 +1,110 @@
 {
-    "examplebooks": {
-        "rabbits": "Un match de football o\u00f9 les gentils lapins gagnent contre les m\u00e9chants chiens",
-        "teamwork": "Joie, amiti\u00e9, fantasie, f\u00e9e, lutins, travail d'\u00e9quipe",
-        "batman-mario": "Batman et Mario jouant \u00e0 diff\u00e9rents sports ensemble, bonheur, en plein air",
-        "scenarios": "Transformez n'importe quel sc\u00e9nario en une page \u00e0 colorier !",
-        "scpecific": "Donnez des consignes sp\u00e9cifiques pour chaque page"
-    },
-    "creation": {
-        "option1": "Meilleure qualit\u00e9",
-        "option2": "Coloriage plus difficile",
-        "option3": "Une seule page",
-        "create": "Cr\u00e9er mon livre",
-        "warning1": "Veuillez remplir la description de votre livre!",
-        "placeholder1": "Mario jouant aux \u00e9checs contre une grenouille dans un parc, ils sont tous les deux concentr\u00e9s et s'amusent. \nUn dragon soufflant sur les bougies de son g\u00e2teau d'anniversaire.",
-        "placeholder2": "Un lapin en tenue de football marquant un but. Le ballon est dans le coin inf\u00e9rieur du filet. Le grand texte \u00ab BUT \u00bb est \u00e9crit en haut de la page. \nUn gnome heureux assis sur une souche d'arbre en train de manger une pizza.",
-        "placeholder3": "Un groupe de trois grenouilles sautant par-dessus la lune.\nUn grand coffre au tr\u00e9sor ouvert, brillant et rempli de pizzas et de glaces.",
-        "tips_button": "Aide: Comment cr\u00e9er son livre?",
-        "tips_close_button": "Cliquez \u00e0 nouveau pour masquer",
-        "tips1": "G\u00e9n\u00e9rez plusieurs pages en \u00e9crivant chaque sc\u00e8ne dans une phrase distincte\n\n[do]Un dragon soufflant sur les bougies de son g\u00e2teau d'anniversaire. Un troupeau de 5 moutons heureux dans un champ, regardant la t\u00e9l\u00e9vision sur un grand \u00e9cran[/do]",
-        "tips2": "Les personnages/personnes c\u00e9l\u00e8bres peuvent donner des r\u00e9sultats incoh\u00e9rents\n\n[avoid]Mario, Superman, Elon Musk[/avoid]\n[do]Un chien, un dragon, un gnome, une f\u00e9e, un homme grand avec une moustache, un homme souriant avec de grands cheveux jaunes ondul\u00e9s[/do]",
-        "tips3": "Utilisez des descriptions sp\u00e9cifiques. \n[avoid]\u2026jouant ensemble[/avoid][do]\u2026jouant au loup et courant dans un grand champ d'herbe[/do] \n[avoid]des chiens[/avoid]  [do] un groupe de trois chiens[/do]",
-        "tips4": "\u00c9vitez de regrouper trop de personnages\n[avoid]\u2026avec un dragon, un grand \u00e9l\u00e9phant, un crocodile et un lutin heureux[/avoid] [do]avec un lutin assis \u00e0 c\u00f4t\u00e9 d\u2019un dragon.[/do]",
-        "tips5": "Pour des sc\u00e8nes plus complexes ou une meilleure qualit\u00e9, activez \"Meilleure qualit\u00e9\""
+  "creation": {
+    "create-page": "Créer une page",
+    "new-page": "Nouvelle page",
+    "a-goblin-in-a-forest-eating-a-mushroom": "Un gobelin dans une forêt mangeant un champignon...",
+    "not-enough-credits": "Pas assez de crédits",
+    "credits-remaining": "crédits restants",
+    "create-your-book": "Creer mon livre",
+    "enter-book-title": "Entrez le titre du livre",
+    "start-creating": "Commencer",
+    "hooks": {
+      "please-enter-a-book-title": "Veuillez saisir le titre du livre",
+      "successfully-created-title": "Création réussie",
+      "creating-book": "En cours de création",
+      "failed-to-create-book-please-try-again": "Échec de la création du livre. \nVeuillez réessayer.",
+      "please-enter-a-description-for-your-page": "Veuillez saisir une description pour votre page",
+      "creating-image": "Création de l'image...",
+      "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
     }
+  },
+  "modifybook": {
+    "credits": {
+      "out_of_credits": "Plus de crédits !"
+    },
+    "processing": "Traitement en cours...",
+    "download_pdf": "Télécharger le PDF",
+    "finish_book": "Terminer le livre",
+    "creative_model": "Qualite d'image",
+    "creative_model_description": "Activez pour des images plus propres, mais potentiellement moins adaptees au coloriage",
+    "advanced_options": "Options avancées",
+    "test_mode": "Mode test",
+    "test_mode_description": "Afficher les descriptions au lieu de générer des images",
+    "advanced_story_context": {
+      "title": "Contexte d'histoire avancé",
+      "description": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité"
+    },
+    "generating-your-book": "Génération de votre livre..."
+  },
+  "edition": {
+    "context": "Contexte",
+    "enhance-image": "Améliorer l'image",
+    "last-seen-doing": "Vu pour la dernière fois en train de faire :",
+    "current-situation": "Situation actuelle :",
+    "environment": "Environnement:",
+    "story-summary": "Résumé de l'histoire :",
+    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Exemples:&#10;•  Ajoute un chapeau au personnage&#10;• Ajoute un chat en dessous de la table &#10;• ",
+    "hooks": {
+      "regenrating-image": "Image régénérée...",
+      "enhancing-description": "Amélioration de l'image"
+    }
+  },
+  "cancel": "Annuler",
+  "modification": {
+    "use-more-detailed-story-context-for-better-continuity": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité",
+    "advanced-story-context": "Contexte de l'histoire avancée"
+  },
+  "feedback": {
+    "thank-you-for-your-feedback": "Merci pour votre retour !",
+    "failed-to-submit-feedback-please-try-again": "Échec de l'envoi des commentaires. \nVeuillez réessayer.",
+    "send-feedback": "Envoyer le commentaire",
+    "rate-your-experience": "Évaluez votre expérience",
+    "how-would-you-rate-your-experience": "Comment évalueriez-vous votre expérience ?",
+    "feedback-for": "Commentaire pour",
+    "tell-us-more-about-your-experience": "Parlez-nous de votre expérience...",
+    "not-now": "Plus tard"
+  },
+  "login": {
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "create": "Créer",
+    "home": "Acceuil",
+    "my-gallery": "Ma bibliothèque",
+    "password": "Mot de passe",
+    "email": "E-mail",
+    "logging-in": "Connexion...",
+    "welcome": "Connexion"
+  },
+  "gallery": {
+    "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
+    "download": "Télécharger",
+    "more-books-in-your-library": "autres livres dans votre bibliothèque",
+    "refresh-books": "Actualiser les livres",
+    "no-books-yet": "Ta bibliotheque est vide...",
+    "start-your-creative-journey": "Remplissons la!",
+    "create-first-book": "Creer mon premier livre"
+  },
+  "home": {
+    "get-started": "Commencer",
+    "start-creating": "Creer mon livre!"
+  },
+  "error": {
+    "oops-something-went-wrong": "Oups ! \nQuelque chose s'est mal passé",
+    "an-unexpected-error-occurred": "Une erreur inattendue s'est produite",
+    "try-again": "Essayer à nouveau",
+    "cannot-create-new-pages-book-is-finished": "Impossible de créer de nouvelles pages : le livre est terminé",
+    "failed-to-enhance-description-please-try-again": "Échec de l'amélioration de la description. \nVeuillez réessayer.",
+    "failed-to-regenerate-image-please-try-again": "Échec de la régénération de l'image. \nVeuillez réessayer.",
+    "please-enter-enhancement-instructions": "Veuillez saisir les instructions d'amélioration",
+    "pdf-url-not-found": "URL PDF introuvable",
+    "no-pdf-url-received-from-server": "Aucune URL PDF reçue du serveur",
+    "failed-to-finish-book-please-try-again": "Impossible de terminer le livre. \nVeuillez réessayer.",
+    "api": {
+      "session-expired": "Session expirée. \nVeuillez vous reconnecter.",
+      "request-timeout": "Désolé pour l'attente. \nVeuillez réessayer."
+    }
+  },
+  "success": {
+    "your-book-has-been-successfully-generated": "Votre livre a été généré avec succès !"
+  }
 }

@@ -1,13 +1,11 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, React} from "react";
 import api from "../../Hooks/ApiHandler";
-import ExamplesView from "./example_books.view";
-import FlipBook from "../flip_book.component";
 import '../../Styles/gallery.css'
-import {getBookData, saveBookData} from "../../Hooks/UserDataHandler";
-import { RefreshCw, Download } from 'lucide-react';
+import {getBookData, saveBookData, isUserLoggedIn} from "../../Hooks/UserDataHandler";
+import { RefreshCw, Download, Plus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { setAskFeedback, addNotification } from '../../redux/websiteSlice';
-
+import { useTranslation } from 'react-i18next';
 // Replace the single constant with two constants
 const LOADING_TIMES = Object.freeze({
     INITIAL: 330,
@@ -43,7 +41,7 @@ const GalleryView = () =>  {
     const [processedBooks, setProcessedBooks] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [loadingMore, setLoadingMore] = useState(false);
-
+    const { t } = useTranslation();
     // Helper function to preload an image
     const preloadImage = (url) => {
         return new Promise((resolve, reject) => {
@@ -109,7 +107,7 @@ const GalleryView = () =>  {
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to load more books. Please try again.',
+                message: error.message || t('gallery.failed-to-load-books-please-try-again'),
                 duration: 5000
             }));
         } finally {
@@ -153,7 +151,7 @@ const GalleryView = () =>  {
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to load books. Please try again.',
+                message: error.message || t('gallery.failed-to-load-books-please-try-again'),
                 duration: 5000
             }));
         } finally {
@@ -198,7 +196,7 @@ const GalleryView = () =>  {
     };
 
     useEffect(() => {
-        initializeGallery();
+        if (isUserLoggedIn()) initializeGallery();        
     }, []);
 
     const downloadBook = (book) => {
@@ -252,8 +250,7 @@ const GalleryView = () =>  {
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
                         >
                             <Download className="w-4 h-4" />
-                            Download
-                        </button>
+                            {t('gallery.download')} </button>
                         <span className="text-sm text-gray-400">{book.id}</span>
                     </div>
                 </div>
@@ -262,34 +259,39 @@ const GalleryView = () =>  {
     }
 
     const renderBookCount = () => {
-        const hiddenBooks = getBookData().bookCount - processedBooks.length;
+        const bookData = getBookData();
+        if (!bookData?.bookCount) return '';
+        
+        const hiddenBooks = bookData.bookCount - processedBooks.length;
         if (hiddenBooks <= 0) return null;
 
         const skeletonCount = Math.min(hiddenBooks, 7); // Show max 7 skeletons
         
         return (
-            <>
+            <div className="flex justify-center w-full">
                 {loadingMore ? (
                     // Show skeletons when loading
-                    Array.from({ length: skeletonCount }).map((_, index) => (
-                        <SkeletonLoader key={`skeleton-${currentPage}-${index}`} />
-                    ))
+                    <div className="w-full max-w-4xl">
+                        {Array.from({ length: skeletonCount }).map((_, index) => (
+                            <SkeletonLoader key={`skeleton-${currentPage}-${index}`} />
+                        ))}
+                    </div>
                 ) : (
                     // Show the "load more" button when not loading
                     <button 
                         onClick={loadMoreBooks}
                         disabled={loadingMore}
-                        className="w-full max-w-4xl mx-auto mt-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm transition-colors duration-200"
+                        className="w-full max-w-4xl p-4 bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm transition-colors duration-200"
                     >
                         <p className="text-center text-gray-600 flex items-center justify-center gap-2">
                             {loadingMore ? (
                                 <RefreshCw className="w-4 h-4 animate-spin" />
                             ) : null}
-                            + {hiddenBooks} more book{hiddenBooks === 1 ? '' : 's'} in your library
+                            + {hiddenBooks}{t('gallery.more-books-in-your-library')}
                         </p>
                     </button>
                 )}
-            </>
+            </div>
         );
     };
 
@@ -299,7 +301,7 @@ const GalleryView = () =>  {
             <button 
                 onClick={loadValues}
                 className="absolute top-4 right-6 p-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
-                title="Refresh books"
+                title={t('gallery.refresh-books')}
             >
                 <RefreshCw 
                     className={`w-6 h-6 text-white ${loading ? 'animate-spin' : ''}`}
@@ -317,8 +319,33 @@ const GalleryView = () =>  {
                     </>
                 ) : (
                     <>
-                        {showBooks()}
-                        {renderBookCount()}
+                        {processedBooks.length > 0 ? (
+                            <>
+                                {showBooks()}
+                                {renderBookCount()}
+                            </>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center min-h-[60vh] bg-white/80 rounded-lg shadow-md p-8">
+                                <div className="text-center mb-8">
+                                    <h2 className="text-2xl font-children font-semibold text-gray-800 mb-3">
+                                        {t('gallery.no-books-yet')}
+                                    </h2>
+                                    <p className="text-gray-600 max-w-md mx-auto">
+                                        {t('gallery.start-your-creative-journey')}
+                                    </p>
+                                </div>
+                                <a 
+                                    href="/create"
+                                    className="px-6 py-3 bg-blue-500 text-white rounded-lg 
+                                             hover:bg-blue-600 transition-colors duration-200
+                                             flex items-center gap-2 font-children font-semibold
+                                             shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    {t('gallery.create-first-book')}
+                                </a>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

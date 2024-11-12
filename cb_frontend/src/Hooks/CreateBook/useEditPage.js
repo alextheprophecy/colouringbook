@@ -1,23 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePage, setIsEditing, updateContext} from '../../redux/bookSlice';
+import { setIsEditing} from '../../redux/bookSlice';
 import useImageGeneration from './useImageGeneration';
 import useLoadRequest from './useLoadRequest';
 import { addNotification } from '../../redux/websiteSlice';
-
+import { useTranslation } from 'react-i18next';
 const useEditPage = () => {
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
-    const settings = useSelector(state => state.website.settings);
+
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [showDescription, setShowDescription] = useState(false);
     const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available', 0]);
     const { regenerateImage, enhanceImage } = useImageGeneration();
-    const [isLoading, setIsLoading] = useState(false);
     const { loadRequest} = useLoadRequest();
-
+    const { t } = useTranslation();
     const [isEnhancing, setIsEnhancing] = useState(false);
 
     const formatPageDescription = (pageData) => {
@@ -46,19 +45,19 @@ const useEditPage = () => {
         } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages, showDescription, bookId]);
+    }, [isEditing, currentPage, pages, bookId]);
 
     
     const handleRegenerate = useCallback(async () => {
         try {
             await loadRequest(
                 () => regenerateImage(currentPage, pages, currentContext, bookId),
-                "Regenrating image..."
+                t('edition.hooks.regenrating-image')
             )
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to regenerate image. Please try again.',
+                message: error.message || t('error.failed-to-regenerate-image-please-try-again'),
                 duration: 3000
             }));
             return false;
@@ -72,7 +71,7 @@ const useEditPage = () => {
         if (!editText.trim()) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'Please enter enhancement instructions',
+                message: t('error.please-enter-enhancement-instructions'),
                 duration: 3000
             }));
             return;
@@ -80,12 +79,12 @@ const useEditPage = () => {
         try {
             await loadRequest(
                 () => enhanceImage(editText, currentPage, pages, currentContext, bookId),
-                "Enhancing description..."
+                t('edition.hooks.enhancing-description')
             )
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to enhance description. Please try again.',
+                message: error.message || t('error.failed-to-enhance-description-please-try-again'),
                 duration: 3000
             }));
         } finally {
@@ -98,7 +97,6 @@ const useEditPage = () => {
         setEditText,
         isVisible,
         currentImage,
-        isLoading,
         handleClose,
         showDescription,
         setShowDescription,

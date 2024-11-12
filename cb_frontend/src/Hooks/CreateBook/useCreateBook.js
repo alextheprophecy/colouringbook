@@ -4,15 +4,18 @@ import { addNotification } from '../../redux/websiteSlice';
 import useLoadRequest from './useLoadRequest';
 import api from '../../Hooks/ApiHandler'; // Assuming you have an API handler for making requests
 import { setAskFeedback } from '../../redux/websiteSlice';
+import { useTranslation } from 'react-i18next';
+
 const useCreateBook = () => {
     const dispatch = useDispatch();
     const { loadRequest } = useLoadRequest();
+    const { t } = useTranslation();
 
     const createBook = async (title) => {
         if (!title.trim()) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'Please enter a book title',
+                message: t('creation.hooks.please-enter-a-book-title'),
                 duration: 3000
             }));
             return false;
@@ -26,18 +29,18 @@ const useCreateBook = () => {
                 dispatch(startBook({ bookId: book._id, title }));
                 dispatch(addNotification({
                     type: 'success',
-                    message: `Successfully created "${title}"`,
+                    message: `${t('creation.hooks.successfully-created-title')} "${title}"`,
                     duration: 3000
                 }));
                 
                 return book;
-            }, `Creating Book ${title}`);
+            }, `${t('creation.hooks.creating-book')} ${title}`);
             
             return true;
         } catch (error) {
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to create book. Please try again.',
+                message: error.message || t('creation.hooks.failed-to-create-book-please-try-again'),
                 duration: 5000
             }));
             return false;

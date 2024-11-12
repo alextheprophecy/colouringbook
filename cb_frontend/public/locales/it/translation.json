@@ -1,17 +1,79 @@
 {
-    "examplebooks": {
-        "rabbits": "Una partita di calcio dove i simpatici conigli vincono contro i cani cattivi",
-        "teamwork": "Felicit\u00e0, amicizia, fantasia, fate, gnomi, lavoro di squadra",
-        "batman-mario": "Batman e Mario che giocano insieme a diversi sport, felicit\u00e0, all'aperto",
-        "scenarios": "Trasforma qualsiasi scenario in una pagina da colorare!",
-        "scpecific": "Fornisci suggerimenti specifici per ogni pagina"
+  "modifybook": {
+    "credits": {
+      "out_of_credits": "Crediti esauriti!"
     },
-    "creation": {
-        "option1": "Migliore qualit\u00e0 dell'immagine",
-        "option2": "Colorazione pi\u00f9 difficile",
-        "option3": "Solo una pagina",
-        "create": "Crea il mio libro",
-        "warning1": "Please fill in the book description!",
-        "placeholder1": "Mario gioca con..."
+    "processing": "Elaborazione in corso...",
+    "download_pdf": "Scarica PDF",
+    "finish_book": "Completa il libro",
+    "advanced_options": "Opzioni avanzate",
+    "test_mode": "Modalità test",
+    "test_mode_description": "Mostra descrizioni invece di generare immagini",
+    "advanced_story_context": {
+      "title": "Contesto storia avanzato",
+      "description": "Usa un contesto di storia più dettagliato per una migliore continuità"
+    },
+    "generating-your-book": "Generazione del tuo libro..."
+  },
+  "edition": {
+    "context": "Contesto",
+    "enhance-image": "Migliora l'immagine",
+    "last-seen-doing": "Visto l'ultima volta facendo:",
+    "current-situation": "Situazione attuale:",
+    "environment": "Ambiente:",
+    "story-summary": "Riepilogo della storia:",
+    "hooks": {
+      "regenrating-image": "Rigenerazione immagine..."
     }
+  },
+  "creation": {
+    "a-goblin-in-a-forest-eating-a-mushroom": "Un goblin in una foresta che mangia un fungo...",
+    "not-enough-credits": "Crediti insufficienti",
+    "credits-remaining": "crediti rimanenti",
+    "create-your-book": "Crea il tuo libro",
+    "enter-book-title": "Inserisci il titolo del libro",
+    "start-creating": "Inizia a creare",
+    "hooks": {
+      "please-enter-a-book-title": "Inserisci il titolo del libro",
+      "successfully-created-title": "Creato con successo",
+      "failed-to-create-book-please-try-again": "Impossibile creare il libro. \nPer favore riprova.",
+      "please-enter-a-description-for-your-page": "Inserisci una descrizione per la tua pagina",
+      "creating-image": "Creazione immagine...",
+      "failed-to-generate-image-please-try-again": "Impossibile generare l'immagine. \nPer favore riprova."
+    }
+  },
+  "modification": {
+    "use-more-detailed-story-context-for-better-continuity": "Utilizza un contesto narrativo più dettagliato per una migliore continuità",
+    "advanced-story-context": "Contesto narrativo avanzato"
+  },
+  "login": {
+    "logout": "Esci",
+    "login": "Login",
+    "create": "Creare",
+    "password": "Password",
+    "email": "E-mail",
+    "welcome": "Registrazione"
+  },
+  "home": {
+    "start-creating": "Crea il mio libro!"
+  },
+  "error": {
+    "oops-something-went-wrong": "Ops! \nQualcosa è andato storto",
+    "an-unexpected-error-occurred": "Si è verificato un errore imprevisto",
+    "try-again": "Riprova",
+    "cannot-create-new-pages-book-is-finished": "Impossibile creare nuove pagine: il libro è finito",
+    "failed-to-enhance-description-please-try-again": "Impossibile migliorare la descrizione. \nPer favore riprova.",
+    "failed-to-regenerate-image-please-try-again": "Impossibile rigenerare l'immagine. \nPer favore riprova.",
+    "please-enter-enhancement-instructions": "Inserisci le istruzioni per il miglioramento",
+    "pdf-url-not-found": "URL del PDF non trovato",
+    "no-pdf-url-received-from-server": "Nessun URL PDF ricevuto dal server",
+    "failed-to-finish-book-please-try-again": "Impossibile finire il libro. \nPer favore riprova.",
+    "api": {
+      "session-expired": "Sessione scaduta. \nEffettua nuovamente l'accesso.",
+      "request-timeout": "Richiedi timeout. \nPer favore riprova."
+    }
+  },
+  "success": {
+    "your-book-has-been-successfully-generated": "Il tuo libro è stato generato con successo!"
+  }
 }

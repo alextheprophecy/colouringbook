@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration, Navigate } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
 import PlaygroundView from "./Components/Views/playground.view";
@@ -17,33 +17,17 @@ import Popup from "./Components/Popup";
 import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 import { useSelector } from 'react-redux';
 import Feedback from './Components/Feedback/feedback';
+import { isUserLoggedIn } from './Hooks/UserDataHandler';
 
-const AppLayout = () => {
-    
-    const resetScrollPosition = () => {
-        window.scrollTo(0, 0);
-    }
+const ProtectedRoute = ({ children }) => {
+  if (!isUserLoggedIn()) {
+    return <Navigate to="/login" replace />;
+  }
 
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
+  return children;
+};
 
-    useEffect(() => {
-        // Handle focusout scroll reset
-        const debouncedReset = debounce(resetScrollPosition, 100);
-        window.addEventListener('focusout', debouncedReset);
-        
-        return () => window.removeEventListener('focusout', debouncedReset);
-    }, [])
-    
+const AppLayout = () => {    
     return (
         <ErrorBoundaryWrapper>
             <Popup />
@@ -58,13 +42,6 @@ const AppLayout = () => {
         </ErrorBoundaryWrapper>
     )
 };
-
-const NavbarLayout = () => (
-  <>
-    <Navbar />
-    <Outlet />
-  </>
-);
 
 const errorElement = () => (<ErrorBoundaryWrapper>
   <div className="min-h-screen flex items-center justify-center">
@@ -96,34 +73,33 @@ const router = createBrowserRouter([
     errorElement: errorElement(),
     children: [
       {
-        element: <NavbarLayout />,
-        errorElement: <ErrorBoundaryWrapper><NavbarLayout /></ErrorBoundaryWrapper>,
+        element: <ProtectedRoute><Outlet /></ProtectedRoute>,
         children: [
           { 
-            path: '/login', 
-            element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
+            path: '/create', 
+            element: <ErrorBoundaryWrapper><CreateBook /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/gallery', 
+            element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
+          },
+          { 
+            path: '/test', 
+            element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
           },
           { 
             path: '/playground', 
             element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
           },
         ]
-      },      
+      },
+      { 
+        path: '/login', 
+        element: <ErrorBoundaryWrapper><LoginView /></ErrorBoundaryWrapper>,
+      },    
       { 
         path: '/', 
         element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/create', 
-        element: <ErrorBoundaryWrapper><CreateBook /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/gallery', 
-        element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
-      },
-      { 
-        path: '/test', 
-        element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
       },
     ]
   }

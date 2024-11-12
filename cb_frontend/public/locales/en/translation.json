@@ -1,0 +1,130 @@
+{
+  "creation": {
+    "create-page": "Create Page",
+    "new-page": "New page",
+    "a-goblin-in-a-forest-eating-a-mushroom": "A goblin in a forest eating a mushroom...",
+    "create-your-book": "Create Your Book",
+    "credits-remaining": "credits",
+    "enter-book-title": "Enter book title",
+    "start-creating": "Start Creating",
+    "not-enough-credits": "Not Enough Credits",
+    "page": "Page",
+    "hooks": {
+      "please-enter-a-book-title": "Please enter a book title",
+      "successfully-created-title": "Successfully created",
+      "creating-book": "Creating Book",
+      "failed-to-create-book-please-try-again": "Failed to create book. Please try again.",
+      "please-enter-a-description-for-your-page": "Please enter a description for your page",
+      "creating-image": "Creating image...",
+      "failed-to-generate-image-please-try-again": "Failed to generate image. Please try again."
+    }
+  },
+  "modifybook": {
+    "credits": {
+      "out_of_credits": "Out of credits!"
+    },
+    "processing": "Processing...",
+    "download_pdf": "Download PDF",
+    "finish_book": "Finish Book",
+    "creative_model": "Image Quality",
+    "creative_model_description": "Activate for cleaner images. Might however be less adapted for colouring in",
+    "advanced_options": "Advanced Options",
+    "test_mode": "Test Mode",
+    "test_mode_description": "Show descriptions instead of generating images",
+    "advanced_story_context": {
+      "title": "Advanced Story Context",
+      "description": "Use more detailed story context for better continuity"
+    },
+    "generating-your-book": "Generating your book..."
+  },
+  "edition": {
+    "context": "Context",
+    "story-summary": "Story Summary:",
+    "environment": "Environment:",
+    "current-situation": "Current Situation:",
+    "last-seen-doing": "Last Seen doing:",
+    "see-image": "See Image",
+    "info": "Info",
+    "enhance": "Enhance",
+    "credits": "credits",
+    "regenerate": "Regenerate",
+    "enhance-image": "Enhance Image",
+    "user-description": "User Description",
+    "composition-idea": "Composition Idea",
+    "api-description": "API Description",
+    "key-objects": "Key Objects:",
+    "current-page": "Current Page",
+    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Examples:&#10;• Make the main character smile more&#10;• Add a tree on the left&#10;• Make the sword longer",
+    "hooks": {
+      "regenrating-image": "Regenrating image...",
+      "enhancing-description": "Enhancing the image..."
+    }
+  },
+  "cancel": "Cancel",
+  "modification": {
+    "advanced-story-context": "Advanced Story Context",
+    "use-more-detailed-story-context-for-better-continuity": "Use more detailed story context for better continuity"
+  },
+  "feedback": {
+    "thank-you-for-your-feedback": "Thank you for your feedback!",
+    "failed-to-submit-feedback-please-try-again": "Failed to submit feedback. Please try again.",
+    "send-feedback": "Send Feedback",
+    "rate-your-experience": "Rate your experience",
+    "how-would-you-rate-your-experience": "How would you rate your experience?",
+    "feedback-for": "Feedback for",
+    "tell-us-more-about-your-experience": "Tell us more about your experience...",
+    "not-now": "Not now"
+  },
+  "login": {
+    "logout": "Logout",
+    "login": "Login",
+    "home": "Home",
+    "create": "Create",
+    "my-gallery": "My Gallery",
+    "email": "Email",
+    "password": "Password",
+    "welcome": "Sign in",
+    "logging-in": "Logging in..."
+  },
+  "error": {
+    "error": "Error",
+    "oops-something-went-wrong": "Oops! Something went wrong",
+    "an-unexpected-error-occurred": "An unexpected error occurred",
+    "try-again": "Try again",
+    "cannot-create-new-pages-book-is-finished": "Cannot create new pages: Book is finished",
+    "failed-to-regenerate-image-please-try-again": "Failed to regenerate image. Please try again.",
+    "please-enter-enhancement-instructions": "Please enter enhancement instructions",
+    "failed-to-enhance-description-please-try-again": "Failed to enhance description. Please try again.",
+    "pdf-url-not-found": "PDF URL not found",
+    "no-pdf-url-received-from-server": "No PDF URL received from server",
+    "failed-to-finish-book-please-try-again": "Failed to finish book. Please try again.",
+    "api": {
+      "request-timeout": "Request timeout. Please try again.",
+      "session-expired": "Session expired. Please login again."
+    }
+  },
+  "gallery": {
+    "failed-to-load-books-please-try-again": "Failed to load books. Please try again.",
+    "download": "Download",
+    "more-books-in-your-library": "more books in your library",
+    "refresh-books": "Refresh books",
+    "no-books-yet": "Your gallery is empty...",
+    "start-your-creative-journey": "Let's fill it up!",
+    "create-first-book": "Create my first book"
+  },
+  "home": {
+    "crayons": "Crayons",
+    "make-colouring-books-from-your-own-stories": "Make colouring books from your own stories",
+    "feature-1-title": "AI-Powered Creation",
+    "feature-1-description": "Describe your story and watch as our AI transforms your words into beautiful coloring pages. Perfect for children's books, educational materials, or creative projects.",
+    "feature-2-title": "Interactive Book Editor",
+    "feature-2-description": "Edit, enhance, and customize your coloring book pages with our intuitive editor. Add details, modify scenes, and create the perfect coloring experience.",
+    "feature-3-title": "Instant PDF Download",
+    "feature-3-description": "Download your creation instantly as a PDF, ready for printing and coloring. Share your books with friends, family, or use them in your classroom.",
+    "start-creating": "Create my book!",
+    "get-started": "Get Started"
+  },
+  "success": {
+    "your-book-has-been-successfully-generated": "Your book has been successfully generated!"
+  }
+}

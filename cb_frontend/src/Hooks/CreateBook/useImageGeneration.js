@@ -8,15 +8,16 @@ const useImageGeneration = () => {
     const dispatch = useDispatch();
     const creationSettings = useSelector(state => state.website.settings);
 
-    const generateImage = async (description, currentContext, bookId) => {
+    const generateImage = async (description, currentContext, bookId, seed=null) => {
         if (!description || description.trim() === '') {
             throw new Error('No description found');
         }                             
         const response = await api.post('image/generatePageWithContext', {
             sceneDescription: description,  
             currentContext, 
-            bookId, 
-            ...creationSettings
+            bookId,
+            seed,
+            ... creationSettings
         });        
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
         console.log('NEW IMAGE', {

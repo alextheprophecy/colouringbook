@@ -4,21 +4,21 @@ import useLoadRequest from './useLoadRequest';
 import { addPage, updateContext } from '../../redux/bookSlice';
 import { addNotification } from '../../redux/websiteSlice';
 import useImageGeneration from './useImageGeneration';
-
+import { useTranslation } from 'react-i18next';
 const useCreatePage = () => {
     const dispatch = useDispatch();
     const [description, setDescription] = useState('');
     const { generateImage } = useImageGeneration();
     const { loadRequest } = useLoadRequest();
-    const { isBookFinished, currentContext, bookId } = useSelector(state => state.book);
-
+    const { isBookFinished, currentContext, bookId, pages } = useSelector(state => state.book);
+    const { t } = useTranslation();
     const handleDescriptionChange = (e) => setDescription(e.target.value);
 
     const createImage = async () => {
         if (isBookFinished) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'Cannot create new pages: Book is finished',
+                message: t('error.cannot-create-new-pages-book-is-finished'),
                 duration: 3000
             }));
             return false;
@@ -27,22 +27,25 @@ const useCreatePage = () => {
         if (!description.trim()) {
             dispatch(addNotification({
                 type: 'error',
-                message: 'Please enter a description for your page',
+                message: t('creation.hooks.please-enter-a-description-for-your-page'),
                 duration: 3000
             }));
             return false;
         }
 
-        try {   
+        try { 
+            const lastPage = pages[pages.length - 1];
+            const lastSeed = lastPage?.seed;
+            console.log('lastSeed', lastSeed);         
             await loadRequest(
-                () => generateImage(description, currentContext, bookId),
-                "Creating image..."
+                () => generateImage(description, currentContext, bookId, lastSeed),
+                t('creation.hooks.creating-image')
             )
         } catch (error) {
             console.error('Error generating page:', error);
             dispatch(addNotification({
                 type: 'error',
-                message: error.message || 'Failed to generate image. Please try again.',
+                message: error.message || t('creation.hooks.failed-to-generate-image-please-try-again'),
                 duration: 5000
             }));
             return false;
