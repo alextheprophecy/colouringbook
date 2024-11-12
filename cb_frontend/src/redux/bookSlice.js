@@ -23,9 +23,7 @@ const initialState = {
   seeds: {advanced: null, fineTuned: null},
   currentContext: '',
   currentPage: 0,
-  isEditing: false,
-  isLoading: false,
-  loadingText: 'Loading...',
+  isEditing: false,  
   hasBookStarted: false, // New state variable
   isBookFinished: false,
   bookId: 0,
@@ -58,14 +56,6 @@ const bookSlice = createSlice({
       state.isEditing = true;
       state.currentPage = action.payload;
     },
-    startLoading: (state, action) => {
-      state.isLoading = true;
-      state.loadingText = action.payload;
-    },
-    stopLoading: (state) => {
-      state.isLoading = false;
-      state.loadingText = '';
-    },
     startBook: (state, action) => {
       const titleInput = action.payload.title;
       state.pages.push(firstPage(titleInput));
@@ -82,6 +72,6 @@ const bookSlice = createSlice({
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook, finishBook, setSeeds, editPage} = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage} = bookSlice.actions;
 
 export default bookSlice.reducer;

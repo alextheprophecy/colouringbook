@@ -8,8 +8,8 @@ import { Book } from 'lucide-react';
 import ScribbleText from "../UI/ui_scribble_text.component";
 
 const CreateBook = () => {
-    const { isLoading, hasBookStarted } = useSelector(state => state.book);
-    const credits = useSelector(state => state.website.credits);
+    const { hasBookStarted } = useSelector(state => state.book);
+    const { credits, isLoading } = useSelector(state => state.website);
     const { createBook } = useCreateBook();
     const [title, setTitle] = useState('');
     const { t } = useTranslation();

@@ -128,6 +128,15 @@ const useModifyBook = () => {
             return;
         }
 
+        // First flip to the beginning
+        const book = getBookInstance();
+        if (book && currentPage > 0) {
+            setIsFlipping(true);
+            book.getSettings().flippingTime = FLIP_TIMES.QUICK_FLIP;
+            book.getSettings().disableFlipByClick = true;
+            book.flip(0);
+        }
+        
         setIsFinishing(true);
         try {
             const response = await loadRequest(
@@ -152,6 +161,9 @@ const useModifyBook = () => {
                 message: t('success.your-book-has-been-successfully-generated'),
                 duration: 5000
             }));
+
+            // After PDF is generated, animate through the book
+            startAnimation(pages.length - 1, true);
 
         } catch (error) {
             console.error('Error finishing book:', error);      

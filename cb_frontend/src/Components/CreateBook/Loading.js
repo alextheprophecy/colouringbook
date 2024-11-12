@@ -2,7 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Loading = () => {
-    const loadingText = useSelector((state) => state.book.loadingText);
+    const {loadingText, isLoading} = useSelector((state) => state.website);
+    console.log('WE AREA :', loadingText, isLoading);
+    if (!isLoading) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[15]">
