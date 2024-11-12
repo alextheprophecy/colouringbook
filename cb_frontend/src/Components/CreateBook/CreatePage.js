@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
+import { useSelector } from 'react-redux';
 const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}, ref) => {  
     const { t } = useTranslation();
+    const creationSettings = useSelector(state => state.website.settings);
     const textareaRef = useRef(null);
     const {
         createImage,
@@ -62,8 +63,8 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                                 <Plus className="w-5 h-5 text-white" />
                                 <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>
                             </button>
-                            <span className="text-red-500 text-[10px] font-mono font-medium">
-                                -3 {t('edition.credits')}
+                            <span className="text-red-500 text-[0.9rem] font-mono font-medium">
+                                -{creationSettings.useAdvancedModel ? 5 : 3} {t('edition.credits')}
                             </span>
                         </div>
                     </div>

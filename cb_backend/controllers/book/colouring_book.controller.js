@@ -21,7 +21,6 @@ const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring b
 
 const verifyPageCredits = async (user, useAdvancedModel) => {
     const creditCost = useAdvancedModel ? CREDIT_COSTS.ADVANCED_GEN : CREDIT_COSTS.GEN;
-    if (!creditCost) throw new Error('Invalid generation type');
     return await verifyCredits(user, creditCost);    
 };
 
@@ -104,9 +103,10 @@ const regeneratePage = async (req, res) => {
     const book = req.book;
     const { detailedDescription, currentPage, ...creationSettings } = req.body;
     const { testMode, ...generationSettings } = creationSettings;
+    console.log('regenerating page with:', generationSettings.useAdvancedModel);
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, 'REGEN').catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
     if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
@@ -136,7 +136,7 @@ const enhancePage = async (req, res) => {
     const { testMode, ...generationSettings } = creationSettings;
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, 'ENHANCE').catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!previousDescription || !enhancementRequest) return res.status(400).json({ error: 'Missing required parameters' });
     

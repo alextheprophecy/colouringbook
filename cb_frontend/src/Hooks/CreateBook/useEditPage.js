@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const useEditPage = () => {
     const dispatch = useDispatch();
     const { pages, currentPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
-
+    const creationSettings = useSelector(state => state.website.settings);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
@@ -64,7 +64,7 @@ const useEditPage = () => {
         } finally {
             handleClose();
         }             
-    }, [currentPage, bookId, currentContext, pages]);
+    }, [currentPage, bookId, currentContext, pages, creationSettings]);
 
 
     const handleEnhance = useCallback(async () => {
