@@ -200,24 +200,45 @@ const GalleryView = () =>  {
     }, []);
 
     const downloadBook = (book) => {
-        api.get('image/getBookPDF', {params: {bookId: book.id}}).then(r => {
-            if(!r) return
-            console.log('yippee', r)
+        const cachedUrl = localStorage.getItem(`bookPDF-${book.id}`);
 
-            const url = r.data
-            console.log(url)
-            // Create a temporary <a> element and trigger the download
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `ColouringBook.pdf`; // Set filename for the download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        if (cachedUrl) {
+            // Try using the cached URL first
+            downloadPDF(cachedUrl);
+        } else {
+            // Fetch a new URL if not cached
+            fetchPDFUrl(book.id);
+        }
+    };
 
-            // Show feedback prompt after successful download
-            dispatch(setAskFeedback(true));
-        })
-    }
+    const fetchPDFUrl = (bookId) => {
+        api.get('image/getBookPDF', { params: { bookId } }).then(r => {
+            if (!r) return;
+            const url = r.data.bookPDF;
+            console.log('PDF URL:', url);
+
+            // Save the URL to local storage
+            localStorage.setItem(`bookPDF-${bookId}`, url);
+
+            // Download the PDF
+            downloadPDF(url);
+        }).catch(error => {
+            console.error('Failed to fetch PDF URL:', error);
+        });
+    };
+
+    const downloadPDF = (url) => {
+        // Create a temporary <a> element and trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `ColouringBook.pdf`; // Set filename for the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Show feedback prompt after successful download
+        dispatch(setAskFeedback(true));
+    };
 
     const showBooks = () => {
         return processedBooks.map(book => (

@@ -181,6 +181,7 @@ const getBookPDF = async (req, res) => {
         // If PDF already exists, return its URL
         if (book.finished) {
             const pdfUrl = await getPDF(user, book);
+            console.log('sending pdfUrl:', pdfUrl);
             return res.status(200).json({ bookPDF: pdfUrl });
         }
         // If book has no pages, return error
@@ -188,7 +189,7 @@ const getBookPDF = async (req, res) => {
             return res.status(400).json({ error: 'Cannot get PDF for a book with no pages' });
         }
         // Generate PDF if it doesn't exist
-        const pdfUrl = await generateBookPDF(req, res);
+        const pdfUrl = await _generateBookPDF(user, book);
         res.status(200).json({ bookPDF: pdfUrl });
     } catch (error) {
         console.error('Error in getBookPDF:', error);
@@ -219,17 +220,17 @@ const finishBook = async (req, res) => {
                 }
             ),
             // Generate PDF
-            generateBookPDF(req, res)
+            _generateBookPDF(user, book)
         ]);
 
         if (!uploadResult || !pdfUrl) {
-            throw new Error('Failed to finish book - error saving data');
+            throw new Error(`Failed to finish book - error saving data, missing ${uploadResult ? '' : 'uploadResult'} ${pdfUrl ? '' : 'pdfUrl'} (${JSON.stringify(uploadResult)}, ${JSON.stringify(pdfUrl)})`);
+        }else{
+            res.status(200).json({ 
+                bookPDF: pdfUrl,
+                message: 'Book finished successfully'
+            });
         }
-
-        res.status(200).json({ 
-            bookPDF: pdfUrl,
-            message: 'Book finished successfully'
-        });
 
     } catch (error) {
         console.error('Error in finishBook:', error);
@@ -237,41 +238,30 @@ const finishBook = async (req, res) => {
     }
 };
 
-const generateBookPDF = async (req, res) => {
-    const user = req.user;
-    const book = req.book;
+const _generateBookPDF = async (user, book) => {  
+    if (book.pageCount === 0) throw new Error('Cannot generate PDF for a book with no pages');        
 
-    try {
-        if (book.pageCount === 0) {
-            return res.status(400).json({ error: 'Cannot generate PDF for a book with no pages' });
-        }
+    const _genBookPDF = (user, book) =>
+        Promise.all(
+            Array.from({length: book.pageCount}, (_, i) => 
+                getFileData(image_data(user.email, book.id, i).key))
+        ).then(imageBuffers => saveBookPDF(imageBuffers, user, book));   
+    
+    // Generate PDF, update book status, and get presigned URL concurrently
+    const [uploadResult, updatedBook, pdfUrl] = await Promise.all([
+        _genBookPDF(user, book),
+        Book2.findByIdAndUpdate(
+            book.id, 
+            { finished: true },
+            { new: true }
+        ),
+        getPDF(user, book)
+    ]);
 
-        const _genBookPDF = (user, book) =>
-            Promise.all(
-                Array.from({length: book.pageCount}, (_, i) => 
-                    getFileData(image_data(user.email, book.id, i).key))
-            ).then(imageBuffers => saveBookPDF(imageBuffers, user, book));   
-        
-        // Generate PDF, update book status, and get presigned URL concurrently
-        const [uploadResult, updatedBook, pdfUrl] = await Promise.all([
-            _genBookPDF(user, book),
-            Book2.findByIdAndUpdate(
-                book.id, 
-                { finished: true },
-                { new: true }
-            ),
-            getPDF(user, book)
-        ]);
-
-        if (!uploadResult || !updatedBook) throw new Error('Failed to finish book');
-        
-        console.log('sending pdfUrl:', pdfUrl);
-        res.status(200).json({ bookPDF: pdfUrl });
-
-    } catch (error) {
-        console.error('Error in finishBook:', error);
-        res.status(500).json({ error: 'Failed to finish book' });
-    }
+    if (!uploadResult || !updatedBook) throw new Error('Failed to finish book');
+    
+    console.log('sending pdfUrl:', pdfUrl);    
+    return pdfUrl;
 };
 
 module.exports = {

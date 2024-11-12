@@ -21,28 +21,25 @@ const DescriptionsController = () => {
     });
 
     const shouldUpdateBookContext = async (enhancementPrompt, currentContext, miniModel = true) => {
-        const systemPrompt = `You are an expert story analyst for children's visual storybooks. Your task is to evaluate whether a requested enhancement introduces an intrinsic change that needs to be reflected in the book context.
-            
-        Guidelines:
-        1. Return TRUE if the enhancement introduces:
-           - Permanent character appearance changes
-           - Persistent setting/environment changes
-           - New story-critical objects or elements
-           - Changes that will definitely affect future scenes
-           - e.g. a character wearing a new hat, or the environment changing to a new location
+        const systemPrompt = `You are an expert in children's storybook continuity. Decide if an enhancement should update the book context.
         
-        2. Return FALSE if the enhancement only includes:
-           - Temporary poses or expressions
-           - One-time actions
-           - Scene-specific details
-           - Minor adjustments that won't carry forward
-           - e.g removing the tree from the background`;
-
-        const userPrompt = `Evaluate if this enhancement request requires updating the story context:
-        - Enhancement Request: "${enhancementPrompt}"
+        Guidelines:
+        1. Return TRUE if the change:
+           - Permanently alters a character’s appearance
+           - Modifies the setting or environment long-term
+           - Adds story-critical objects or elements
+           - Affects future scenes (e.g., new food item, new setting)
+        
+        2. Return FALSE if the change is temporary or minor:
+           - Temporary expressions or poses
+           - Background adjustments (e.g., moving a tree)
+           - One-time actions with no lasting impact`;
+        
+            const userPrompt = `Should this enhancement update the story context?
+        - Enhancement: "${enhancementPrompt}"
         - Current Context: ${JSON.stringify(currentContext, null, 2)}
         
-        Return TRUE only if the enhancement introduces changes that should persist in future scenes.`;
+        Return TRUE if it introduces lasting changes; otherwise, return FALSE.`;
 
         const resultSchema = z.object({
             result: z.boolean()

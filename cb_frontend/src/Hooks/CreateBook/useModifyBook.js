@@ -18,7 +18,7 @@ export const FLIP_TIMES = Object.freeze({
 const useModifyBook = () => {
     const dispatch = useDispatch();
     const { pages, currentPage, bookId, isBookFinished, seeds, title, currentContext} = useSelector(state => state.book);
-    const bookData = useSelector(state => state.book);
+
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
     const [isFinishing, setIsFinishing] = useState(false);
@@ -26,11 +26,17 @@ const useModifyBook = () => {
     const [pdfUrl, setPdfUrl] = useState(null);
     const { t } = useTranslation();
     const [isSinglePage, setIsSinglePage] = useState(false);
-
+    const [selectedCreationPage, setSelectedCreationPage] = useState(false);
+    
     const isOnCreationPage = useCallback(() => {
         return currentPage === pages.length
     }, [currentPage, pages.length]);
     
+    const isOnSelectedCreationPage = useCallback(() => {
+        console.log('isOnSelectedCreationPage', currentPage >= pages.length - (isSinglePage ? 0 : 1));
+        return (pages.length%2===0) ? (selectedCreationPage && currentPage >= pages.length - (isSinglePage ? 0 : 1)) : currentPage >= pages.length - (isSinglePage ? 0 : 1)
+    }, [currentPage, pages.length, selectedCreationPage, isSinglePage]);
+
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
     const startAnimation = useCallback((targetPage = pages.length-1, quickFlip = false) => {
@@ -98,8 +104,8 @@ const useModifyBook = () => {
 
     useEffect(() => {
         const book = getBookInstance();
-        if (book) book.getSettings().useMouseEvents = !isOnCreationPage();
-    }, [isOnCreationPage]);
+        if (book) book.getSettings().useMouseEvents = isSinglePage ? !isOnCreationPage() : !isOnSelectedCreationPage();        
+    }, [isOnCreationPage, isOnSelectedCreationPage, selectedCreationPage]);
 
     const handleFinishBook = async () => {
         if (isFinishing) return;
@@ -134,7 +140,8 @@ const useModifyBook = () => {
             
             setPdfUrl(data.bookPDF);
             window.open(data.bookPDF, '_blank');
-            dispatch(finishBook());            dispatch(setAskFeedback(true));
+            dispatch(finishBook());            
+            dispatch(setAskFeedback(true));
             dispatch(addNotification({
                 type: 'success',
                 message: t('success.your-book-has-been-successfully-generated'),
@@ -147,6 +154,27 @@ const useModifyBook = () => {
             setIsFinishing(false);
         }
     };   
+
+    const handleCreatePageMouseEnter = () => {
+        if (!isSinglePage) {            
+            const book = getBookInstance();
+            if (book){
+                console.log('handleCreatePageMouseEnter', flipBookRef.current);
+                setSelectedCreationPage(true);
+            } 
+        }
+    };
+
+    const handleCreatePageMouseLeave = () => {
+        if (!isSinglePage) {
+            const book = getBookInstance();
+            if (book){
+                console.log('handleCreatePageMouseLeave', flipBookRef.current);
+                setSelectedCreationPage(false);
+
+            }
+        }
+    };
     
     return {
         flipBookRef,
@@ -167,6 +195,8 @@ const useModifyBook = () => {
         isBookFinished,
         pdfUrl,
         isSinglePage,
+        handleCreatePageMouseEnter,
+        handleCreatePageMouseLeave
     };
 };
 

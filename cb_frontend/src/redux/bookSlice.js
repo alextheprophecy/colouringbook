@@ -6,6 +6,7 @@ const pagesExample = [
   { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=3`, description: "Page 1"},
   { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=4`, description: "Page 1"},
   { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=5`, description: "Page 1"},
+  { image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=5`, description: "Page 1"},
 
 ];
 
@@ -53,6 +54,10 @@ const bookSlice = createSlice({
     setIsEditing: (state, action) => {
       state.isEditing = action.payload;
     },  
+    editPage: (state, action) => {
+      state.isEditing = true;
+      state.currentPage = action.payload;
+    },
     startLoading: (state, action) => {
       state.isLoading = true;
       state.loadingText = action.payload;
@@ -77,6 +82,6 @@ const bookSlice = createSlice({
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook, finishBook, setSeeds } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startLoading, stopLoading, startBook, finishBook, setSeeds, editPage} = bookSlice.actions;
 
 export default bookSlice.reducer;

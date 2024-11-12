@@ -8,6 +8,7 @@ import CreatePage from './CreatePage';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
+import { setCurrentPage, setIsEditing, finishBook, editPage } from '../../redux/bookSlice';
 
 
 const ModifyBook = () => {
@@ -29,6 +30,8 @@ const ModifyBook = () => {
         isFinishing,
         isBookFinished,
         isSinglePage,
+        handleCreatePageMouseEnter,
+        handleCreatePageMouseLeave
     } = useModifyBook();
 
     const credits = useSelector((state) => state.website.credits);
@@ -87,37 +90,67 @@ const ModifyBook = () => {
                 </button>
             )}
             
-            {/* Only show edit button if book is not finished */}
+            {/* Edit buttons - show one or two depending on isSinglePage */}
             {!isOnCreationPage() && currentPage > 0 && !isFlipping && !isBookFinished && (
-                <button 
-                    className={`absolute right-[-5px] bottom-0
-                            w-16 h-16
-                            bg-white/80
-                            shadow-lg hover:shadow-xl
-                            rounded-tl-full
-                            group
-                            overflow-hidden
-                            origin-bottom-right
-                            ring-1 ring-blue-200
-                            z-10`}
-                   
-                    onClick={() => {console.log('edit');
-                        setIsEditing(true)}}
-                    disabled={isFlipping}
-                >
-                    <Pencil 
-                        className={`absolute bottom-2 right-2
-                                h-8 w-8 
-                                text-blue-600 group-hover:text-blue-800
-                                cursor-pointer`}
-                    />
-                </button>
+                <>
+                    {/* Left page edit button */}
+                    {(!isSinglePage && currentPage >= 1) && (
+                        <button 
+                            className={`absolute left-[-5px] bottom-0
+                                    w-16 h-16
+                                    bg-white/80
+                                    shadow-lg hover:shadow-xl
+                                    rounded-tr-full
+                                    group
+                                    overflow-hidden
+                                    origin-bottom-left
+                                    ring-1 ring-blue-200
+                                    z-10`}
+                            onClick={() => {
+                                dispatch(editPage(currentPage));                                                      
+                            }}
+                            disabled={isFlipping}
+                        >
+                            <Pencil 
+                                className={`absolute bottom-2 left-2
+                                        h-8 w-8 
+                                        text-blue-600 group-hover:text-blue-800
+                                        cursor-pointer`}
+                            />
+                        </button>
+                    )}
+
+                    {/* Right page edit button */}
+                    <button 
+                        className={`absolute right-[-5px] bottom-0
+                                w-16 h-16
+                                bg-white/80
+                                shadow-lg hover:shadow-xl
+                                rounded-tl-full
+                                group
+                                overflow-hidden
+                                origin-bottom-right
+                                ring-1 ring-blue-200
+                                z-10`}
+                        onClick={() => {
+                            dispatch(editPage(isSinglePage ? currentPage : currentPage+1));                           
+                        }}
+                        disabled={isFlipping}
+                    >
+                        <Pencil 
+                            className={`absolute bottom-2 right-2
+                                    h-8 w-8 
+                                    text-blue-600 group-hover:text-blue-800
+                                    cursor-pointer`}
+                        />
+                    </button>
+                </>
             )}
         </>
-    );
+    );   
 
     return (
-        <div className={`mt-4 p-8 bg-gradient-to-b from-blue-50 to-blue-100 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+        <div className={`mt-4 p-8 bg-blue-50 gap-2 rounded-[20px] mx-auto flex justify-end items-stretch flex-col shadow-lg min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
             {/* Credits display at the top */}
             <div className="fixed top-2 right-6 z-10">
                 <div className={`px-2 py-1 rounded-full 
@@ -178,9 +211,12 @@ const ModifyBook = () => {
                         !isBookFinished ? (
                             <CreatePage 
                                 key="create-page" 
-                                classNameProp={pageClassname(pages.length)} 
+                                classNameProp={pageClassname(pages.length)}
+                                onMouseEnter={handleCreatePageMouseEnter}
+                                onMouseLeave={handleCreatePageMouseLeave}
                             />
-                        ) : null
+                        ) : null,
+                        (!isSinglePage && pages.length%2===1)? <div className="bg-blue-50"/> : null
                     ].filter(Boolean)}
 
                 </HTMLFlipBook>
