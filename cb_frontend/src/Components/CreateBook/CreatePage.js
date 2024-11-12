@@ -19,7 +19,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
         // Add a small delay to ensure mouse events are disabled before focusing
         setTimeout(() => {
             textareaRef.current?.focus();
-        }, 200);
+        }, 150);
     };
 
     return (
@@ -41,7 +41,9 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                                     focus:outline-none resize-none
                                     text-gray-700 placeholder-gray-400
                                     font-children text-lg leading-relaxed
-                                    shadow-[inset_0_0_10px_rgba(0,0,0,0.3)]"
+                                    shadow-[inset_0_0_10px_rgba(0,0,0,0.3)]
+                                    transition-shadow duration-500
+                                    focus:shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]"
                             placeholder={t('creation.a-goblin-in-a-forest-eating-a-mushroom')}
                             value={description}
                             onChange={handleDescriptionChange}   
