@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ModifyBook from "../CreateBook/ModifyBook";
 import Loading from '../CreateBook/Loading';
 import useCreateBook from '../../Hooks/CreateBook/useCreateBook';
-import useLoadRequest from '../../Hooks/CreateBook/useLoadRequest';
 import { useTranslation } from 'react-i18next';
 import { Book } from 'lucide-react';
 import ScribbleText from "../UI/ui_scribble_text.component";
@@ -12,24 +11,11 @@ const CreateBook = () => {
     const { hasBookStarted } = useSelector(state => state.book);
     const { credits, isLoading } = useSelector(state => state.website);
     const { createBook } = useCreateBook();
-    const { loadRequest } = useLoadRequest();
     const [title, setTitle] = useState('');
     const { t } = useTranslation();
-    const dispatch = useDispatch();
 
     const handleCreateBook = async () => {
         await createBook(title);
-    };
-
-    const testLoading = async () => {
-        await loadRequest(
-            async () => {
-                // Simulate some async work
-                await new Promise(resolve => setTimeout(resolve, 5000));
-            },
-            "TESTING LOADING",
-            true
-        );
     };
 
     const CreationContainer = (children) => (
@@ -40,10 +26,6 @@ const CreateBook = () => {
     
     return (
         <>
-        <button
-            onClick={testLoading}>
-            Test Loading
-        </button>
             <div className="min-h-screen flex items-center justify-center relative">
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />                    
                 {!hasBookStarted ? (

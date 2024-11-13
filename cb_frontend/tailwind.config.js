@@ -11,7 +11,8 @@ module.exports = {
         buwicked: ['Bu-Wicked', 'cursive'],
       },
       cursor: {
-        default: "url(/public/assets/cursors/pencil-cursor.svg), default"
+        'pencil': "url('/public/assets/cursors/pencil-cursor.svg') 0 32, auto",
+        'select': "url('/public/assets/cursors/select.svg') 14 -2, pointer",
       },
       textShadow: {
         'lg': '3px 3px 6px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 0, 0, 0.6)',
