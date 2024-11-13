@@ -1,6 +1,6 @@
 import '../../Styles/UI/scribble_text.css';
 import rough from 'roughjs/bundled/rough.esm';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, React } from "react";
 import opentype from 'opentype.js';
 
 const ScribbleText = ({ text = "Error",

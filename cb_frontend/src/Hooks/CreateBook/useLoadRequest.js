@@ -1,21 +1,20 @@
 import { useDispatch } from 'react-redux';
-import { startLoading, stopLoading } from '../../redux/bookSlice';
+import { startLoading, stopLoading } from '../../redux/websiteSlice';
+import { useTranslation } from 'react-i18next';
 
 const useLoadRequest = () => {
     const dispatch = useDispatch();
-
-    const loadRequest = async (asyncFunction, loadingText = 'Loading...') => {
-        dispatch(startLoading(loadingText)); // Pass the loading text
+    const { t } = useTranslation();
+    
+    const loadRequest = async (asyncFunction, loadingText = t('modifybook.loading'), dontRefreshWarning = true) => {
+        dispatch(startLoading({loadingText, dontRefreshWarning}));
         try {
-            const result = await asyncFunction();
-            return result;
-            //TODO: if result is false, show error message in a pop up
-
+            return await asyncFunction();
         } catch (error) {
             console.error('Error during async operation:', error);
             throw error;
         } finally {
-            dispatch(stopLoading()); // Use stopLoading to reset loading state
+            dispatch(stopLoading());
         }
     };
 

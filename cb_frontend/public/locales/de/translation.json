@@ -31,7 +31,7 @@
     "not-enough-credits": "Nicht genügend Credits",
     "credits-remaining": "Restguthaben",
     "create-your-book": "Erstellen Sie Ihr Buch",
-    "enter-book-title": "Buchtitel eingeben",
+    "enter-book-title": "Abenteuerbuch ...",
     "start-creating": "Beginnen",
     "hooks": {
       "please-enter-a-book-title": "Bitte geben Sie einen Buchtitel ein",
@@ -40,7 +40,9 @@
       "please-enter-a-description-for-your-page": "Bitte geben Sie eine Beschreibung für Ihre Seite ein",
       "creating-image": "Bild erstellung...",
       "failed-to-generate-image-please-try-again": "Bild konnte nicht generiert werden. \nBitte versuchen Sie es erneut."
-    }
+    },
+    "title": "Titel",
+    "dont-refresh": "Bitte aktualisieren Sie die Seite nicht!"
   },
   "modification": {
     "use-more-detailed-story-context-for-better-continuity": "Verwenden Sie einen detaillierteren Story-Kontext für eine bessere Kontinuität",
@@ -55,7 +57,26 @@
     "welcome": "anmelden"
   },
   "home": {
-    "start-creating": "Erstelle mein Buch!"
+    "start-creating": "Erstelle mein Buch!",
+    "feature-5": {
+      "description": "Erstellen Sie Ihr Malbuch und drucken Sie es in wenigen Minuten aus!",
+      "title": "Einfach und Schnell"
+    },
+    "feature-1": {
+      "description": "Unsere KI merkt sich jeden Teil Ihrer Geschichte! \nVon den Freunden, die Sie treffen, bis zu den Schätzen, die Sie finden, das Buch begleitet Sie beim Erzählen Ihrer Geschichte!",
+      "title": "Geschichtengedächtnis"
+    },
+    "feature-4": {
+      "description": "Ändern Sie jede Seite mit nur wenigen Worten! \nFügen Sie einen Heldenhut, ein magisches Schwert oder alles andere hinzu, was Sie sich vorstellen",
+      "title": "Magische Neuzeichnungen"
+    },
+    "feature-3": {
+      "description": "Erstelle jeden Charakter, den du dir vorstellen kannst! \nErwecken Sie Ihre wildesten Ideen zum Leben!",
+      "title": "Deine Charaktere"
+    },
+    "feature-2": {
+      "title": "Deine Geschichte"
+    }
   },
   "error": {
     "oops-something-went-wrong": "Hoppla! \nEtwas ist schief gelaufen",

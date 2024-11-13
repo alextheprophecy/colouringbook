@@ -1,38 +1,53 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ModifyBook from "../CreateBook/ModifyBook";
 import Loading from '../CreateBook/Loading';
 import useCreateBook from '../../Hooks/CreateBook/useCreateBook';
+import useLoadRequest from '../../Hooks/CreateBook/useLoadRequest';
 import { useTranslation } from 'react-i18next';
 import { Book } from 'lucide-react';
 import ScribbleText from "../UI/ui_scribble_text.component";
 
 const CreateBook = () => {
-    const { isLoading, hasBookStarted } = useSelector(state => state.book);
-    const credits = useSelector(state => state.website.credits);
+    const { hasBookStarted } = useSelector(state => state.book);
+    const { credits, isLoading } = useSelector(state => state.website);
     const { createBook } = useCreateBook();
+    const { loadRequest } = useLoadRequest();
     const [title, setTitle] = useState('');
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const handleCreateBook = async () => {
         await createBook(title);
     };
 
+    const testLoading = async () => {
+        await loadRequest(
+            async () => {
+                // Simulate some async work
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            },
+            "TESTING LOADING",
+            true
+        );
+    };
+
     const CreationContainer = (children) => (
-        <div className={`${isLoading ? 'pointer-events-none opacity-50' : ''} w-[90vw] mt-[0] ml-[5vw] mr-[5vw]`}>
+        <div className={`${isLoading ? 'pointer-events-none opacity-50' : ''} w-[90vw] mt-[0] ml-[5vw] mr-[5vw] z-20`}>
             {children}
         </div>
     );
     
     return (
         <>
-            {isLoading && <Loading />}
-            {!hasBookStarted ? (
-                <div className="min-h-screen flex items-center justify-center bg-paper relative">
-                    {/* Paper texture overlay with gradient */}
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />
-                    
-                    <div className="w-full max-w-md mx-4 p-8 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl relative">
+        <button
+            onClick={testLoading}>
+            Test Loading
+        </button>
+            <div className="min-h-screen flex items-center justify-center relative">
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />                    
+                {!hasBookStarted ? (
+                    <div className="w-full max-w-md mx-4 p-8 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl relative z-20">
                         <div className="mb-8 flex justify-center">
                             <ScribbleText
                                 text={t('creation.create-your-book')}
@@ -67,16 +82,23 @@ const CreateBook = () => {
                             </div>
 
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Book className="h-5 w-5 text-gray-400" />
+                                <div className="flex items-center gap-3">
+                                    <label className="text-blue-600 font-children font-semibold text-lg whitespace-nowrap">
+                                        {t('creation.title')}:
+                                    </label>
+                                    <div className="relative flex-1">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Book className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input 
+                                            type="text" 
+                                            value={title} 
+                                            onChange={(e) => setTitle(e.target.value)} 
+                                            placeholder={t('creation.enter-book-title')} 
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 font-children bg-white/50"
+                                        />
+                                    </div>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    value={title} 
-                                    onChange={(e) => setTitle(e.target.value)} 
-                                    placeholder={t('creation.enter-book-title')} 
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 font-children bg-white/50"
-                                />
                             </div>
 
                             <button 
@@ -89,12 +111,13 @@ const CreateBook = () => {
                             >
                                 {credits >= 3 ? t('creation.start-creating') : t('creation.not-enough-credits')}
                             </button>
-                        </div>
-                    </div>
-                </div>
-            ) : (
+                        </div>                                           
+                    </div>) : (
                 CreationContainer(<ModifyBook />)
             )}
+             
+            </div>
+            {isLoading && <Loading />}
         </>
     );
 };

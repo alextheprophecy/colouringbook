@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useState, useRef, useEffect, React } from 'react';
 import PropTypes from 'prop-types';
-const BASE_SLIDE_INTERVAL = 1750;
-const INTERVAL_VARIANCE = 500;
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import ScribbleText from '../UI/ui_scribble_text.component';
+const BASE_SLIDE_INTERVAL = 2000;
+const INTERVAL_VARIANCE = 250;
 const INACTIVITY_DELAY = 4000;
 
 const slideVariants = {
@@ -156,21 +158,21 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                 </AnimatePresence>
                 <button 
                     onClick={handlePrevImage} 
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/70 p-2 rounded-full shadow-md hover:shadow-lg"
+                    className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md hover:shadow-lg p-2"
                     disabled={isAnimating}
                 >
-                    &lt;
+                    <ChevronLeft className="w-6 h-6 text-blue-500" />
                 </button>
                 <button 
                     onClick={handleNextImage} 
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/70 p-2 rounded-full shadow-md hover:shadow-lg"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md hover:shadow-lg p-2"
                     disabled={isAnimating}
                 >
-                    &gt;
+                    <ChevronRight className="w-6 h-6 text-blue-500" />
                 </button>
             </div>
             <motion.div 
-                className="w-full md:w-1/2 space-y-4 text-center md:text-left"
+                className="w-full md:w-1/2 space-y-4 text-center md:text-left flex flex-col"
                 initial={{ 
                     y: 30,
                     opacity: 0 
@@ -186,12 +188,20 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                         delay: index * 0.2 + 0.25,
                     }
                 }}
-                viewport={{ once: true }}
-            >
-                <h2 className="text-2xl font-children font-semibold text-gray-800">
-                    {title}
-                </h2>
-                <p className="text-gray-600">
+                viewport={{ once: true }}>
+                    <div className="flex justify-center">
+                        <ScribbleText
+                            text={title}
+                            sizeFactor={0.5}
+                            fillColor="#027a9f"  // from main.view.js
+                            strokeColor="#00a4d7" // from main.view.js
+                            roughness={0.6}
+                            strokeWidth={1.5}
+                            animate={true}
+                        />
+                    </div>
+                <p className={`text-gray-600 min-h-[4rem] flex items-center md:items-start justify-center md:justify-start
+                 font-semibold drop-shadow-sm [word-spacing:0.1em] font-children text-xl text-center`}>
                     {description}
                 </p>
             </motion.div>

@@ -31,7 +31,7 @@
     "not-enough-credits": "Crediti insufficienti",
     "credits-remaining": "crediti rimanenti",
     "create-your-book": "Crea il tuo libro",
-    "enter-book-title": "Inserisci il titolo del libro",
+    "enter-book-title": "Libro di avventure...",
     "start-creating": "Inizia a creare",
     "hooks": {
       "please-enter-a-book-title": "Inserisci il titolo del libro",
@@ -40,7 +40,8 @@
       "please-enter-a-description-for-your-page": "Inserisci una descrizione per la tua pagina",
       "creating-image": "Creazione immagine...",
       "failed-to-generate-image-please-try-again": "Impossibile generare l'immagine. \nPer favore riprova."
-    }
+    },
+    "dont-refresh": "Per favore non aggiornare la pagina!"
   },
   "modification": {
     "use-more-detailed-story-context-for-better-continuity": "Utilizza un contesto narrativo più dettagliato per una migliore continuità",
@@ -55,7 +56,26 @@
     "welcome": "Registrazione"
   },
   "home": {
-    "start-creating": "Crea il mio libro!"
+    "start-creating": "Crea il mio libro!",
+    "feature-5": {
+      "description": "Crea il tuo libro da colorare e stampalo in pochi minuti!",
+      "title": "Facile"
+    },
+    "feature-1": {
+      "description": "La nostra IA ricorda ogni parte della tua storia! \nDagli amici che incontri ai tesori che trovi, il libro segue il tuo racconto!",
+      "title": "Memoria della storia"
+    },
+    "feature-4": {
+      "description": "Modifica ogni pagina con poche parole! \nAggiungi un cappello da eroe, una spada magica o qualsiasi altra cosa tu possa immaginare",
+      "title": "Ridisegni magici"
+    },
+    "feature-3": {
+      "description": "Crea qualsiasi personaggio tu possa immaginare! \nDai vita alle tue idee più sfrenate!",
+      "title": "I tuoi personaggi"
+    },
+    "feature-2": {
+      "title": "La tua storia"
+    }
   },
   "error": {
     "oops-something-went-wrong": "Ops! \nQualcosa è andato storto",

@@ -54,7 +54,7 @@ const MainView = () => {
     };
 
     return (
-        <div className="min-h-screen bg-paper from-blue-50 to-blue-100 relative">
+        <div className="min-h-screen from-blue-50 to-blue-100 relative">
             {/* Paper texture overlay with gradient */}
             <div 
                 className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50 z-0"
@@ -65,7 +65,7 @@ const MainView = () => {
                 {/* Hero Section */}
                 <div className="w-full py-16 text-center">
                     <motion.div
-                        className="mb-3 mx-auto max-w-4xl px-4 flex justify-center items-center"
+                        className="mb-3 mx-auto max-w-4xl px-4 flex justify-center items-center relative"
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ 
@@ -75,9 +75,11 @@ const MainView = () => {
                             delay: 0.2
                         }}
                     >
-                        <div className="transform-gpu flex justify-center w-full">
+                        <div className="absolute inset-0 bg-title-banner bg-no-repeat bg-center bg-contain transform md:scale-125 scale-y-125 opacity-60 md:translate-x-[5%] translate-x-[3%] " />
+                        
+                        <div className="transform-gpu flex justify-center w-full relative z-10">
                             <ScribbleText
-                                text={t('home.crayons')}
+                                text={"Crayons"}
                                 sizeFactor={1.4}
                                 fillColor="#027a9f"
                                 strokeColor="#00a4d7"
@@ -88,7 +90,7 @@ const MainView = () => {
                         </div>
                     </motion.div>
                     <motion.p 
-                        className="text-lg text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed -mt-1"
+                        className="text-lg text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed -mt-2"
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ 
@@ -106,45 +108,54 @@ const MainView = () => {
                             }
                         }}
                     >
-                        <span className="text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                            {t('home.make-colouring-books-from-your-own-stories')} </span>
+                        <span className={`text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent md:text-2xl text-lg`}>
+                            {t('home.make-colouring-books-from-your-own-stories')}
+                        </span>
                     </motion.p>
                 </div>
 
                 {/* Feature Cards */}
-                <div className="max-w-7xl mx-auto px-4 pb-16 -mt-4 space-y-12">
+                <div className="max-w-7xl mx-auto px-4 pb-16 -mt-2 space-y-12">
                    
                     <FeatureCard
                         index={0}
                         imagePosition="right"
-                        title={t('home.feature-2-title')}
-                        description={t('home.feature-2-description')}
+                        title={t('home.feature-2.title')}
+                        description={t('home.feature-2.description')}
                         directory="/assets/features_showcase/HauntedHouse"
                         imageNames={['p0_2.png', 'p1.png', 'p2.png', 'p3.png', 'p4.png', 'p7.png']}
                     />                    
                     <FeatureCard
                         index={1}
                         imagePosition="left"
-                        title={t('home.feature-3-title')}
-                        directory="/assets/features_showcase/simple"
-                        imageNames={['birthdayParty.png', 'download.png', 'im0.jpg', 'im2.jpg', 'im4.jpg', 'img2.jpg', 'mario spiderman playing chess.jpg', 'witches.png']}
-                        description={t('home.feature-3-description')}
+                        title={t('home.feature-3.title')}
+                        directory="/assets/features_showcase/creative"
+                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'squirrel-girqffe.jpg', 'snakemario.jpg', 'mosquito.jpg']}
+                        description={t('home.feature-3.description')}
                     />
                     <FeatureCard
                         index={2}
                         imagePosition="right"
-                        title={t('home.feature-2-title')}
-                        description={t('home.feature-2-description')}
+                        title={t('home.feature-4.title')}
+                        description={t('home.feature-4.description')}
                         directory="/assets/features_showcase/enhance"
                         imageNames={['turtle/enhanced.png', 'donkey/enhanced.png']}
                     />
                      <FeatureCard
                         index={3}
                         imagePosition="left"
-                        title={t('home.feature-1-title')}
-                        description={t('home.feature-1-description')}
-                        directory="/assets/features_showcase/creative"
-                        imageNames={['mosquito.jpg', 'snakemario.jpg']}
+                        title={t('home.feature-1.title')}
+                        description={t('home.feature-1.description')}
+                        directory="/assets/features_showcase/book-football-rabbits"
+                        imageNames={['out-0.jpg', 'pic4.jpg',  'pic2.jpg', 'pic3.jpg',  'pic6.jpg', 'pic7.jpg', 'pic5.jpg']}
+                    />
+                    <FeatureCard
+                        index={4}
+                        imagePosition="right"
+                        title={t('home.feature-5.title')}
+                        description={t('home.feature-5.description')}
+                        directory="/assets/features_showcase/simple"
+                        imageNames={['birthdayParty.png', 'chess_game.jpg','img2.jpg',  'im0.jpg', 'im2.jpg', 'witches.png', 'img16.jpg', 'im1.jpg', 'im5.jpg']}
                     />
                     
                     {/* CTA Button */}

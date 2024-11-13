@@ -6,9 +6,12 @@ const initialState = {
   isPopupVisible: false,
   askFeedback: false,
   credits: getUserData()?.credits || 0,
+  isLoading: false,
+  loadingText: '',
+  dontRefreshWarning: true,
   settings: {
     testMode: false,
-    useFineTunedModel: true,
+    useAdvancedModel: false,
     useAdvancedContext: true
   }
 }
@@ -38,6 +41,16 @@ const websiteSlice = createSlice({
       state.notifications = [];
       state.isPopupVisible = false;
     },
+    startLoading: (state, action) => {
+      console.log('startLoading', action.payload);
+      state.isLoading = true;
+      state.loadingText = action.payload.loadingText;
+      state.dontRefreshWarning = action.payload.dontRefreshWarning;
+    },
+    stopLoading: (state) => {
+      state.isLoading = false;
+      state.loadingText = '';
+    },
     updateCredits: (state, action) => {
       state.credits = action.payload;
     },
@@ -60,6 +73,8 @@ export const {
   addNotification, 
   removeNotification, 
   clearAllNotifications,
+  startLoading,
+  stopLoading,
   updateCredits,
   decrementCredits, 
   incrementCredits,

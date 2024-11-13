@@ -1,12 +1,9 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState} from 'react';
 import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration, Navigate } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
 import PlaygroundView from "./Components/Views/playground.view";
-import ScribbleText from "./Components/UI/ui_scribble_text.component";
 import BurgerMenu from "./Components/Navbar/burger_menu.component";
-import Navbar from "./Components/Navbar/navbar.component";
-import Background from './Components/UI/background.component';
 import './Styles/main.css';
 import MainView from "./Components/Views/main.view";
 import { AnimatePresence } from "framer-motion";
@@ -15,7 +12,6 @@ import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 import CreateBook from "./Components/Views/CreateBook";
 import Popup from "./Components/Popup";
 import ErrorBoundaryWrapper from './Components/ErrorBoundary';
-import { useSelector } from 'react-redux';
 import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
 
@@ -105,7 +101,7 @@ const router = createBrowserRouter([
   }
 ]);
 export default function TranslatedApp() {
-    const [showIntro, setShowIntro] = useState(shouldShowIntro);
+    //const [showIntro, setShowIntro] = useState(shouldShowIntro);
    
     
     return (

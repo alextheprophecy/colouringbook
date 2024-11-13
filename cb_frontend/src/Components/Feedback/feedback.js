@@ -186,7 +186,7 @@ const Feedback = () => {
                     {!selectedEmoji && (
                         <button
                             onClick={() => {
-                                setIsOpen(false)
+                                //setIsOpen(false)
                                 dispatch(setAskFeedback(false))
                             }}
                             className="mt-4 px-4 py-2 

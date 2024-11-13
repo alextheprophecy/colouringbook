@@ -6,7 +6,7 @@
     "not-enough-credits": "Pas assez de crédits",
     "credits-remaining": "crédits restants",
     "create-your-book": "Creer mon livre",
-    "enter-book-title": "Entrez le titre du livre",
+    "enter-book-title": "L'aventure de ...",
     "start-creating": "Commencer",
     "hooks": {
       "please-enter-a-book-title": "Veuillez saisir le titre du livre",
@@ -16,7 +16,9 @@
       "please-enter-a-description-for-your-page": "Veuillez saisir une description pour votre page",
       "creating-image": "Création de l'image...",
       "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
-    }
+    },
+    "title": "Titre",
+    "dont-refresh": "Merci de ne pas actualiser la page !"
   },
   "modifybook": {
     "credits": {
@@ -26,7 +28,7 @@
     "download_pdf": "Télécharger le PDF",
     "finish_book": "Terminer le livre",
     "creative_model": "Qualite d'image",
-    "creative_model_description": "Activez pour des images plus propres, mais potentiellement moins adaptees au coloriage",
+    "creative_model_description": "Activez pour des images de meilleure qualité. Coute plus cher en crédits.",
     "advanced_options": "Options avancées",
     "test_mode": "Mode test",
     "test_mode_description": "Afficher les descriptions au lieu de générer des images",
@@ -34,7 +36,8 @@
       "title": "Contexte d'histoire avancé",
       "description": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité"
     },
-    "generating-your-book": "Génération de votre livre..."
+    "generating-your-book": "Génération de votre livre...",
+    "loading": "Chargement..."
   },
   "edition": {
     "context": "Contexte",
@@ -47,7 +50,8 @@
     "hooks": {
       "regenrating-image": "Image régénérée...",
       "enhancing-description": "Amélioration de l'image"
-    }
+    },
+    "credits": "credits"
   },
   "cancel": "Annuler",
   "modification": {
@@ -62,7 +66,8 @@
     "how-would-you-rate-your-experience": "Comment évalueriez-vous votre expérience ?",
     "feedback-for": "Commentaire pour",
     "tell-us-more-about-your-experience": "Parlez-nous de votre expérience...",
-    "not-now": "Plus tard"
+    "not-now": "Plus tard",
+    "give-feedback": "Donner un avis"
   },
   "login": {
     "logout": "Déconnexion",
@@ -86,7 +91,28 @@
   },
   "home": {
     "get-started": "Commencer",
-    "start-creating": "Creer mon livre!"
+    "start-creating": "Creer mon livre!",
+    "make-colouring-books-from-your-own-stories": "Crée ton propre livre de coloriage à partir de tes histoires",
+    "feature-5": {
+      "description": "Crée ton livre de coloriage et imprimez-le en quelques minutes !",
+      "title": "Facile & Rapide"
+    },
+    "feature-1": {
+      "description": "Notre IA se souvient de chaque détail de ton histoire ! Des amis que tu rencontres aux trésors que tu découvres, le livre suit ton récit!",
+      "title": "Mémoire d'histoire"
+    },
+    "feature-4": {
+      "description": "Modifie chaque page en quelques mots ! Ajoute un chapeau de paille à ton héros, une épée magique, ou tout ce que tu peux imaginer",
+      "title": "Retouches magiques"
+    },
+    "feature-3": {
+      "description": "Crée n'importe quel personnage que tu peux imaginer ! Donne vie à tes idées les plus folles!",
+      "title": "Tes personnages"
+    },
+    "feature-2": {
+      "description": "Explore sans limites et fais ce qui te plaît ! Emmène ton personnage escalader des montagnes, piloter un avion de chasse ou même marcher sur la lune.",
+      "title": "Ton histoire"
+    }
   },
   "error": {
     "oops-something-went-wrong": "Oups ! \nQuelque chose s'est mal passé",
