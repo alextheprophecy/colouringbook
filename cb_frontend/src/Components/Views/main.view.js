@@ -65,7 +65,7 @@ const MainView = () => {
                 {/* Hero Section */}
                 <div className="w-full py-16 text-center">
                     <motion.div
-                        className="mb-3 mx-auto max-w-4xl px-4 flex justify-center items-center"
+                        className="mb-3 mx-auto max-w-4xl px-4 flex justify-center items-center relative"
                         initial={{ y: -50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ 
@@ -75,9 +75,11 @@ const MainView = () => {
                             delay: 0.2
                         }}
                     >
-                        <div className="transform-gpu flex justify-center w-full">
+                        <div className="absolute inset-0 bg-title-banner bg-no-repeat bg-center bg-contain transform md:scale-125 scale-y-125 opacity-60 md:translate-x-[5%] translate-x-[3%] " />
+                        
+                        <div className="transform-gpu flex justify-center w-full relative z-10">
                             <ScribbleText
-                                text={t('home.crayons')}
+                                text={"Crayons"}
                                 sizeFactor={1.4}
                                 fillColor="#027a9f"
                                 strokeColor="#00a4d7"
@@ -88,7 +90,7 @@ const MainView = () => {
                         </div>
                     </motion.div>
                     <motion.p 
-                        className="text-lg text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed -mt-1"
+                        className="text-lg text-gray-600 max-w-2xl mx-auto px-4 font-children leading-relaxed -mt-2"
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ 
@@ -106,13 +108,14 @@ const MainView = () => {
                             }
                         }}
                     >
-                        <span className="text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                            {t('home.make-colouring-books-from-your-own-stories')} </span>
+                        <span className={`text-gray-700 font-semibold drop-shadow-sm [word-spacing:0.1em] bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent md:text-2xl text-lg`}>
+                            {t('home.make-colouring-books-from-your-own-stories')}
+                        </span>
                     </motion.p>
                 </div>
 
                 {/* Feature Cards */}
-                <div className="max-w-7xl mx-auto px-4 pb-16 -mt-4 space-y-12">
+                <div className="max-w-7xl mx-auto px-4 pb-16 -mt-2 space-y-12">
                    
                     <FeatureCard
                         index={0}

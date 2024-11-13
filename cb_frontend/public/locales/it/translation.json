@@ -56,7 +56,26 @@
     "welcome": "Registrazione"
   },
   "home": {
-    "start-creating": "Crea il mio libro!"
+    "start-creating": "Crea il mio libro!",
+    "feature-5": {
+      "description": "Crea il tuo libro da colorare e stampalo in pochi minuti!",
+      "title": "Facile"
+    },
+    "feature-1": {
+      "description": "La nostra IA ricorda ogni parte della tua storia! \nDagli amici che incontri ai tesori che trovi, il libro segue il tuo racconto!",
+      "title": "Memoria della storia"
+    },
+    "feature-4": {
+      "description": "Modifica ogni pagina con poche parole! \nAggiungi un cappello da eroe, una spada magica o qualsiasi altra cosa tu possa immaginare",
+      "title": "Ridisegni magici"
+    },
+    "feature-3": {
+      "description": "Crea qualsiasi personaggio tu possa immaginare! \nDai vita alle tue idee più sfrenate!",
+      "title": "I tuoi personaggi"
+    },
+    "feature-2": {
+      "title": "La tua storia"
+    }
   },
   "error": {
     "oops-something-went-wrong": "Ops! \nQualcosa è andato storto",

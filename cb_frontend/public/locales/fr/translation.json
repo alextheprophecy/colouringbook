@@ -91,7 +91,28 @@
   },
   "home": {
     "get-started": "Commencer",
-    "start-creating": "Creer mon livre!"
+    "start-creating": "Creer mon livre!",
+    "make-colouring-books-from-your-own-stories": "Crée ton propre livre de coloriage à partir de tes histoires",
+    "feature-5": {
+      "description": "Crée ton livre de coloriage et imprimez-le en quelques minutes !",
+      "title": "Facile & Rapide"
+    },
+    "feature-1": {
+      "description": "Notre IA se souvient de chaque détail de ton histoire ! Des amis que tu rencontres aux trésors que tu découvres, le livre suit ton récit!",
+      "title": "Mémoire d'histoire"
+    },
+    "feature-4": {
+      "description": "Modifie chaque page en quelques mots ! Ajoute un chapeau de paille à ton héros, une épée magique, ou tout ce que tu peux imaginer",
+      "title": "Retouches magiques"
+    },
+    "feature-3": {
+      "description": "Crée n'importe quel personnage que tu peux imaginer ! Donne vie à tes idées les plus folles!",
+      "title": "Tes personnages"
+    },
+    "feature-2": {
+      "description": "Explore sans limites et fais ce qui te plaît ! Emmène ton personnage escalader des montagnes, piloter un avion de chasse ou même marcher sur la lune.",
+      "title": "Ton histoire"
+    }
   },
   "error": {
     "oops-something-went-wrong": "Oups ! \nQuelque chose s'est mal passé",

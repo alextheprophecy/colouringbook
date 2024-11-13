@@ -50,7 +50,26 @@
     "welcome": "Iniciar sesión"
   },
   "home": {
-    "start-creating": "Crea mi libro!"
+    "start-creating": "Crea mi libro!",
+    "feature-5": {
+      "description": "¡Haz tu libro para colorear e imprímelo en minutos!",
+      "title": "Fácil"
+    },
+    "feature-1": {
+      "description": "¡Nuestra IA recuerda cada parte de tu historia! \nDesde los amigos que conoces hasta los tesoros que encuentras, ¡el libro sigue tu narración!",
+      "title": "Memoria de la historia"
+    },
+    "feature-4": {
+      "description": "¡Modifica cada página con solo unas pocas palabras! \nAñade un sombrero de héroe, una espada mágica o cualquier otra cosa que imagines",
+      "title": "Redibujos mágicos"
+    },
+    "feature-3": {
+      "description": "¡Crea cualquier personaje que puedas imaginar! \n¡Haz realidad tus ideas más locas!",
+      "title": "Tus personajes"
+    },
+    "feature-2": {
+      "title": "Tu historia"
+    }
   },
   "error": {
     "oops-something-went-wrong": "¡Ups! \nalgo salió mal",

@@ -45,7 +45,7 @@ const useModifyBook = () => {
     const startAnimation = useCallback((targetPage = pages.length, quickFlip = false) => {
         const extraPage = !isSinglePage ? 1 : 0;
         const adjustedTargetPage = targetPage + extraPage;
-        console.log('startAnimation', adjustedTargetPage);
+
         const book = getBookInstance();
         if (currentPage >= adjustedTargetPage || !book || isFlipping) return;
         const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)        
@@ -173,7 +173,7 @@ const useModifyBook = () => {
     };   
 
     const handleCreatePageMouseEnter = () => {
-        if (isSinglePage) return           
+        if (isSinglePage || isFlipping) return           
         const book = getBookInstance();
         if (book) setSelectedCreationPage(true);          
     }

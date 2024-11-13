@@ -192,15 +192,16 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                     <div className="flex justify-center">
                         <ScribbleText
                             text={title}
-                            sizeFactor={0.4}
-                            fillColor="#1f2937"  // text-gray-800 equivalent
-                            strokeColor="#374151" // slightly lighter for stroke
+                            sizeFactor={0.5}
+                            fillColor="#027a9f"  // from main.view.js
+                            strokeColor="#00a4d7" // from main.view.js
                             roughness={0.6}
                             strokeWidth={1.5}
                             animate={true}
                         />
                     </div>
-                <p className="text-gray-600 min-h-[4rem] flex items-center md:items-start justify-center md:justify-start">
+                <p className={`text-gray-600 min-h-[4rem] flex items-center md:items-start justify-center md:justify-start
+                 font-semibold drop-shadow-sm [word-spacing:0.1em] font-children text-xl text-center`}>
                     {description}
                 </p>
             </motion.div>

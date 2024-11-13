@@ -125,11 +125,11 @@
     "get-started": "Get Started",
     "feature-1": {
       "title": "Story Memory",
-      "description": "Our magical AI remembers every part of your story! From the friends you meet to the treasures you find, the book follows your story telling!"
+      "description": "Our AI remembers every part of your story! From the friends you meet to the treasures you find, the book follows your story telling!"
     },
     "feature-2": {
       "title": "Your Story",
-      "description": "Go anywhere, do anything! Take your character from climbing mountains to flying jets to walking on the moon. Every choice makes a brand-new journey only you can create!"
+      "description": "Go anywhere, do anything! Take your character from climbing mountains to flying jets to walking on the moon. "
     },
     "feature-3": {
       "title": "Your Characters",
@@ -137,11 +137,11 @@
     },
     "feature-4": {
       "title": "Magic Redraws",
-      "description": "Modify each page with just a few words! Add a hero’s hat, a magical sword, or anything else you imagine. "
+      "description": "Modify each page with just a few words! Add a hero’s hat, a magical sword, or anything else you imagine"
     },
     "feature-5": {
       "title": "Easy & Fast",
-      "description": "Make your own coloring book in minutes! They are ready to print colour when completed! Your adventures are always saved to your profile!"
+      "description": "Make your colouring book and print it out in minutes!"
     }
   },
   "success": {
