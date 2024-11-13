@@ -122,15 +122,15 @@ const MainView = () => {
                         imagePosition="right"
                         title={t('home.feature-2.title')}
                         description={t('home.feature-2.description')}
-                        directory="/assets/features_showcase/HauntedHouse"
-                        imageNames={['p0_2.png', 'p1.png', 'p2.png', 'p3.png', 'p4.png', 'p7.png']}
+                        directory="/assets/features_showcase/Any Story"
+                        imageNames={['moon.png', 'ant.png', 'trampoline.png', 'vampire_party.png', 'goblin.png', 'boy.png', 'playground.png', ]}
                     />                    
                     <FeatureCard
                         index={1}
                         imagePosition="left"
                         title={t('home.feature-3.title')}
                         directory="/assets/features_showcase/creative"
-                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'squirrel-girqffe.jpg', 'snakemario.jpg', 'mosquito.jpg']}
+                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'mosquito.jpg']}
                         description={t('home.feature-3.description')}
                     />
                     <FeatureCard
@@ -146,8 +146,13 @@ const MainView = () => {
                         imagePosition="left"
                         title={t('home.feature-1.title')}
                         description={t('home.feature-1.description')}
-                        directory="/assets/features_showcase/book-football-rabbits"
-                        imageNames={['out-0.jpg', 'pic4.jpg',  'pic2.jpg', 'pic3.jpg',  'pic6.jpg', 'pic7.jpg', 'pic5.jpg']}
+                        directory="/assets/features_showcase/HauntedHouse"
+                        imageNames={['p0_2.png', 'p1.png', 'p2.png', 'p3.png', 'p4.png', 'p7.png']
+                            /* [
+                            'book-football-rabbits/out-0.jpg', 'book-football-rabbits/pic4.jpg',  'book-football-rabbits/pic2.jpg', 'book-football-rabbits/pic3.jpg',  
+                            'book-football-rabbits/pic6.jpg', 'book-football-rabbits/pic7.jpg', 'book-football-rabbits/pic5.jpg'
+                            ] */
+                        }
                     />
                     <FeatureCard
                         index={4}
@@ -155,7 +160,7 @@ const MainView = () => {
                         title={t('home.feature-5.title')}
                         description={t('home.feature-5.description')}
                         directory="/assets/features_showcase/simple"
-                        imageNames={['birthdayParty.png', 'chess_game.jpg','img2.jpg',  'im0.jpg', 'im2.jpg', 'witches.png', 'img16.jpg', 'im1.jpg', 'im5.jpg']}
+                        imageNames={['birthdayParty.png', 'chess_game.jpg','img2.jpg',  'im0.jpg', 'im2.jpg', 'witches.png', 'img16.jpg', 'im1.jpg']}
                     />
                     
                     {/* CTA Button */}
