@@ -51,7 +51,7 @@ const ModifyBook = () => {
         <>
             {currentPage > 0 && (
                 <button 
-                    className="absolute left-0 top-[50%] transform -translate-y-1/2 -translate-x-1/2 
+                    className="absolute left-16 top-[50%] transform -translate-y-1/2 -translate-x-1/2 
                               bg-white/80
                               p-2 rounded-full
                               shadow-lg hover:shadow-xl
@@ -71,7 +71,7 @@ const ModifyBook = () => {
             )}
             {currentPage < (pages.length - (isBookFinished ? 1 : 0)) && (
                 <button 
-                    className="absolute -right-0 top-[50%] transform -translate-y-1/2 translate-x-1/2
+                    className="absolute right-16 top-[50%] transform -translate-y-1/2 translate-x-1/2
                               bg-white/80
                               p-2 rounded-full
                               shadow-lg hover:shadow-xl
@@ -116,7 +116,7 @@ const ModifyBook = () => {
     );   
 
     return (
-        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
+        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
             {/* Credits display at the top */}
             <div className="fixed top-2 right-6 z-10">
                 <div className={`px-2 py-1 rounded-lg 
@@ -137,7 +137,7 @@ const ModifyBook = () => {
             </div>
 
             
-            <div className={`flex-1 flex justify-center items-center relative min-w-[${MIN_WIDTH}px]`}>
+            <div className={`flex-1 flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
                     key={`book-${pages.length}-${isBookFinished}`}

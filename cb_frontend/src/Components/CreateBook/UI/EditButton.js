@@ -8,8 +8,8 @@ const EditButton = ({ position, onClick, disabled }) => {
     const INITIAL_DELAY = 0.45;
     return (
         <motion.button 
-            className={`absolute bottom-0
-                    ${isLeft ? 'sm:left-0 left-[calc(50%-150px)]' : 'sm:right-0 right-[calc(50%-150px)]'}
+            className={`absolute bottom-16
+                    ${isLeft ? 'sm:left-16 left-[calc(50%-150px)]' : 'sm:right-16 right-[calc(50%-150px)]'}
                     w-16 h-16
                     bg-blue-400/75
                     shadow-lg hover:shadow-xl hover:bg-blue-400
