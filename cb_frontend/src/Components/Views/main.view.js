@@ -114,6 +114,49 @@ const MainView = () => {
                     </motion.p>
                 </div>
 
+                {/* Demo Video Section */}
+                <div className="w-full max-w-7xl mx-auto px-4 pb-16 -mt-8">
+                    <motion.div
+                        className="relative rounded-xl overflow-hidden shadow-2xl bg-white"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                            duration: 0.8,
+                            delay: 0.3
+                        }}
+                        viewport={{ once: true }}
+                    >
+                        {/* Video Container */}
+                        <div className="aspect-video relative">
+                            <video
+                                className="w-full h-full object-cover"
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
+                                poster="/assets/video-poster.jpg"
+                            >
+                                <source src="/assets/features_showcase/demo-video.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            
+                            {/* Gradient Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                            
+                            {/* Play Button Overlay (optional) */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <motion.div
+                                    className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center cursor-pointer"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-blue-500 border-b-8 border-b-transparent ml-1" />
+                                </motion.div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+
                 {/* Feature Cards */}
                 <div className="max-w-7xl mx-auto px-4 pb-16 -mt-2 space-y-12">
                    

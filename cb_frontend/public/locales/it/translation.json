@@ -24,7 +24,11 @@
     "story-summary": "Riepilogo della storia:",
     "hooks": {
       "regenrating-image": "Rigenerazione immagine..."
-    }
+    },
+    "enhance": "Migliorare",
+    "regenerate": "Rigenerare",
+    "info": "Informazioni",
+    "see-image": "Vedi immagine"
   },
   "creation": {
     "a-goblin-in-a-forest-eating-a-mushroom": "Un goblin in una foresta che mangia un fungo...",
@@ -95,5 +99,6 @@
   },
   "success": {
     "your-book-has-been-successfully-generated": "Il tuo libro è stato generato con successo!"
-  }
+  },
+  "cancel": "Cancellare"
 }

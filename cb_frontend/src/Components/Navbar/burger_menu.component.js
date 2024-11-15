@@ -68,9 +68,10 @@ class BurgerMenu extends Component {
                     <div className="relative z-[50] flex flex-col space-y-4 h-full">
                         <div className="flex flex-col space-y-4">
                             {this.getMenuLink('/', t('login.home'))}
+                            {this.getMenuLink('/demo', t('login.demo'), 'bg-purple-600 hover:bg-purple-700')}
                             {isUserLoggedIn() && this.getMenuLink('/create', t('login.create'))}
                             {isUserLoggedIn() && this.getMenuLink('/gallery', t('login.my-gallery'))}
-                            {isUserLoggedIn() && <button
+                            {isUserLoggedIn() && (<button
                                 onClick={this.handleFeedback}
                                 className="flex items-center justify-center gap-2 px-3 py-2 rounded 
                                     bg-green-600/70 hover:bg-green-700/70 text-white font-bold text-lg 
@@ -78,7 +79,7 @@ class BurgerMenu extends Component {
                             >
                                 <MessageSquare className="w-5 h-5" />
                                 {t('feedback.give-feedback')}
-                            </button>}
+                            </button>)}
                             {this.login_logout_button()}
                         </div>   
                     </div>

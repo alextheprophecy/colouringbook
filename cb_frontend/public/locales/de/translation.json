@@ -24,7 +24,11 @@
     "story-summary": "Zusammenfassung der Geschichte:",
     "hooks": {
       "regenrating-image": "Bild wird neu generiert..."
-    }
+    },
+    "enhance": "Erweitern",
+    "regenerate": "Regenerieren",
+    "info": "Info",
+    "see-image": "Siehe Bild"
   },
   "creation": {
     "a-goblin-in-a-forest-eating-a-mushroom": "Ein Kobold im Wald, der einen Pilz frisst ...",
@@ -96,5 +100,6 @@
   },
   "success": {
     "your-book-has-been-successfully-generated": "Ihr Buch wurde erfolgreich generiert!"
-  }
+  },
+  "cancel": "Stornieren"
 }
