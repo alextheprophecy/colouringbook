@@ -29,7 +29,6 @@ const useModifyBook = () => {
     const [selectedCreationPage, setSelectedCreationPage] = useState(false);
     
     const isOnCreationPage = useCallback(() => {
-        console.log('isOnCreationPage', currentPage, pages.length);
         return currentPage >= pages.length;
     }, [currentPage, pages.length, isSinglePage]);
     
