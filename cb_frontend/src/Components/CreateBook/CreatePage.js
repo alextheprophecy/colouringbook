@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
-import { Plus } from 'lucide-react';
+import { BookPlus, Image, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}, ref) => {  
@@ -62,7 +62,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                                         transition-all duration-200
                                         mb-0.5"
                             >
-                                <Plus className="w-5 h-5 text-white" />
+                                <Image className="w-5 h-5 text-white" />
                                 <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>
                             </button>
                             <span className="text-red-500 text-[0.9rem] font-mono font-medium">
