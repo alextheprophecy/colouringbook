@@ -19,7 +19,7 @@ const firstPage = (title="Coloring \n book") => {
 }
 
 const initialState = {
-  pages: [],
+  pages: pagesExample,
   seeds: {advanced: null, fineTuned: null},
   currentContext: '',
   currentPage: 0,
