@@ -46,12 +46,16 @@
     "current-situation": "Situation actuelle :",
     "environment": "Environnement:",
     "story-summary": "Résumé de l'histoire :",
-    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Exemples:&#10;•  Ajoute un chapeau au personnage&#10;• Ajoute un chat en dessous de la table &#10;• ",
+    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Exemples: Ajoute un chapeau au personnage, Ajoute un chat en dessous de la table",
     "hooks": {
-      "regenrating-image": "Image régénérée...",
-      "enhancing-description": "Amélioration de l'image"
+      "regenrating-image": "Régénération de l'image...",
+      "enhancing-description": "Amélioration de l'image..."
     },
-    "credits": "credits"
+    "credits": "credits",
+    "enhance": "Améliorer",
+    "regenerate": "Régénérer",
+    "info": "Infos",
+    "see-image": "image"
   },
   "cancel": "Annuler",
   "modification": {
@@ -121,7 +125,7 @@
     "cannot-create-new-pages-book-is-finished": "Impossible de créer de nouvelles pages : le livre est terminé",
     "failed-to-enhance-description-please-try-again": "Échec de l'amélioration de la description. \nVeuillez réessayer.",
     "failed-to-regenerate-image-please-try-again": "Échec de la régénération de l'image. \nVeuillez réessayer.",
-    "please-enter-enhancement-instructions": "Veuillez saisir les instructions d'amélioration",
+    "please-enter-enhancement-instructions": "Veuillez saisir vos améliorations souhaitées",
     "pdf-url-not-found": "URL PDF introuvable",
     "no-pdf-url-received-from-server": "Aucune URL PDF reçue du serveur",
     "failed-to-finish-book-please-try-again": "Impossible de terminer le livre. \nVeuillez réessayer.",

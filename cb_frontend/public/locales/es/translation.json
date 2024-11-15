@@ -91,9 +91,14 @@
     "hooks": {
       "regenrating-image": "Regenerando imagen...",
       "enhancing-description": "Mejorando la descripción..."
-    }
+    },
+    "enhance": "Mejorar",
+    "regenerate": "Regenerado",
+    "info": "Información",
+    "see-image": "Ver imagen"
   },
   "success": {
     "your-book-has-been-successfully-generated": "¡Su libro se ha generado exitosamente!"
-  }
+  },
+  "cancel": "Cancelar"
 }

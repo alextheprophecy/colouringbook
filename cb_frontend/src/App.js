@@ -14,6 +14,7 @@ import Popup from "./Components/Popup";
 import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
+import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
 
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
       { 
         path: '/', 
         element: <ErrorBoundaryWrapper><MainView /></ErrorBoundaryWrapper>,
+      },
+      { 
+        path: '/demo', 
+        element: <ErrorBoundaryWrapper><InteractiveDemo /></ErrorBoundaryWrapper>,
       },
     ]
   }
