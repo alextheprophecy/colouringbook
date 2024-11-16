@@ -118,21 +118,17 @@ const ModifyBook = () => {
     return (
         <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
             {/* Credits display at the top */}
-            <div className="fixed top-2 right-6 z-10">
+            <div className="fixed top-2 right-2 z-10">
                 <div className={`px-2 py-1 rounded-lg 
-                    ${credits > 0 ? 'bg-green-100/80' : 'bg-red-100/80'} 
+                    ${credits > 0 ? 'bg-green-400/60' : 'bg-red-400/60'} 
                     shadow-sm 
                     backdrop-blur-sm
                     font-mono text-sm
                     transition-all duration-200`}
                 >
-                    {credits > 0 ? (
-                        <span className="text-green-700">
-                            {credits} credits
-                        </span>
-                    ) : (
-                        <span className="text-red-600">{t('modifybook.credits.out_of_credits')}</span>
-                    )}
+                    <span className="text-white">
+                        {credits > 0 ? `${credits} credits` : t('modifybook.credits.out_of_credits')}
+                    </span>                    
                 </div>
             </div>
 
@@ -201,29 +197,7 @@ const ModifyBook = () => {
                 {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>
-                    
-                    {/* Creative Model Toggle */}
-                    <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
-                    <label className="flex items-center justify-between cursor-pointer">
-                        <div className="flex flex-col">
-                            <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
-                            <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
-                        </div>
-                        <div className="relative">
-                            <input
-                                type="checkbox"
-                                checked={settings.useAdvancedModel}
-                                onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
-                                className="sr-only"
-                            />
-                            <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
-                                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
-                            </div>
-                        </div>
-                    </label>
-                    </div>
-
-                    {/* <button 
+                    <button 
                         className={`w-full max-w-md 
                             ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
                             ${isFlipping ? 'cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}
@@ -237,14 +211,36 @@ const ModifyBook = () => {
                     >
                         <Plus className="w-5 h-5" />
                         {t('creation.new-page')}
-                    </button> */}
+                    </button>
+
+                    {/* Creative Model Toggle */}
+                    <div className={`p-3 -mt-16 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
+                        ${!isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'}`}>
+                        <label className="flex items-center justify-between cursor-pointer">
+                            <div className="flex flex-col">
+                                <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
+                                <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
+                            </div>
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    checked={settings.useAdvancedModel}
+                                    onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
+                                    className="sr-only"
+                                />
+                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
                     </>
                 )}
 
                 <button 
                     className={`w-full max-w-md 
                         ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
-                        ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-2 scale-110' : 'opacity-70 translate-y-0 scale-100'}
+                        ${isOnCreationPage() && !isBookFinished ? '' : '-mt-16'}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
                         ${pages.length <= 1 ? 'hidden' : ''}
                         text-white py-3 px-6 rounded-lg 
@@ -276,6 +272,7 @@ const ModifyBook = () => {
                         </>
                     )}
                 </button>
+
                 {isBookFinished && (
                     <div className="flex flex-col gap-3 w-full max-w-md">
                         <button 

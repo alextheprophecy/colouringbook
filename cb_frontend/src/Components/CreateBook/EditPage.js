@@ -1,11 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
 import {Wand2, RotateCcw, Info} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toggleSetting } from '../../redux/websiteSlice';
+
 const EditPage = () => {
     const { t } = useTranslation();
-    const currentPage = useSelector((state) => state.book.currentPage);
+    const {currentPage} = useSelector((state) => state.book);
+    const {settings} = useSelector((state) => state.website);
+    const dispatch = useDispatch()
 
     const {
         editText,
@@ -22,7 +26,10 @@ const EditPage = () => {
         handleEnhance
     } = useEditPage();
 
+
     if (!isVisible || currentPage === 0) return null;    
+
+    
 
     return (
         <div 
@@ -31,9 +38,8 @@ const EditPage = () => {
             onClick={handleClose}
         >
             <div 
-                className={`bg-white rounded-lg w-full max-w-4xl mx-4 transition-all duration-300 ease-in-out 
-                    relative my-[60px]
-                    ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}
+                className={`bg-white rounded-lg w-full max-w-4xl mx-4
+                    relative my-8
                     grid grid-cols-1 lg:grid-cols-2 gap-6 p-6`}
                 onClick={(e) => e.stopPropagation()}
             >   
@@ -123,11 +129,11 @@ const EditPage = () => {
                 </div>
 
                 {/* Right Column - Actions */}
-                <div className="flex flex-col gap-6 p-2 h-[50vh] lg:h-[70vh]">            
+                <div className="flex flex-col h-[50vh] lg:h-[70vh]">            
                     {!isEnhancing ? (
-                        <>
+                        <div className="flex flex-col h-full">
                             {/* Action Cards */}
-                            <div className="space-y-4">
+                            <div className="space-y-4 flex-shrink-0">
                                 {/* Enhance Card */}
                                 <div className="group bg-green-100 p-4 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
@@ -171,20 +177,43 @@ const EditPage = () => {
                                         </span>
                                     </button>
                                 </div>
-                            </div>
+                            
 
-                            {/* Desktop Cancel Button - Only visible on desktop */}
-                            <button 
-                                className="mt-auto w-full bg-gray-100 hover:bg-gray-200 
-                                    text-gray-700 py-3 px-6 rounded-lg transition-all duration-300 
-                                    font-children font-semibold
-                                    border border-gray-200 hover:border-gray-300
-                                    flex items-center justify-center gap-2"
-                                onClick={handleClose}
-                            >
-                                {t('cancel')}
-                            </button>
-                        </>
+                            {/* Creative Model Toggle */}
+                            <div className="p-3 bg-white/80 rounded-lg shadow-md hover:shadow-lg ring-1 ring-blue-100 mt-4 flex-shrink-0">
+                                <label className="flex items-center justify-between cursor-pointer">
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
+                                        <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            checked={settings.useAdvancedModel}
+                                            onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
+                                            className="sr-only"
+                                        />
+                                        <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            </div>
+                            {/* Desktop Cancel Button */}
+                            <div className="mt-4 pt-2 flex-shrink-0">
+                                <button 
+                                    className="w-full bg-gray-100 hover:bg-gray-200 
+                                        text-gray-700 py-3 px-6 rounded-lg
+                                        font-children font-semibold
+                                        border border-gray-200 hover:border-gray-300
+                                        flex items-center justify-center gap-2"
+                                    onClick={handleClose}
+                                >
+                                    {t('cancel')}
+                                </button>
+                            </div>
+                        </div>
                     ) : (
                         <div className="flex flex-col h-full">
                             {/* Enhancement Mode UI */}

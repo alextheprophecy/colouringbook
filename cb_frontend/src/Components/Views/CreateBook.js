@@ -28,7 +28,7 @@ const CreateBook = () => {
         <>
             <div className="min-h-screen flex items-center justify-center relative">
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-blue-50/50 to-blue-300/50" />                    
-                {hasBookStarted ? (
+                {!hasBookStarted ? (
                     <div className="w-full max-w-md mx-4 p-8 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl relative z-20">
                         <div className="mb-8 flex justify-center">
                             <ScribbleText

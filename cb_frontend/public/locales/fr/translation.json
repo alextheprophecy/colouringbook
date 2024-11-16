@@ -1,6 +1,6 @@
 {
   "creation": {
-    "create-page": "Créer une page",
+    "create-page": "Générer",
     "new-page": "Nouvelle page",
     "a-goblin-in-a-forest-eating-a-mushroom": "Un gobelin dans une forêt mangeant un champignon...",
     "not-enough-credits": "Pas assez de crédits",
@@ -18,7 +18,8 @@
       "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
     },
     "title": "Titre",
-    "dont-refresh": "Merci de ne pas actualiser la page !"
+    "dont-refresh": "Merci de ne pas actualiser la page !",
+    "new-book": "Nouveau livre"
   },
   "modifybook": {
     "credits": {

@@ -55,7 +55,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                             <button
                                 onClick={createImage}
                                 className="relative flex items-center gap-2 px-5 py-2 
-                                        bg-green-500 hover:bg-green-600
+                                        bg-blue-500 hover:bg-blue-600
                                         rounded-lg
                                         shadow-md hover:shadow-lg W
                                         transform hover:scale-[1.02]
