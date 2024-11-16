@@ -156,7 +156,7 @@ const ModifyBook = () => {
     return (
         <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex 
             ${isLoading ? 'justify-center' : ''} 
-            items-center flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
+            items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
             {/* Credits display at the top */}
            
             <div className=" fixed top-2 right-2 z-10">
@@ -265,7 +265,7 @@ const ModifyBook = () => {
                     </button>
 
                     {/* Creative Model Toggle */}
-                    <div className={`p-3 -mt-16 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
+                    <div className={`p-3 md:-mt-8 -mt-12 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
                         ${!isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'}`}>
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex flex-col">
