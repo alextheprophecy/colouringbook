@@ -131,9 +131,9 @@ const EditPage = () => {
                 {/* Right Column - Actions */}
                 <div className="flex flex-col h-[50vh] lg:h-[70vh]">            
                     {!isEnhancing ? (
-                        <div className="flex flex-col h-full">
+                        <div className="flex flex-col h-full justify-between">
                             {/* Action Cards */}
-                            <div className="space-y-4 flex-shrink-0">
+                            <div className="space-y-4">
                                 {/* Enhance Card */}
                                 <div className="group bg-green-100 p-4 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
@@ -180,7 +180,7 @@ const EditPage = () => {
                             
 
                             {/* Creative Model Toggle */}
-                            <div className="p-3 bg-white/80 rounded-lg shadow-md hover:shadow-lg ring-1 ring-blue-100 mt-4 flex-shrink-0">
+                            <div className="p-3 bg-white/80 rounded-lg shadow-md hover:shadow-lg ring-1 ring-blue-100 mt-4">
                                 <label className="flex items-center justify-between cursor-pointer">
                                     <div className="flex flex-col">
                                         <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
@@ -200,8 +200,9 @@ const EditPage = () => {
                                 </label>
                             </div>
                             </div>
-                            {/* Desktop Cancel Button */}
-                            <div className="mt-4 pt-2 flex-shrink-0">
+
+                            {/* Desktop Cancel Button - Now at bottom */}
+                            <div className="mt-auto pt-2">
                                 <button 
                                     className="w-full bg-gray-100 hover:bg-gray-200 
                                         text-gray-700 py-3 px-6 rounded-lg
