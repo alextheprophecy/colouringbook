@@ -140,7 +140,9 @@ const ModifyBook = () => {
     );   
 
     return (
-        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
+        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex 
+            ${isLoading ? 'justify-center' : ''} 
+            items-center flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
             {/* Credits display at the top */}
            
             <div className=" fixed top-2 right-2 z-10">
@@ -159,8 +161,10 @@ const ModifyBook = () => {
 
             <TestButton />
 
-            {/* Book container */}
-            <div className={`flex-1 bg-red-500 flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
+            {/* Book container*/}
+            <div className={`flex justify-center items-center relative 
+                min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16
+                `}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
                     key={`book-${pages.length}-${isBookFinished}`}
@@ -220,9 +224,10 @@ const ModifyBook = () => {
                 </HTMLFlipBook>
             </div>
 
-            {/* Buttons and options container */}
-            <div className={`mt-[10px] flex flex-col gap-4 items-center transition-all duration-200 ${isLoading ? 'scale-0' : 'scale-100'}`}>
-                    {/* Only show New Page button if book is not finished */}
+            {/* Buttons container with absolute scaling */}
+            <div className={`flex flex-col gap-4 items-center transition-all duration-500 ease-in-out mt-2
+                ${isLoading ? 'scale-0 h-0 opacity-0' : 'scale-100 opacity-100'}`}>
+                {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>
                     <button 

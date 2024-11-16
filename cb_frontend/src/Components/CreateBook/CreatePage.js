@@ -4,9 +4,11 @@ import useCreatePage from '../../Hooks/CreateBook/useCreatePage';
 import { BookPlus, Image, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { BarLoader } from 'react-spinners';
+
 const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}, ref) => {  
     const { t } = useTranslation();
-    const creationSettings = useSelector(state => state.website.settings);
+    const {settings: creationSettings, isLoading} = useSelector(state => state.website);
     const textareaRef = useRef(null);
     const {
         createImage,
@@ -34,6 +36,12 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
             <div className={`${classNameProp} shadow-none  absolute inset-0 bg-white scale-[0.993]`}>                            
                 <div className="relative w-full h-full">                                   
                     {/* Content container */}
+                    {isLoading ? 
+                        <div className="flex flex-col items-center justify-center h-full">
+                            <p className="text-blue-600 font-children text-xl mb-4">{t('creation.wait-for-load')}</p>
+                            <BarLoader color="#3B82F6" width={150} />                            
+                        </div>
+                    : 
                     <div className="flex flex-col h-full pt-8 px-6">
                         <textarea
                             ref={textareaRef}
@@ -69,7 +77,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                                 -{creationSettings.useAdvancedModel ? 5 : 3} {t('edition.credits')}
                             </span>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

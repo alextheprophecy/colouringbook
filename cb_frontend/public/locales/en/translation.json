@@ -21,7 +21,8 @@
     "feat": {},
     "new-book": "Create New Book",
     "title": "Title",
-    "dont-refresh": "Please do not refresh the page!"
+    "dont-refresh": "Please do not refresh the page!",
+    "wait-for-load": "Please wait"
   },
   "modifybook": {
     "credits": {

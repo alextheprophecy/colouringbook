@@ -19,7 +19,8 @@
     },
     "title": "Titre",
     "dont-refresh": "Merci de ne pas actualiser la page !",
-    "new-book": "Nouveau livre"
+    "new-book": "Nouveau livre",
+    "wait-for-load": "Chargement"
   },
   "modifybook": {
     "credits": {
