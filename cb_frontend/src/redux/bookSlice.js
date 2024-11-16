@@ -26,6 +26,7 @@ const initialState = {
   isEditing: false,  
   hasBookStarted: false, // New state variable
   isBookFinished: false,
+  workingOnPage: null,
   bookId: 0,
   title: ''
 };
@@ -55,6 +56,10 @@ const bookSlice = createSlice({
     editPage: (state, action) => {
       state.isEditing = true;
       state.currentPage = action.payload;
+      state.workingOnPage = action.payload;
+    },
+    workOnPage: (state, action) => {
+      state.workingOnPage = action.payload;
     },
     startBook: (state, action) => {
       const titleInput = action.payload.title;
@@ -72,6 +77,6 @@ const bookSlice = createSlice({
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage} = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage, workOnPage} = bookSlice.actions;
 
 export default bookSlice.reducer;

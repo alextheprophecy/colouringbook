@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useLoadRequest from './useLoadRequest';
-import { addPage, updateContext, setSeeds } from '../../redux/bookSlice';
+import { addPage, updateContext, setSeeds, workOnPage } from '../../redux/bookSlice';
 import { addNotification } from '../../redux/websiteSlice';
 import useImageGeneration from './useImageGeneration';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +36,7 @@ const useCreatePage = () => {
         }
 
         try { 
+            dispatch(workOnPage(pages.length));
             /* const lastPage = pages[pages.length - 1];
             const lastSeed = pages[0]?.seed //lastPage?.seed; TODO: handling the seed to use for new image */
             const lastSeed = useAdvancedModel ? seeds.advanced : seeds.fineTuned;

@@ -49,6 +49,7 @@ const useEditPage = () => {
 
     
     const handleRegenerate = useCallback(async () => {
+        handleClose();
         try {
             await loadRequest(
                 () => regenerateImage(currentPage, pages, currentContext, bookId),
@@ -61,13 +62,12 @@ const useEditPage = () => {
                 duration: 3000
             }));
             return false;
-        } finally {
-            handleClose();
-        }             
+        }         
     }, [currentPage, bookId, currentContext, pages, creationSettings]);
 
 
     const handleEnhance = useCallback(async () => {
+        handleClose();
         if (!editText.trim()) {
             dispatch(addNotification({
                 type: 'error',
@@ -87,8 +87,6 @@ const useEditPage = () => {
                 message: error.message || t('error.failed-to-enhance-description-please-try-again'),
                 duration: 3000
             }));
-        } finally {
-            handleClose();   
         }
     }, [editText, currentPage, bookId, currentContext, pages]);
 

@@ -21,7 +21,7 @@ const ModifyBook = () => {
     // Add test function for loading
     const testLoading = async () => {
         await loadRequest(
-            () => new Promise(resolve => setTimeout(resolve, 3000)), // 3 second delay
+            () => new Promise(resolve => setTimeout(resolve, 4500)), // 3 second delay
             "Testing loading state...",
             true
         );
@@ -58,6 +58,7 @@ const ModifyBook = () => {
         updateOrientation
     } = useModifyBook();
 
+    const {workingOnPage} = useSelector((state) => state.book)
     const credits = useSelector((state) => state.website.credits);
     const settings = useSelector((state) => state.website.settings);
     const [showAdvanced, setShowAdvanced] = useState(false);
@@ -139,6 +140,19 @@ const ModifyBook = () => {
         </>
     );   
 
+    const pageLoadingBlur = () =>
+        <div className={`absolute inset-0 bg-white/70 backdrop-blur-[2px]
+            flex items-center justify-center z-10 rounded-[inherit]`}>
+            <div className="flex flex-col items-center gap-3">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent 
+                    rounded-full animate-spin" />
+                <p className="text-blue-600 font-children text-lg font-semibold">
+                    {t('modifybook.modifying')}
+                </p>
+            </div>
+        </div>
+    
+
     return (
         <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex 
             ${isLoading ? 'justify-center' : ''} 
@@ -191,15 +205,19 @@ const ModifyBook = () => {
                     {[
                         ...pages.map((page, index) => [
                             <div key={`page-${index}`} className="page-element">
-                                {typeof page.image === 'string' && (page.image.startsWith('http') || page.image.startsWith('blob')) ? (
-                                    <img 
-                                        src={page.image} 
-                                        alt={`{t('creation.page')} ${index + 1}`}
-                                        className={pageClassname(index)}
-                                    />
+                                {(page.image.startsWith('http') || page.image.startsWith('blob')) ? (
+                                    <div className={`${pageClassname(index)} overflow-hidden `}>
+                                        <img 
+                                            src={page.image} 
+                                            alt={`{t('creation.page')} ${index + 1}`}
+                                            className="h-full w-full object-cover bg-gray-200"
+                                        />
+                                        {isLoading && workingOnPage === index && pageLoadingBlur()}
+                                    </div>
                                 ) : (
                                     <div className={`${pageClassname(index)} bg-white p-6 font-children text-gray-700 overflow-y-auto`}>
                                         <p className="whitespace-pre-wrap">{page.image}</p>
+                                        {isLoading && workingOnPage === index && pageLoadingBlur()}
                                     </div>
                                 )}
                             </div>,

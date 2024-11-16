@@ -4,6 +4,7 @@ import { addPage, updateContext, updatePage, setSeeds } from '../../redux/bookSl
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
+    const {workingOnPage} = useSelector(state => state.book);
     const creationSettings = useSelector(state => state.website.settings);
 
     const generateImage = async (description, currentContext, bookId, seed=null) => {
@@ -56,7 +57,7 @@ const useImageGeneration = () => {
         });
         const { image, seed } = response.data;
         
-        return dispatch(updatePage({index: currentPage, data: { image, seed }, isRegeneration: true}));
+        return dispatch(updatePage({index: workingOnPage, data: { image, seed }, isRegeneration: true}));
     }
 
     const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        
@@ -77,7 +78,7 @@ const useImageGeneration = () => {
 
         console.log('NEW IMAGE', image, seed);
         dispatch(updatePage({
-            index: currentPage,
+            index: workingOnPage,
             data: { 
                 detailedDescription: enhancedDescription,
                 enhancementRequest,

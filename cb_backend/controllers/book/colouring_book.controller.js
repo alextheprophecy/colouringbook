@@ -31,7 +31,7 @@ const _generateImage = async (user, book, pageNumber, description, {useAdvancedM
     if (useAdvancedModel)      
         imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
     else
-        imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
+        imageData = await queryFluxSchnell(`coloring page, ${description}`, seed);//queryFineTuned(`coloring page, ${description}`, {seed: seed});
     
     const { url, versionId } = await savePageData(user, book.id, pageNumber, imageData);
     return { url, seed, versionId };
