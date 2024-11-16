@@ -250,10 +250,10 @@ const ModifyBook = () => {
                     <>
                     <button 
                         className={`w-full max-w-md 
-                            ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
-                            ${isFlipping ? 'cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}
+                            ${isOnCreationPage() || isFlipping ? 'scale-0 pointer-events-none' : 'scale-100 relative'}
+                            bg-blue-500 hover:bg-blue-600 
                             text-white py-3 px-6 rounded-lg 
-                            transition-opacity duration-300 ease-in-out 
+                            transition-scale duration-300 ease-in-out 
                             hover:scale-[1.02] shadow-md hover:shadow-lg
                             flex items-center justify-center gap-2
                             font-children font-semibold tracking-wider`}
@@ -265,7 +265,7 @@ const ModifyBook = () => {
                     </button>
 
                     {/* Creative Model Toggle */}
-                    <div className={`p-3 md:-mt-8 -mt-12 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
+                    <div className={`p-3 md:-mt-8 -mt-12 max-w-md bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
                         ${!isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'}`}>
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex flex-col">
