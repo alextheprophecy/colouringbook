@@ -26,10 +26,8 @@ const EditPage = () => {
 
     return (
         <div 
-            className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start 
-                transition-all duration-300 ease-in-out z-[500] overflow-y-auto
-                ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-                safe-top [--webkit-overflow-scrolling:touch] overscroll-contain`}
+            className={`fixed inset-0 bg-black bg-opacity-70 flex justify-center items-start 
+                z-[500] overflow-y-auto overscroll-contain`}
             onClick={handleClose}
         >
             <div 
@@ -125,57 +123,51 @@ const EditPage = () => {
                 </div>
 
                 {/* Right Column - Actions */}
-                <div className="flex flex-col gap-6 p-2">            
+                <div className="flex flex-col gap-6 p-2 h-[50vh] lg:h-[70vh]">            
                     {!isEnhancing ? (
                         <>
                             {/* Action Cards */}
                             <div className="space-y-4">
                                 {/* Enhance Card */}
-                                <div className="group bg-white p-4 rounded-lg shadow-md hover:shadow-lg 
+                                <div className="group bg-green-100 p-4 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
                                     <button 
                                         className="w-full flex items-center gap-4"
                                         onClick={() => setIsEnhancing(true)}
                                     >
-                                        <div className="flex-shrink-0 p-3 bg-green-100 rounded-full 
+                                        <div className="flex-shrink-0 p-3 bg-green-600 rounded-full 
                                             group-hover:bg-green-200 transition-colors duration-300">
-                                            <Wand2 className="w-6 h-6 text-green-600" />
+                                            <Wand2 className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <h3 className="font-children font-semibold text-gray-800 mb-1">
+                                            <h3 className="font-children font-semibold text-green-600 mb-1">
                                                 {t('edition.enhance')}
                                             </h3>
-                                            <p className="text-sm text-gray-600">
-                                                {t('edition.enhance-description')}
-                                            </p>
                                         </div>
                                         <span className="text-xs font-mono text-red-500 ml-2">
-                                            -3 {t('edition.credits')}
+                                            <strong>-3</strong> {t('edition.credits')}
                                         </span>
                                     </button>
                                 </div>
 
                                 {/* Regenerate Card */}
-                                <div className="group bg-white p-4 rounded-lg shadow-md hover:shadow-lg 
+                                <div className="group bg-blue-100 p-4 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
                                     <button 
                                         className="w-full flex items-center gap-4"
                                         onClick={handleRegenerate}
                                     >
-                                        <div className="flex-shrink-0 p-3 bg-blue-100 rounded-full 
+                                        <div className="flex-shrink-0 p-3 bg-blue-600 rounded-full 
                                             group-hover:bg-blue-200 transition-colors duration-300">
-                                            <RotateCcw className="w-6 h-6 text-blue-600" />
+                                            <RotateCcw className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <h3 className="font-children font-semibold text-gray-800 mb-1">
+                                            <h3 className="font-children font-semibold text-blue-600 mb-1">
                                                 {t('edition.regenerate')}
                                             </h3>
-                                            <p className="text-sm text-gray-600">
-                                                {t('edition.regenerate-description')}
-                                            </p>
                                         </div>
                                         <span className="text-xs font-mono text-red-500 ml-2">
-                                            -3 {t('edition.credits')}
+                                            <strong>-3</strong> {t('edition.credits')}
                                         </span>
                                     </button>
                                 </div>
@@ -196,18 +188,18 @@ const EditPage = () => {
                     ) : (
                         <div className="flex flex-col h-full">
                             {/* Enhancement Mode UI */}
-                            <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                            <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col">
                                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-3">
                                     <h3 className="font-children font-semibold text-lg">
-                                        {t('edition.enhancement-instructions')}
+                                        {t('edition.enhance-image')}
                                     </h3>
                                     <p className="text-sm text-blue-100">
                                         {t('edition.enhancement-description')}
                                     </p>
                                 </div>
-                                <div className="p-4">
+                                <div className="p-4 flex-1">
                                     <textarea 
-                                        className="w-full h-[calc(100%-2rem)] min-h-[200px] border-0 
+                                        className="w-full h-full border-0 
                                             focus:outline-none resize-none font-children text-gray-700
                                             placeholder:text-gray-400 placeholder:italic
                                             bg-gray-50 p-3 rounded-lg"
@@ -219,7 +211,7 @@ const EditPage = () => {
                             </div>
                             
                             {/* Enhancement Mode Actions */}
-                            <div className="flex justify-end gap-3 mt-4">
+                            <div className="flex justify-around flex-row gap-3 mt-4">
                                 <button 
                                     className="px-6 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 
                                         text-gray-700 font-children font-semibold transition-all duration-300

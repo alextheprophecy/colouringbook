@@ -148,7 +148,7 @@ const ModifyBook = () => {
                     maxWidth={1000}
                     maxHeight={1533}
                     maxShadowOpacity={0.5}
-                    mobileScrollSupport={true}
+                    mobileScrollSupport={false}
                     clickEventForward={true}
                     ref={flipBookRef}
                     onFlip={onFlip}
@@ -200,10 +200,33 @@ const ModifyBook = () => {
             <div className="mt-[10px] flex flex-col gap-4 items-center">
                 {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
-                    <button 
+                    <>
+                    
+                    {/* Creative Model Toggle */}
+                    <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
+                    <label className="flex items-center justify-between cursor-pointer">
+                        <div className="flex flex-col">
+                            <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
+                            <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="checkbox"
+                                checked={settings.useAdvancedModel}
+                                onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
+                                className="sr-only"
+                            />
+                            <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
+                            </div>
+                        </div>
+                    </label>
+                    </div>
+
+                    {/* <button 
                         className={`w-full max-w-md 
                             ${isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'} 
-                            ${isFlipping ? 'cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}
+                            ${isFlipping ? 'cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}
                             text-white py-3 px-6 rounded-lg 
                             transition-opacity duration-300 ease-in-out 
                             hover:scale-[1.02] shadow-md hover:shadow-lg
@@ -214,13 +237,14 @@ const ModifyBook = () => {
                     >
                         <Plus className="w-5 h-5" />
                         {t('creation.new-page')}
-                    </button>
+                    </button> */}
+                    </>
                 )}
 
                 <button 
                     className={`w-full max-w-md 
-                        ${isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'}
-                        ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-4 scale-110' : 'opacity-70 translate-y-0 scale-100'}
+                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
+                        ${isOnCreationPage() && !isBookFinished ? 'opacity-100 -translate-y-2 scale-110' : 'opacity-70 translate-y-0 scale-100'}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
                         ${pages.length <= 1 ? 'hidden' : ''}
                         text-white py-3 px-6 rounded-lg 
@@ -283,26 +307,7 @@ const ModifyBook = () => {
 
                 {/* Settings Panel */}
                 {!isBookFinished && (<div className="w-full max-w-md flex flex-col gap-4">
-                    {/* Creative Model Toggle */}
-                    <div className="p-4 bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100">
-                        <label className="flex items-center justify-between cursor-pointer">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
-                                <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    checked={settings.useAdvancedModel}
-                                    onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
-                                    className="sr-only"
-                                />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
+                  
 
                     {/* Advanced Options Dropdown */}
                     <div className="flex flex-col gap-2">

@@ -41,7 +41,7 @@
   },
   "edition": {
     "context": "Contexte",
-    "enhance-image": "Améliorer l'image",
+    "enhance-image": "Améliorer",
     "last-seen-doing": "Vu pour la dernière fois en train de faire :",
     "current-situation": "Situation actuelle :",
     "environment": "Environnement:",
@@ -55,7 +55,9 @@
     "enhance": "Améliorer",
     "regenerate": "Régénérer",
     "info": "Infos",
-    "see-image": "image"
+    "see-image": "image",
+    "current-page": "Page",
+    "enhancement-description": "Décris tes changements souhaités"
   },
   "cancel": "Annuler",
   "modification": {

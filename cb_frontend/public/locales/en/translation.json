@@ -53,7 +53,7 @@
     "enhance": "Enhance",
     "credits": "credits",
     "regenerate": "Regenerate",
-    "enhance-image": "Enhance Image",
+    "enhance-image": "Enhance",
     "user-description": "User Description",
     "composition-idea": "Composition Idea",
     "api-description": "API Description",
@@ -63,7 +63,8 @@
     "hooks": {
       "regenrating-image": "Regenrating image...",
       "enhancing-description": "Enhancing the image..."
-    }
+    },
+    "enhancement-description": "Describe the changes you wish"
   },
   "cancel": "Cancel",
   "modification": {
