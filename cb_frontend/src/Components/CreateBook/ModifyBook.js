@@ -10,11 +10,35 @@ import { toggleSetting } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
 import { setCurrentPage, setIsEditing, finishBook, editPage } from '../../redux/bookSlice';
 import EditButton from './UI/EditButton';
+import useLoadRequest from '../../Hooks/CreateBook/useLoadRequest';
 
 const ModifyBook = () => {
     const { t } = useTranslation();
     const MIN_WIDTH = Object.freeze(300);
-     // Set minimum width as a constant
+    const { loadRequest } = useLoadRequest();
+    const { isLoading } = useSelector((state) => state.website);
+
+    // Add test function for loading
+    const testLoading = async () => {
+        await loadRequest(
+            () => new Promise(resolve => setTimeout(resolve, 3000)), // 3 second delay
+            "Testing loading state...",
+            true
+        );
+    };
+
+    // Add test button at the top
+    const TestButton = () => (
+        <button
+            onClick={testLoading}
+            className="fixed top-16 right-2 z-10 px-3 py-1.5 bg-red-500 hover:bg-red-600 
+                      text-white rounded-lg shadow-md hover:shadow-lg 
+                      transition-all duration-200 font-children text-sm"
+        >
+            Test Loading
+        </button>
+    );
+
     const {
         flipBookRef,
         pages,
@@ -118,7 +142,8 @@ const ModifyBook = () => {
     return (
         <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex justify-end items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
             {/* Credits display at the top */}
-            <div className="fixed top-2 right-2 z-10">
+           
+            <div className=" fixed top-2 right-2 z-10">
                 <div className={`px-2 py-1 rounded-lg 
                     ${credits > 0 ? 'bg-green-400/60' : 'bg-red-400/60'} 
                     shadow-sm 
@@ -132,8 +157,10 @@ const ModifyBook = () => {
                 </div>
             </div>
 
-            
-            <div className={`flex-1 flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
+            <TestButton />
+
+            {/* Book container */}
+            <div className={`flex-1 bg-red-500 flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
                     key={`book-${pages.length}-${isBookFinished}`}
@@ -193,8 +220,9 @@ const ModifyBook = () => {
                 </HTMLFlipBook>
             </div>
 
-            <div className="mt-[10px] flex flex-col gap-4 items-center">
-                {/* Only show New Page button if book is not finished */}
+            {/* Buttons and options container */}
+            <div className={`mt-[10px] flex flex-col gap-4 items-center transition-all duration-200 ${isLoading ? 'scale-0' : 'scale-100'}`}>
+                    {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>
                     <button 

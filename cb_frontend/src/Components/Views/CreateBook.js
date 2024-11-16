@@ -19,7 +19,7 @@ const CreateBook = () => {
     };
 
     const CreationContainer = (children) => (
-        <div className={`${isLoading ? 'pointer-events-none opacity-50' : ''} w-[90vw] mt-[0] ml-[5vw] mr-[5vw] z-20`}>
+        <div className={`w-[90vw] mt-[0] ml-[5vw] mr-[5vw] z-20`}>
             {children}
         </div>
     );
