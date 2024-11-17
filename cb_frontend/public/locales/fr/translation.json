@@ -39,7 +39,8 @@
       "description": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité"
     },
     "generating-your-book": "Génération de votre livre...",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "reset_book": "Abandonner création"
   },
   "edition": {
     "context": "Contexte",

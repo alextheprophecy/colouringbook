@@ -41,7 +41,8 @@
       "description": "Use more detailed story context for better continuity"
     },
     "generating-your-book": "Generating your book...",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "reset_book": "Reset book"
   },
   "edition": {
     "context": "Context",

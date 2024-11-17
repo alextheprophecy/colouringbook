@@ -38,7 +38,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave,
                     {/* Content container */}
                     {(isLoading && !disabled) ? 
                         <div className="flex flex-col items-center justify-center h-full">
-                            <p className="text-blue-600 font-children text-xl mb-4">{t('creation.wait-for-load')}</p>
+                            <p className="text-blue-600 font-children text-xl mb-4">{t('creation.hooks.creating-image')}</p>
                             <BarLoader color="#3B82F6" width={150} />                            
                         </div>
                     : 

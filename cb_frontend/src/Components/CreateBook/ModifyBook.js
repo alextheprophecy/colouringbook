@@ -1,7 +1,7 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import EditPage from './EditPage';
-import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown, BookOpen, BookCheck } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Pencil, Plus, Download, FileDown, BookOpen, BookCheck, Trash2 } from 'lucide-react';
 import useModifyBook, { FLIP_TIMES } from '../../Hooks/CreateBook/useModifyBook';
 import {useState, useCallback } from 'react';
 import CreatePage from './CreatePage';
@@ -40,25 +40,6 @@ const ModifyBook = () => {
             Test Loading
         </button>
     );
-
-    const ResetButton = () => {
-        const dispatch = useDispatch();
-        
-        const handleReset = () => {
-            dispatch(resetPersistedState());
-        };
-
-        return (
-            <button
-                onClick={handleReset}
-                className="fixed top-16 left-2 z-10 px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 
-                          text-white rounded-lg shadow-md hover:shadow-lg 
-                          transition-all duration-200 font-children text-sm"
-            >
-                Reset Book
-            </button>
-        );
-    };
 
     const {
         flipBookRef,
@@ -135,7 +116,6 @@ const ModifyBook = () => {
                     />
                 </button>
             )}
-            
             {/* Edit buttons - show one or two depending on isSinglePage */}
             {currentPage > 0 && !isFlipping && !isLoading && !isBookFinished && (
                 <>
@@ -192,12 +172,11 @@ const ModifyBook = () => {
                     </span>                    
                 </div>
             </div>
-            
             {/* Book container*/}
             <div className={`flex-1 justify-center items-center  relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
-                    key={`book-${pages.length}-${isLoading}-${isBookFinished}`}
+                    key={`book-${pages.length}-${isLoading}-${isBookFinished}-${isFinishing}`}
                     width={300}
                     height={450}    
                     size="stretch"
@@ -205,7 +184,7 @@ const ModifyBook = () => {
                     maxWidth={1000}
                     maxHeight={1533}
                     maxShadowOpacity={0.5}
-                    mobileScrollSupport={false}
+                    mobileScrollSupport={true}
                     clickEventForward={true}
                     ref={flipBookRef}
                     onFlip={onFlip}
@@ -215,6 +194,7 @@ const ModifyBook = () => {
                     startPage={currentPage}
                     onInit={() => {
                         updateOrientation();
+                        if(isFinishing)startAnimation(0, true);
                         if(pages.length===1)return startAnimation(1)
                         const goToPage = workingOnPage===-1?(pages.length-1):(workingOnPage)
                         if(!isLoading)startAnimation(goToPage)
@@ -247,7 +227,7 @@ const ModifyBook = () => {
                                 </div>
                             )
                         ]).flat(),
-                        !isBookFinished ? (
+                        !(isBookFinished || isFinishing) ? (
                             <CreatePage 
                                 key="create-page" 
                                 disabled={(isLoading && workingOnPage!==-1)}
@@ -268,7 +248,7 @@ const ModifyBook = () => {
                 {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>
-                    <button 
+                    <button key={`new-page-button-${isOnCreationPage()}`}
                         className={`w-full max-w-md 
                             ${isOnCreationPage() ? 'scale-0 absolute pointer-events-none' : 'scale-100 relative'}
                             bg-blue-500 hover:bg-blue-600 
@@ -348,7 +328,7 @@ const ModifyBook = () => {
                 {isBookFinished && (
                     <div className="flex flex-col gap-3 w-full max-w-md">
                         <button 
-                            onClick={() => window.location.reload()}
+                            onClick={() => {dispatch(resetPersistedState); window.location.reload()}}
                             className="w-full bg-blue-500 hover:bg-blue-600 
                                 text-white py-3 px-6 rounded-lg 
                                 transition-all duration-300 ease-in-out 
@@ -432,6 +412,18 @@ const ModifyBook = () => {
                             </div>
                         </div>
                     </div>
+                    
+                    {/* New Reset Button placement */}
+                    <button
+                        onClick={() => dispatch(resetPersistedState())}
+                        className="w-fit mx-auto py-2 px-4 text-sm text-red-600 hover:text-red-700
+                                  bg-red-50 hover:bg-red-100
+                                  rounded-lg transition-all duration-200
+                                  font-children flex items-center justify-center gap-2"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                        {t('modifybook.reset_book')}
+                    </button>
                 </div>)}
             </div>
 
