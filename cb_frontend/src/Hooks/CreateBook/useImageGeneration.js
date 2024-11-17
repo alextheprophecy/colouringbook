@@ -10,7 +10,7 @@ const useImageGeneration = () => {
     const generateImage = async (description, currentContext, bookId, seed=null) => {
         if (!description || description.trim() === '') throw new Error('No description found');
                                      
-        const response = await api.post('image/generatePageWithContext', {
+        /* const response = await api.post('image/generatePageWithContext', {
             sceneDescription: description,  
             currentContext, 
             bookId,
@@ -34,30 +34,38 @@ const useImageGeneration = () => {
                 fineTuned: imageSeedAndRest.seed,
             }));    
         }
-        
+         */
+        const imageSeedAndRest = {
+            seed: 1234567890,
+            detailedDescription: 'A detailed description of the image',
+            image: `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=P${workingOnPage}`
+        };
+        await new Promise(resolve => setTimeout(resolve, 2500));
+
         dispatch(addPage({
             userDescription: description, 
-            detailedDescription, 
+            detailedDescription: imageSeedAndRest.detailedDescription, 
             ...imageSeedAndRest
         }));
 
-        return dispatch(updateContext(updatedContext));        
+        //return dispatch(updateContext(updatedContext));        
     }
 
-    const regenerateImage = async (currentPage, pages, currentContext, bookId) => {   
+    const regenerateImage = async (currentPage, pages, currentContext, bookId) => {
         console.log('regenerating image', currentPage, pages);
         console.log('Context', currentContext);     
         const detailedDescription = pages[currentPage]?.detailedDescription;
         if (!detailedDescription) throw new Error('No detailed description found');
-        const response = await api.post('image/regeneratePage', {
+        /* const response = await api.post('image/regeneratePage', {
             detailedDescription, 
             bookId, 
             currentPage: currentPage-1,
             ...creationSettings
         });
-        const { image, seed } = response.data;
-        
-        return dispatch(updatePage({index: workingOnPage, data: { image, seed }, isRegeneration: true}));
+        const { image, seed } = response.data; */
+        const image = `https://placehold.co/400x600/${Math.floor(Math.random()*16777215).toString(16)}/000000?text=P${workingOnPage}`
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        return dispatch(updatePage({index: workingOnPage, data: { image, seed: 6 }, isRegeneration: true}));
     }
 
     const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        

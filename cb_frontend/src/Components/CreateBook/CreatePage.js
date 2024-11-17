@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { BarLoader } from 'react-spinners';
 
-const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}, ref) => {  
+const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave, disabled}, ref) => {  
     const { t } = useTranslation();
     const {settings: creationSettings, isLoading} = useSelector(state => state.website);
     const textareaRef = useRef(null);
@@ -36,7 +36,7 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
             <div className={`${classNameProp} shadow-none  absolute inset-0 bg-white scale-[0.993]`}>                            
                 <div className="relative w-full h-full">                                   
                     {/* Content container */}
-                    {isLoading ? 
+                    {(isLoading && !disabled) ? 
                         <div className="flex flex-col items-center justify-center h-full">
                             <p className="text-blue-600 font-children text-xl mb-4">{t('creation.wait-for-load')}</p>
                             <BarLoader color="#3B82F6" width={150} />                            
@@ -45,30 +45,34 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave}
                     <div className="flex flex-col h-full pt-8 px-6">
                         <textarea
                             ref={textareaRef}
-                            className="w-[100%] h-[80%] mx-auto p-4 bg-transparent rounded-[5px]
+                            className={`w-[100%] h-[80%] mx-auto p-4 bg-transparent rounded-[5px]
                                     focus:outline-none resize-none
                                     text-gray-700 placeholder-gray-400
                                     font-children text-lg leading-relaxed
                                     shadow-[inset_0_0_10px_rgba(0,0,0,0.3)]
                                     transition-shadow duration-500
-                                    focus:shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]"
+                                    focus:shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]
+                                    ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
                             placeholder={t('creation.a-goblin-in-a-forest-eating-a-mushroom')}
                             value={description}
                             onChange={handleDescriptionChange}   
-                            onClick={handleClick}
-                            onMouseLeave={onMouseLeave}                                
+                            onClick={disabled ? undefined : handleClick}
+                            onMouseLeave={onMouseLeave}    
+                            disabled={disabled}                            
                         />
                         
                         <div className="relative group mt-auto mb-2 self-center flex flex-col items-center">
                             <button
                                 onClick={createImage}
-                                className="relative flex items-center gap-2 px-5 py-2 
-                                        bg-blue-500 hover:bg-blue-600
-                                        rounded-lg
-                                        shadow-md hover:shadow-lg W
-                                        transform hover:scale-[1.02]
-                                        transition-all duration-200
-                                        mb-0.5"
+                                disabled={disabled}
+                                className={`relative flex items-center gap-2 px-5 py-2 
+                                        rounded-lg shadow-md
+                                        transform transition-all duration-200
+                                        mb-0.5
+                                        ${disabled 
+                                            ? 'bg-gray-400 cursor-not-allowed' 
+                                            : 'bg-blue-500 hover:bg-blue-600 hover:shadow-lg hover:scale-[1.02]'
+                                        }`}
                             >
                                 <Image className="w-5 h-5 text-white" />
                                 <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>

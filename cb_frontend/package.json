@@ -28,6 +28,7 @@
     "react-scroll": "^1.9.0",
     "react-spinners": "^0.14.1",
     "redux": "^5.0.1",
+    "redux-persist": "^6.0.0",
     "roughjs": "^4.6.6",
     "stream": "^0.0.3",
     "web-vitals": "^2.1.4"

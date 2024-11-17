@@ -8,9 +8,11 @@ import CreatePage from './CreatePage';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSetting } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
-import { setCurrentPage, setIsEditing, finishBook, editPage } from '../../redux/bookSlice';
+import { setCurrentPage, setIsEditing, finishBook, editPage, creatingPage, resetBook } from '../../redux/bookSlice';
 import EditButton from './UI/EditButton';
 import useLoadRequest from '../../Hooks/CreateBook/useLoadRequest';
+import { resetPersistedState } from '../../redux/store';
+
 
 const ModifyBook = () => {
     const { t } = useTranslation();
@@ -20,8 +22,9 @@ const ModifyBook = () => {
 
     // Add test function for loading
     const testLoading = async () => {
+        dispatch(editPage(5));
         await loadRequest(
-            () => new Promise(resolve => setTimeout(resolve, 4500)), // 3 second delay
+            () => new Promise(resolve => setTimeout(resolve, 2500)), // 3 second delay
             "Testing loading state...",
             true
         );
@@ -38,6 +41,25 @@ const ModifyBook = () => {
             Test Loading
         </button>
     );
+
+    const ResetButton = () => {
+        const dispatch = useDispatch();
+        
+        const handleReset = () => {
+            dispatch(resetPersistedState());
+        };
+
+        return (
+            <button
+                onClick={handleReset}
+                className="fixed top-16 left-2 z-10 px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 
+                          text-white rounded-lg shadow-md hover:shadow-lg 
+                          transition-all duration-200 font-children text-sm"
+            >
+                Reset Book
+            </button>
+        );
+    };
 
     const {
         flipBookRef,
@@ -173,6 +195,7 @@ const ModifyBook = () => {
             </div>
 
             <TestButton />
+            <ResetButton />
 
             {/* Book container*/}
             <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
@@ -196,7 +219,10 @@ const ModifyBook = () => {
                     startPage={currentPage}
                     onInit={() => {
                         updateOrientation();
-                        if(!isLoading && workingOnPage===-1)startAnimation(pages.length-1)
+                        if(pages.length===1)return startAnimation(1)
+                        const goToPage = workingOnPage===-1?(pages.length-1):(workingOnPage)
+                        if(!isLoading)startAnimation(goToPage)
+                            //LETS MOVE ALL THIS LOGIC INSIDE THE STARTANIMATION FUNCTION
                     }}  // For initial animation
                 >
                     {[
@@ -225,9 +251,10 @@ const ModifyBook = () => {
                                 </div>
                             )
                         ]).flat(),
-                        !isBookFinished && !(isLoading && workingOnPage!==-1) ? (
+                        !isBookFinished ? (
                             <CreatePage 
                                 key="create-page" 
+                                disabled={(isLoading && workingOnPage!==-1)}
                                 classNameProp={pageClassname(pages.length)}
                                 onMouseEnter={handleCreatePageMouseEnter}
                                 onMouseLeave={handleCreatePageMouseLeave}

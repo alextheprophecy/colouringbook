@@ -26,10 +26,8 @@ const EditPage = () => {
         handleEnhance
     } = useEditPage();
 
-
-    if (!isVisible || currentPage === 0) return null;    
-
     
+    if (!isVisible || currentPage === 0) return null;        
 
     return (
         <div 

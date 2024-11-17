@@ -42,37 +42,68 @@ const useModifyBook = () => {
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
     const startAnimation = useCallback((targetPage = pages.length, quickFlip = false) => {
-        const extraPage = !isSinglePage ? 1 : 0;
-        const adjustedTargetPage = targetPage + extraPage;
-
-        const book = getBookInstance();
-        if (currentPage >= adjustedTargetPage || !book || isFlipping) return;
-        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)        
-        setIsFlipping(true);
-        book.getSettings().disableFlipByClick = true;
-
-        let currentPageIndex = currentPage;
-        const flipThroughPages = () => {
-            const flipSpeed = quickFlip ? (currentPageIndex === 0 ? FLIP_TIMES.QUICK_COVER : FLIP_TIMES.QUICK_FLIP) : (currentPageIndex === 0 ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP);
     
-            book.getSettings().flippingTime = flipSpeed
-            console.log('we are at', currentPageIndex, adjustedTargetPage);
-            if (currentPageIndex < adjustedTargetPage) {
-                book.flipNext('top');
-                currentPageIndex++;
+        const book = getBookInstance();
+        
+        console.log('startAnimation', targetPage, currentPage);
+        if (!book || isFlipping || currentPage === targetPage) return;
+        
+        // Calculate the actual number of flips needed
+        let flipsNeeded;
+        if (isSinglePage) {
+            flipsNeeded = targetPage - currentPage;
+        } else {
+            const currentSpread = currentPage === 0 ? 0 : Math.ceil((currentPage+1) / 2);
+            const targetSpread = targetPage === 0 ? 0 : Math.ceil((targetPage+1) / 2);
+            flipsNeeded = targetSpread - currentSpread;
+        }
+        console.log('need', flipsNeeded);
+
+        if (flipsNeeded === 0) return;
+        
+        
+        const isFlippingForward = flipsNeeded > 0;
+        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : 
+            (currentPage === 0 || targetPage === 0) ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY;
+        
+        
+        setIsFlipping(true);        
+        
+        let flipsCompleted = 0;
+        
+        const flipThroughPages = () => {
+            const currentPageIndex = isFlippingForward ? 
+                currentPage + (flipsCompleted * (isSinglePage ? 1 : 2)) :
+                currentPage - (flipsCompleted * (isSinglePage ? 1 : 2));
+
+            const isOnCover = currentPageIndex === 0 || currentPageIndex === 1;
+            const flipSpeed = quickFlip ? 
+                (isOnCover ? FLIP_TIMES.QUICK_COVER : FLIP_TIMES.QUICK_FLIP) : 
+                (isOnCover ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP);
+
+            book.getSettings().flippingTime = flipSpeed;
+
+            if (flipsCompleted < Math.abs(flipsNeeded)) {
+                if (isFlippingForward) book.flipNext('top');
+                else if(currentPage > 0) book.flipPrev('top');                
+                
+                flipsCompleted++;
                 
                 setTimeout(() => {
                     flipThroughPages();
                 }, flipSpeed);
             } else {
                 setTimeout(() => {
-                    setIsFlipping(false);
-                    book.getSettings().flippingTime = FLIP_TIMES.USER;
-                    book.getSettings().disableFlipByClick = false;
+                    finishUp();
                 }, quickFlip ? FLIP_TIMES.QUICK_DELAY : FLIP_TIMES.USER);
             }
         };
 
+        const finishUp = () => {
+            setIsFlipping(false);
+            book.getSettings().flippingTime = FLIP_TIMES.USER;
+            book.getSettings().disableFlipByClick = false;
+        }
         setTimeout(flipThroughPages, startDelay);
     }, [isFlipping, currentPage, pages.length, isSinglePage]);
 
