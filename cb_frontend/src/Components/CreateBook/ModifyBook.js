@@ -116,7 +116,7 @@ const ModifyBook = () => {
             )}
             
             {/* Edit buttons - show one or two depending on isSinglePage */}
-            {currentPage > 0 && !isFlipping && !isBookFinished && (
+            {currentPage > 0 && !isFlipping && !isLoading && !isBookFinished && (
                 <>
                     {/* Left page edit button */}
                     {(!isSinglePage && currentPage > 1 && (currentPage != pages.length+1)) && (
@@ -154,9 +154,8 @@ const ModifyBook = () => {
     
 
     return (
-        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex 
-            ${isLoading ? 'justify-center' : ''} 
-            items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-x-hidden`}>
+        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex
+            items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-hidden`}>
             {/* Credits display at the top */}
            
             <div className=" fixed top-2 right-2 z-10">
@@ -176,12 +175,10 @@ const ModifyBook = () => {
             <TestButton />
 
             {/* Book container*/}
-            <div className={`flex justify-center items-center relative 
-                min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16
-                `}>
+            <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
-                    key={`book-${pages.length}-${isBookFinished}`}
+                    key={`book-${pages.length}-${isLoading}-${isBookFinished}`}
                     width={300}
                     height={450}    
                     size="stretch"
@@ -199,7 +196,7 @@ const ModifyBook = () => {
                     startPage={currentPage}
                     onInit={() => {
                         updateOrientation();
-                        pages.length==1 && startAnimation(pages.length-1)
+                        if(!isLoading && workingOnPage===-1)startAnimation(pages.length-1)
                     }}  // For initial animation
                 >
                     {[
@@ -228,7 +225,7 @@ const ModifyBook = () => {
                                 </div>
                             )
                         ]).flat(),
-                        !isBookFinished ? (
+                        !isBookFinished && !(isLoading && workingOnPage!==-1) ? (
                             <CreatePage 
                                 key="create-page" 
                                 classNameProp={pageClassname(pages.length)}
@@ -244,7 +241,7 @@ const ModifyBook = () => {
 
             {/* Buttons container with absolute scaling */}
             <div className={`flex flex-col gap-4 items-center transition-all duration-500 ease-in-out mt-2
-                ${isLoading ? 'scale-0 h-0 opacity-0' : 'scale-100 opacity-100'}`}>
+                ${isLoading ? 'scale-0 opacity-0 absolute' : 'scale-100 opacity-100'}`}>
                 {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>

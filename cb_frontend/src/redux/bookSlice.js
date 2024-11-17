@@ -58,8 +58,8 @@ const bookSlice = createSlice({
       state.currentPage = action.payload;
       state.workingOnPage = action.payload;
     },
-    workOnPage: (state, action) => {
-      state.workingOnPage = action.payload;
+    creatingPage: (state) => {
+      state.workingOnPage = -1;
     },
     startBook: (state, action) => {
       const titleInput = action.payload.title;
@@ -77,6 +77,6 @@ const bookSlice = createSlice({
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage, workOnPage} = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage, creatingPage} = bookSlice.actions;
 
 export default bookSlice.reducer;
