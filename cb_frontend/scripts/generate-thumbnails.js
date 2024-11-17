@@ -15,7 +15,7 @@ const processDirectory = async (directory) => {
         if (file.match(/\.(jpg|jpeg|png|gif)$/i)) {
             await sharp(path.join(directory, file))
                 .resize(500) // Adjust size as needed
-                .jpeg({ quality: 30 })
+                .jpeg({ quality: 40 })
                 .toFile(path.join(thumbnailsDir, file));
         }
     }
