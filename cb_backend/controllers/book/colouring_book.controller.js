@@ -20,10 +20,10 @@ const verifyPageCredits = async (user, usingModel) => {
     return await verifyCredits(user, creditCost);    
 };
 
-const _generateImage = async (user, book, pageNumber, description, {usingModel = 0, seed}) => { 
+const _generateImage = async (user, book, pageNumber, description, {usingModel = 2, seed}) => { 
     if(!seed) seed = randomSeed();
     let imageData;
-
+    usingModel = parseInt(usingModel);
     if (usingModel === 0)      
         imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
     else if (usingModel === 1)  
