@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCallback, useState, useRef, useEffect, React } from 'react';
 import PropTypes from 'prop-types';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, TrendingUpDownIcon } from 'lucide-react';
 import ScribbleText from '../UI/ui_scribble_text.component';
+
 const BASE_SLIDE_INTERVAL = 2000;
 const INTERVAL_VARIANCE = 250;
 const INACTIVITY_DELAY = 4000;
+const LOAD_HIGH_QUALITY_IMAGES = false;
 
 const slideVariants = {
     initial: (direction) => ({
@@ -30,6 +32,10 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
     const [isAnimating, setIsAnimating] = useState(false);
     const [direction, setDirection] = useState(0);
     const [isAutoSliding, setIsAutoSliding] = useState(true);
+    const [loadedImages, setLoadedImages] = useState({
+        thumbnails: new Set(),
+        fullsize: new Set()
+    });
     
     const autoSlideTimer = useRef(null);
     const inactivityTimer = useRef(null);
@@ -74,6 +80,32 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
             if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
         };
     }, []); // Empty dependency array means this only runs on mount/unmount
+
+    useEffect(() => {
+        // Preload images
+        imageNames.forEach(imageName => {
+            // Load thumbnail
+            const thumbnailImg = new Image();
+            thumbnailImg.src = `${directory}/thumbnails/${imageName}`;
+            thumbnailImg.onload = () => {
+                setLoadedImages(prev => ({
+                    ...prev,
+                    thumbnails: new Set([...prev.thumbnails, imageName])
+                }));
+
+                if (LOAD_HIGH_QUALITY_IMAGES) {    
+                    const highQualityImg = new Image();
+                    highQualityImg.src = `${directory}/${imageName}`;
+                    highQualityImg.onload = () => {
+                        setLoadedImages(prev => ({
+                            ...prev,
+                            fullsize: new Set([...prev.fullsize, imageName])
+                        }));
+                    };
+                }
+            };
+        });
+    }, [directory, imageNames]);
 
     const handleNextImage = (event) => {
         event.preventDefault();
@@ -149,11 +181,28 @@ const FeatureCard = ({ imagePosition = 'left', title, description, index, direct
                             duration: 0.55
                         }}
                     >
-                        <img
-                            src={`${directory}/${imageNames[currentImageIndex]}`}
-                            alt={`Example${currentImageIndex + 1}`}
-                            className="w-full h-full object-cover"
-                        />
+                        <div className="relative w-full h-full">
+                            {/* Blur placeholder */}
+                            <div 
+                                className="absolute inset-0 bg-gray-200 animate-pulse"
+                                style={{
+                                    display: loadedImages.thumbnails.has(imageNames[currentImageIndex]) ? 'none' : 'block'
+                                }}
+                            />
+                            
+                            {/* Show either thumbnail or high quality image based on setting */}
+                            <img
+                                src={LOAD_HIGH_QUALITY_IMAGES 
+                                    ? `${directory}/${imageNames[currentImageIndex]}`
+                                    : `${directory}/thumbnails/${imageNames[currentImageIndex]}`
+                                }
+                                className={`w-full h-full object-cover transition-opacity duration-300 ${
+                                    loadedImages.thumbnails.has(imageNames[currentImageIndex]) ? 'opacity-100' : 'opacity-0'
+                                }`}
+                                alt={title}
+                                loading="lazy"
+                            />
+                        </div>
                     </motion.div>
                 </AnimatePresence>
                 <button 

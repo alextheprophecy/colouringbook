@@ -99,7 +99,8 @@
     "email": "Email",
     "password": "Password",
     "welcome": "Sign in",
-    "logging-in": "Logging in..."
+    "logging-in": "Logging in...",
+    "about": "About"
   },
   "error": {
     "error": "Error",
@@ -160,5 +161,17 @@
   "delete": {
     "are-your-sure": "Delete book?",
     "delete": "Delete"
+  },
+  "about": {
+    "title": "About us",
+    "contact": {
+      "title": "Contact Us"
+    },
+    "ai": {
+      "title": "Crayons.me Technology Stack",
+      "chatgpt": {
+        "description": "We use "
+      }
+    }
   }
 }

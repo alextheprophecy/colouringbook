@@ -13,7 +13,7 @@ import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
 import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
-
+import About from './Components/Views/About';
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
     return <Navigate to="/login" replace />;
@@ -79,6 +79,10 @@ const router = createBrowserRouter([
             element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
           },
         ]
+      },
+      { 
+        path: '/about', 
+        element: <ErrorBoundaryWrapper><About /></ErrorBoundaryWrapper>,
       },
       { 
         path: '/login', 

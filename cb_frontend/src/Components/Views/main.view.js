@@ -132,7 +132,7 @@ const MainView = () => {
                         imagePosition="left"
                         title={t('home.feature-3.title')}
                         directory="/assets/features_showcase/creative"
-                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'mosquito.jpg']}
+                        imageNames={['monkey.png', 'pizza_Detective.png', 'super_mushroom.png', 'smart_dog.png', 'steal.png', 'mosquito.jpg']}
                         description={t('home.feature-3.description')}
                     />
                     <FeatureCard
@@ -141,7 +141,7 @@ const MainView = () => {
                         title={t('home.feature-4.title')}
                         description={t('home.feature-4.description')}
                         directory="/assets/features_showcase/enhance"
-                        imageNames={['turtle/enhanced.png', 'donkey/enhanced.png']}
+                        imageNames={['donkey-bike.png', 'turtle.png']}
                     />
                      <FeatureCard
                         index={3}
@@ -166,7 +166,7 @@ const MainView = () => {
                     />
                     
                     {/* Demo Video Section */}
-                    <div className="w-full max-w-7xl mx-auto px-4 pb-16 -mt-8">
+                    {/* <div className="w-full max-w-7xl mx-auto px-4 pb-16 -mt-8">
                         <motion.div
                             className="relative rounded-xl overflow-hidden shadow-2xl bg-white"
                             initial={{ opacity: 0, y: 20 }}
@@ -177,7 +177,7 @@ const MainView = () => {
                             }}
                             viewport={{ once: true }}
                         >
-                            {/* Video Container */}
+                            
                             <div className="aspect-video relative">
                                 <video
                                     className="w-full h-full object-cover"
@@ -191,10 +191,10 @@ const MainView = () => {
                                     Your browser does not support the video tag.
                                 </video>
                                 
-                                {/* Gradient Overlay */}
+                               
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                                 
-                                {/* Play Button Overlay (optional) */}
+                              
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <motion.div
                                         className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center cursor-pointer"
@@ -207,7 +207,7 @@ const MainView = () => {
                             </div>
                         </motion.div>
                     </div>
-                    
+                     */}
                     {/* CTA Button */}
                     <motion.div 
                         className="text-center pt-8"

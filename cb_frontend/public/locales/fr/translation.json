@@ -93,7 +93,8 @@
     "password": "Mot de passe",
     "email": "E-mail",
     "logging-in": "Connexion...",
-    "welcome": "Connexion"
+    "welcome": "Connexion",
+    "about": "Info"
   },
   "gallery": {
     "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
@@ -152,5 +153,11 @@
   "delete": {
     "are-your-sure": "Abandonner ce livre?",
     "delete": "Abandonner"
+  },
+  "about": {
+    "title": "Informations",
+    "contact": {
+      "title": "Contactez nous"
+    }
   }
 }

@@ -74,22 +74,13 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
                 </div>
                 <div className="relative z-[50] flex flex-col space-y-4 h-full">
                     <div className="flex flex-col space-y-4">
-                        {getMenuLink('/', t('login.home'))}
-                        {getMenuLink('/demo', t('login.demo'), 'bg-purple-600 hover:bg-purple-700')}
+                        {getMenuLink('/', t('login.home'))}                        
                         {isUserLoggedIn() && getMenuLink('/create', t('login.create'))}
                         {isUserLoggedIn() && getMenuLink('/gallery', t('login.my-gallery'))}
-                        {isUserLoggedIn() && (
-                            <button
-                                onClick={handleFeedback}
-                                className="flex items-center justify-center gap-2 px-3 py-2 rounded 
-                                    bg-green-600/70 hover:bg-green-700/70 text-white font-bold text-lg 
-                                    shadow-md transition-transform transform hover:scale-105"
-                            >
-                                <MessageSquare className="w-5 h-5" />
-                                {t('feedback.give-feedback')}
-                            </button>
-                        )}
                         {login_logout_button()}
+                        <div className="mt-16">
+                            {getMenuLink('/about', t('login.about'), 'bg-green-600 hover:bg-green-700 mt-16')}
+                        </div>
                     </div>   
                 </div>
             </Menu>
