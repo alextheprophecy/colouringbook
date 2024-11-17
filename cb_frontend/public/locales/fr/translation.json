@@ -1,6 +1,6 @@
 {
   "creation": {
-    "create-page": "Créer une page",
+    "create-page": "Générer",
     "new-page": "Nouvelle page",
     "a-goblin-in-a-forest-eating-a-mushroom": "Un gobelin dans une forêt mangeant un champignon...",
     "not-enough-credits": "Pas assez de crédits",
@@ -18,7 +18,9 @@
       "failed-to-generate-image-please-try-again": "Échec de la génération de l'image. \nVeuillez réessayer."
     },
     "title": "Titre",
-    "dont-refresh": "Merci de ne pas actualiser la page !"
+    "dont-refresh": "Merci de ne pas actualiser la page !",
+    "new-book": "Nouveau livre",
+    "wait-for-load": "Chargement"
   },
   "modifybook": {
     "credits": {
@@ -27,8 +29,8 @@
     "processing": "Traitement en cours...",
     "download_pdf": "Télécharger le PDF",
     "finish_book": "Terminer le livre",
-    "creative_model": "Qualite d'image",
-    "creative_model_description": "Activez pour des images de meilleure qualité. Coute plus cher en crédits.",
+    "creative_model": "Avancé",
+    "creative_model_description": "Images de meilleure qualitée, très bon pour des scènes complexes",
     "advanced_options": "Options avancées",
     "test_mode": "Mode test",
     "test_mode_description": "Afficher les descriptions au lieu de générer des images",
@@ -37,16 +39,22 @@
       "description": "Utiliser un contexte d'histoire plus détaillé pour une meilleure continuité"
     },
     "generating-your-book": "Génération de votre livre...",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "reset_book": "Abandonner création",
+    "image_quality": "Qualité d'image",
+    "standard_model": "Bonne",
+    "basic_model": "Simple",
+    "standard_basic_description": "Modèle très basique",
+    "standard_model_description": "Images ressemblent plus à des pages de coloriage. Mieux pour des scènes simples"
   },
   "edition": {
     "context": "Contexte",
-    "enhance-image": "Améliorer l'image",
+    "enhance-image": "Améliorer",
     "last-seen-doing": "Vu pour la dernière fois en train de faire :",
     "current-situation": "Situation actuelle :",
     "environment": "Environnement:",
     "story-summary": "Résumé de l'histoire :",
-    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Exemples: Ajoute un chapeau au personnage, Ajoute un chat en dessous de la table",
+    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "...Ajoute un chapeau au personnage...\n...Enlève le chat de la scène...\n...Ajoute des arbres derrière...",
     "hooks": {
       "regenrating-image": "Régénération de l'image...",
       "enhancing-description": "Amélioration de l'image..."
@@ -55,7 +63,10 @@
     "enhance": "Améliorer",
     "regenerate": "Régénérer",
     "info": "Infos",
-    "see-image": "image"
+    "see-image": "image",
+    "current-page": "Page",
+    "enhancement-description": "Décris tes changements souhaités",
+    "enhance-description": "Décrit tes modifications"
   },
   "cancel": "Annuler",
   "modification": {
@@ -82,7 +93,8 @@
     "password": "Mot de passe",
     "email": "E-mail",
     "logging-in": "Connexion...",
-    "welcome": "Connexion"
+    "welcome": "Connexion",
+    "about": "Info"
   },
   "gallery": {
     "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
@@ -116,7 +128,8 @@
     "feature-2": {
       "description": "Explore sans limites et colorie ce qui te plaît ! Emmène ton personnage escalader des montagnes, piloter un avion de chasse ou même marcher sur la lune.",
       "title": "Ton histoire"
-    }
+    },
+    "feature-cancel": "Retour"
   },
   "error": {
     "oops-something-went-wrong": "Oups ! \nQuelque chose s'est mal passé",
@@ -136,5 +149,15 @@
   },
   "success": {
     "your-book-has-been-successfully-generated": "Votre livre a été généré avec succès !"
+  },
+  "delete": {
+    "are-your-sure": "Abandonner ce livre?",
+    "delete": "Abandonner"
+  },
+  "about": {
+    "title": "Informations",
+    "contact": {
+      "title": "Contactez nous"
+    }
   }
 }

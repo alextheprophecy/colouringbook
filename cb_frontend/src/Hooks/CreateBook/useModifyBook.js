@@ -11,13 +11,13 @@ export const FLIP_TIMES = Object.freeze({
     QUICK_FLIP: 250,
     QUICK_COVER: 450,
     ANIMATION_DELAY: 550,
-    ANIMATION_COVER: 1000,
+    ANIMATION_COVER: 750,
     ANIMATION_FLIP: 420
 });
 
 const useModifyBook = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, bookId, isBookFinished, seeds, title, currentContext} = useSelector(state => state.book);
+    const { pages, currentPage, bookId, isBookFinished, seeds, title, currentContext, isEditing} = useSelector(state => state.book);
 
     const flipBookRef = useRef(null);
     const [isFlipping, setIsFlipping] = useState(false);
@@ -29,7 +29,6 @@ const useModifyBook = () => {
     const [selectedCreationPage, setSelectedCreationPage] = useState(false);
     
     const isOnCreationPage = useCallback(() => {
-        console.log('isOnCreationPage', currentPage, pages.length);
         return currentPage >= pages.length;
     }, [currentPage, pages.length, isSinglePage]);
     
@@ -43,37 +42,68 @@ const useModifyBook = () => {
     const getBookInstance = () => flipBookRef.current?.pageFlip();
 
     const startAnimation = useCallback((targetPage = pages.length, quickFlip = false) => {
-        const extraPage = !isSinglePage ? 1 : 0;
-        const adjustedTargetPage = targetPage + extraPage;
-
+        console.log('startAnimation', targetPage, currentPage);
         const book = getBookInstance();
-        if (currentPage >= adjustedTargetPage || !book || isFlipping) return;
-        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : (currentPage === 0 ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY)        
-        setIsFlipping(true);
-        book.getSettings().disableFlipByClick = true;
+        
+        console.log('startAnimation', targetPage, currentPage);
+        if (!book || isFlipping || currentPage === targetPage) return;
+        
+        // Calculate the actual number of flips needed
+        let flipsNeeded;
+        if (isSinglePage) {
+            flipsNeeded = targetPage - currentPage;
+        } else {
+            const currentSpread = currentPage === 0 ? 0 : Math.ceil((currentPage+1) / 2);
+            const targetSpread = targetPage === 0 ? 0 : Math.ceil((targetPage+1) / 2);
+            flipsNeeded = targetSpread - currentSpread;
+        }
+        console.log('need', flipsNeeded);
 
-        let currentPageIndex = currentPage;
+        if (flipsNeeded === 0) return;
+        
+        
+        const isFlippingForward = flipsNeeded > 0;
+        const startDelay = quickFlip ? FLIP_TIMES.QUICK_DELAY : 
+            (currentPage === 0 || targetPage === 0) ? FLIP_TIMES.ANIMATION_DELAY : FLIP_TIMES.QUICK_DELAY;
+        
+        
+        setIsFlipping(true);        
+        
+        let flipsCompleted = 0;
+        
         const flipThroughPages = () => {
-            const flipSpeed = quickFlip ? (currentPageIndex === 0 ? FLIP_TIMES.QUICK_COVER : FLIP_TIMES.QUICK_FLIP) : (currentPageIndex === 0 ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP);
-    
-            book.getSettings().flippingTime = flipSpeed
-            console.log('we are at', currentPageIndex, adjustedTargetPage);
-            if (currentPageIndex < adjustedTargetPage) {
-                book.flipNext('top');
-                currentPageIndex++;
+            const currentPageIndex = isFlippingForward ? 
+                currentPage + (flipsCompleted * (isSinglePage ? 1 : 2)) :
+                currentPage - (flipsCompleted * (isSinglePage ? 1 : 2));
+
+            const isOnCover = currentPageIndex === 0 || currentPageIndex === 1;
+            const flipSpeed = quickFlip ? 
+                (isOnCover ? FLIP_TIMES.QUICK_COVER : FLIP_TIMES.QUICK_FLIP) : 
+                (isOnCover ? FLIP_TIMES.ANIMATION_COVER : FLIP_TIMES.ANIMATION_FLIP);
+
+            book.getSettings().flippingTime = flipSpeed;
+
+            if (flipsCompleted < Math.abs(flipsNeeded)) {
+                if (isFlippingForward) book.flipNext('top');
+                else if(currentPage > 0) book.flipPrev('top');                
+                
+                flipsCompleted++;
                 
                 setTimeout(() => {
                     flipThroughPages();
                 }, flipSpeed);
             } else {
                 setTimeout(() => {
-                    setIsFlipping(false);
-                    book.getSettings().flippingTime = FLIP_TIMES.USER;
-                    book.getSettings().disableFlipByClick = false;
+                    finishUp();
                 }, quickFlip ? FLIP_TIMES.QUICK_DELAY : FLIP_TIMES.USER);
             }
         };
 
+        const finishUp = () => {
+            setIsFlipping(false);
+            book.getSettings().flippingTime = FLIP_TIMES.USER;
+            book.getSettings().disableFlipByClick = false;
+        }
         setTimeout(flipThroughPages, startDelay);
     }, [isFlipping, currentPage, pages.length, isSinglePage]);
 
@@ -99,22 +129,31 @@ const useModifyBook = () => {
     };
 
     const onFlip = useCallback((e) => {
-       dispatch(setCurrentPage(e.data));        
+       dispatch(setCurrentPage(e.data));    
     }, [dispatch]);
 
     const updateOrientation = () => {
         const book = getBookInstance();
         if (book) setIsSinglePage(book.getOrientation() === 'portrait');
+        window.scrollTo(0, 0);
     };
 
+    // Disable mouse events when on creation page
     useEffect(() => {
         const book = getBookInstance();
         if (book) book.getSettings().useMouseEvents = isSinglePage ? !isOnCreationPage() : !isOnSelectedCreationPage();        
     }, [isOnCreationPage, isOnSelectedCreationPage, selectedCreationPage]);
 
+
+    // Disable mobile scroll support when editing (to allow scroll of edit page aswell as book)
+    useEffect(() => {
+        const book = getBookInstance();
+        if (book) book.getSettings().mobileScrollSupport = !isEditing;
+    }, [isEditing]);
+
     const handleFinishBook = async () => {
         if (isFinishing) return;
-        
+
         if (isBookFinished) {
             if (!pdfUrl && !pages[0]?.pdfUrl) {
                 dispatch(addNotification({
@@ -126,18 +165,9 @@ const useModifyBook = () => {
             }
             window.open(pdfUrl || pages[0].pdfUrl, '_blank');
             return;
-        }
-
-        // First flip to the beginning
-        const book = getBookInstance();
-        if (book && currentPage > 0) {
-            setIsFlipping(true);
-            book.getSettings().flippingTime = FLIP_TIMES.QUICK_FLIP;
-            book.getSettings().disableFlipByClick = true;
-            book.flip(0);
-        }
+        }                
         
-        setIsFinishing(true);
+        setIsFinishing(true);      
         try {
             const response = await loadRequest(
                 async () => await api.post('image/finishBook', {

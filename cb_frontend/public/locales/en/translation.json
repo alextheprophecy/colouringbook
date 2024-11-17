@@ -1,6 +1,6 @@
 {
   "creation": {
-    "create-page": "Create Page",
+    "create-page": "Generate",
     "new-page": "New page",
     "a-goblin-in-a-forest-eating-a-mushroom": "A goblin in a forest eating a mushroom...",
     "create-your-book": "Create Your Book",
@@ -21,7 +21,8 @@
     "feat": {},
     "new-book": "Create New Book",
     "title": "Title",
-    "dont-refresh": "Please do not refresh the page!"
+    "dont-refresh": "Please do not refresh the page!",
+    "wait-for-load": "Please wait"
   },
   "modifybook": {
     "credits": {
@@ -30,8 +31,8 @@
     "processing": "Processing...",
     "download_pdf": "Download PDF",
     "finish_book": "Finish Book",
-    "creative_model": "Image Quality",
-    "creative_model_description": "Activate for better quality. Costs more credits however.",
+    "creative_model": "Advanced",
+    "creative_model_description": "Better at complex scenes and for cleaner outlines",
     "advanced_options": "Advanced Options",
     "test_mode": "Test Mode",
     "test_mode_description": "Show descriptions instead of generating images",
@@ -40,7 +41,13 @@
       "description": "Use more detailed story context for better continuity"
     },
     "generating-your-book": "Generating your book...",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "reset_book": "Reset book",
+    "image_quality": "Image quality",
+    "standard_model": "Good",
+    "basic_model": "Basic",
+    "standard_basic_description": "Very basic model with limited capabilities",
+    "standard_model_description": "Images look more like colouring books, good for simple scenes"
   },
   "edition": {
     "context": "Context",
@@ -53,17 +60,19 @@
     "enhance": "Enhance",
     "credits": "credits",
     "regenerate": "Regenerate",
-    "enhance-image": "Enhance Image",
+    "enhance-image": "Enhance",
     "user-description": "User Description",
     "composition-idea": "Composition Idea",
     "api-description": "API Description",
     "key-objects": "Key Objects:",
     "current-page": "Current Page",
-    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "Examples: Make the main character smile more, Add a tree on the left, Make the sword longer",
+    "examples-and-10-make-the-main-character-smile-more-and-10-add-a-tree-on-the-left-and-10-make-the-colors-more-vibrant": "...Make the main character smile more...\n...Add a tree on the left...\n...Make the sword longer...",
     "hooks": {
       "regenrating-image": "Regenrating image...",
       "enhancing-description": "Enhancing the image..."
-    }
+    },
+    "enhancement-description": "Describe the changes you wish",
+    "enhance-description": "Describe your changes"
   },
   "cancel": "Cancel",
   "modification": {
@@ -90,7 +99,8 @@
     "email": "Email",
     "password": "Password",
     "welcome": "Sign in",
-    "logging-in": "Logging in..."
+    "logging-in": "Logging in...",
+    "about": "About"
   },
   "error": {
     "error": "Error",
@@ -142,9 +152,26 @@
     "feature-5": {
       "title": "Easy & Fast",
       "description": "Make your colouring book and print it out in minutes!"
-    }
+    },
+    "feature-cancel": "Cancel"
   },
   "success": {
     "your-book-has-been-successfully-generated": "Your book has been successfully generated!"
+  },
+  "delete": {
+    "are-your-sure": "Delete book?",
+    "delete": "Delete"
+  },
+  "about": {
+    "title": "About us",
+    "contact": {
+      "title": "Contact Us"
+    },
+    "ai": {
+      "title": "Crayons.me Technology Stack",
+      "chatgpt": {
+        "description": "We use "
+      }
+    }
   }
 }

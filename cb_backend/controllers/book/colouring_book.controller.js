@@ -9,30 +9,30 @@ const MAX_PAGE_COUNT = 6
 const TWO_STEP_DESCRIPTION_GENERATION = true
 const USE_SCHNELL_MODEL = true
 const USE_FLUX_PRO_MODEL = false
-const CREDIT_COSTS = {
-    GEN: 3,
-    ADVANCED_GEN: 5,
-    REGEN: 5,
-    ENHANCE: 5
-}
+
+const CREDIT_COSTS = [5, 3, 1]
 
 const CHILD_PROMPT = (description)=>`Children's detailed black and white coloring page. ${description} Only black outlines, colorless, no shadows, no shading, black and white, coloring page.`
 const ADULT_PROMPT = (description)=>`${description}. Adult's detailed coloring book. No shadows, no text, unshaded, colorless, coherent, thin lines, black and white`
 
-const verifyPageCredits = async (user, useAdvancedModel) => {
-    const creditCost = useAdvancedModel ? CREDIT_COSTS.ADVANCED_GEN : CREDIT_COSTS.GEN;
+const verifyPageCredits = async (user, usingModel) => {
+    const creditCost = CREDIT_COSTS[usingModel];
     return await verifyCredits(user, creditCost);    
 };
 
-const _generateImage = async (user, book, pageNumber, description, {useAdvancedModel = false, seed}) => { 
+const _generateImage = async (user, book, pageNumber, description, {usingModel = 0, seed}) => { 
     if(!seed) seed = randomSeed();
     let imageData;
 
-    if (useAdvancedModel)      
+    if (usingModel === 0)      
         imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
-    else
+    else if (usingModel === 1)  
         imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
-    
+    else
+        imageData = await queryFluxSchnell(CHILD_PROMPT(description), seed);
+    console.log('imageData', imageData);
+    console.log('seed', seed);
+    console.log('description', description);
     const { url, versionId } = await savePageData(user, book.id, pageNumber, imageData);
     return { url, seed, versionId };
 };
@@ -63,7 +63,7 @@ const generatePageWithContext = async (req, res) => {
     const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
 
@@ -103,10 +103,10 @@ const regeneratePage = async (req, res) => {
     const book = req.book;
     const { detailedDescription, currentPage, ...creationSettings } = req.body;
     const { testMode, ...generationSettings } = creationSettings;
-    console.log('regenerating page with:', generationSettings.useAdvancedModel);
+    console.log('regenerating page with:', generationSettings.usingModel);
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
     if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
@@ -136,7 +136,7 @@ const enhancePage = async (req, res) => {
     const { testMode, ...generationSettings } = creationSettings;
 
     //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.useAdvancedModel).catch(error => res.status(403).json({ error: error.message }));
+    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
 
     if (!previousDescription || !enhancementRequest) return res.status(400).json({ error: 'Missing required parameters' });
     

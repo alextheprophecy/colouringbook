@@ -1,9 +1,10 @@
 import api from '../../Hooks/ApiHandler';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPage, updateContext, updatePage, setSeeds } from '../../redux/bookSlice';
+import { addPage, updateContext, updatePage, setSeed } from '../../redux/bookSlice';
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
+    const {workingOnPage} = useSelector(state => state.book);
     const creationSettings = useSelector(state => state.website.settings);
 
     const generateImage = async (description, currentContext, bookId, seed=null) => {
@@ -24,15 +25,10 @@ const useImageGeneration = () => {
             ...imageSeedAndRest
         });
 
-        if(creationSettings.useAdvancedModel){
-            dispatch(setSeeds({
-                advanced: imageSeedAndRest.seed
-            }));    
-        } else {
-            dispatch(setSeeds({
-                fineTuned: imageSeedAndRest.seed,
-            }));    
-        }
+        dispatch(setSeed({
+            model: creationSettings.usingModel,
+            seed: imageSeedAndRest.seed
+        }));   
         
         dispatch(addPage({
             userDescription: description, 
@@ -56,7 +52,7 @@ const useImageGeneration = () => {
         });
         const { image, seed } = response.data;
         
-        return dispatch(updatePage({index: currentPage, data: { image, seed }, isRegeneration: true}));
+        return dispatch(updatePage({index: workingOnPage, data: { image, seed }, isRegeneration: true}));
     }
 
     const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        
@@ -77,7 +73,7 @@ const useImageGeneration = () => {
 
         console.log('NEW IMAGE', image, seed);
         dispatch(updatePage({
-            index: currentPage,
+            index: workingOnPage,
             data: { 
                 detailedDescription: enhancedDescription,
                 enhancementRequest,

@@ -2,12 +2,10 @@ import React, { Suspense, useState} from 'react';
 import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration, Navigate } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
-import PlaygroundView from "./Components/Views/playground.view";
 import BurgerMenu from "./Components/Navbar/burger_menu.component";
 import './Styles/main.css';
 import MainView from "./Components/Views/main.view";
 import { AnimatePresence } from "framer-motion";
-import IntroScreen from "./Components/UI/intro_screen.component";
 import {setShouldShowIntro, shouldShowIntro} from "./Hooks/UserDataHandler";
 import CreateBook from "./Components/Views/CreateBook";
 import Popup from "./Components/Popup";
@@ -15,7 +13,7 @@ import ErrorBoundaryWrapper from './Components/ErrorBoundary';
 import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
 import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
-
+import About from './Components/Views/About';
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
     return <Navigate to="/login" replace />;
@@ -80,15 +78,11 @@ const router = createBrowserRouter([
             path: '/gallery', 
             element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
           },
-          { 
-            path: '/test', 
-            element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
-          },
-          { 
-            path: '/playground', 
-            element: <ErrorBoundaryWrapper><PlaygroundView /></ErrorBoundaryWrapper>,
-          },
         ]
+      },
+      { 
+        path: '/about', 
+        element: <ErrorBoundaryWrapper><About /></ErrorBoundaryWrapper>,
       },
       { 
         path: '/login', 

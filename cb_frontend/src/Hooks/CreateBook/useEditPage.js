@@ -7,13 +7,13 @@ import { addNotification } from '../../redux/websiteSlice';
 import { useTranslation } from 'react-i18next';
 const useEditPage = () => {
     const dispatch = useDispatch();
-    const { pages, currentPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
+    const { pages, workingOnPage, isEditing, currentContext, bookId } = useSelector(state => state.book);
     const creationSettings = useSelector(state => state.website.settings);
     const [editText, setEditText] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
     const [showDescription, setShowDescription] = useState(false);
-    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available', 0]);
+    const [sceneDescription, setSceneDescription] = useState(['No user description available', 'No detailed description available']);
     const { regenerateImage, enhanceImage } = useImageGeneration();
     const { loadRequest} = useLoadRequest();
     const { t } = useTranslation();
@@ -39,19 +39,20 @@ const useEditPage = () => {
         if (isEditing) {
             //open the edit page
             setShowDescription(false);
-            setSceneDescription(formatPageDescription(pages[currentPage]));
-            setCurrentImage(pages[currentPage]?.image || '');
+            setSceneDescription(formatPageDescription(pages[workingOnPage]));
+            setCurrentImage(pages[workingOnPage]?.image || '');
             setIsVisible(true)
         } else {
             handleClose();
         }
-    }, [isEditing, currentPage, pages, bookId]);
+    }, [isEditing, workingOnPage, pages, bookId]);
 
     
     const handleRegenerate = useCallback(async () => {
+        handleClose();
         try {
             await loadRequest(
-                () => regenerateImage(currentPage, pages, currentContext, bookId),
+                () => regenerateImage(workingOnPage, pages, currentContext, bookId),
                 t('edition.hooks.regenrating-image')
             )
         } catch (error) {
@@ -61,13 +62,12 @@ const useEditPage = () => {
                 duration: 3000
             }));
             return false;
-        } finally {
-            handleClose();
-        }             
-    }, [currentPage, bookId, currentContext, pages, creationSettings]);
+        }         
+    }, [workingOnPage, bookId, currentContext, pages, creationSettings]);
 
 
     const handleEnhance = useCallback(async () => {
+        handleClose();
         if (!editText.trim()) {
             dispatch(addNotification({
                 type: 'error',
@@ -78,7 +78,7 @@ const useEditPage = () => {
         }
         try {
             await loadRequest(
-                () => enhanceImage(editText, currentPage, pages, currentContext, bookId),
+                () => enhanceImage(editText, workingOnPage, pages, currentContext, bookId),
                 t('edition.hooks.enhancing-description')
             )
         } catch (error) {
@@ -87,10 +87,8 @@ const useEditPage = () => {
                 message: error.message || t('error.failed-to-enhance-description-please-try-again'),
                 duration: 3000
             }));
-        } finally {
-            handleClose();   
         }
-    }, [editText, currentPage, bookId, currentContext, pages]);
+    }, [editText, workingOnPage, bookId, currentContext, pages]);
 
     return {
         editText,

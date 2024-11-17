@@ -1,6 +1,5 @@
 import {useEffect, useState, React} from "react";
 import api from "../../Hooks/ApiHandler";
-import '../../Styles/gallery.css'
 import {getBookData, saveBookData, isUserLoggedIn} from "../../Hooks/UserDataHandler";
 import { RefreshCw, Download, Plus } from 'lucide-react';
 import { useDispatch } from 'react-redux';
