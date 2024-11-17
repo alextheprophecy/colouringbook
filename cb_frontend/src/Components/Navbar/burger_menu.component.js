@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { setAskFeedback } from '../../redux/websiteSlice';
 import { MessageSquare } from 'lucide-react';
 
-const BurgerMenu = ({ t, isEditing, setAskFeedback }) => {
+const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     
@@ -28,7 +28,7 @@ const BurgerMenu = ({ t, isEditing, setAskFeedback }) => {
     }
 
     const isCreatePage = location.pathname === '/create';
-    const shouldHideMenu = isEditing && isCreatePage;
+    const shouldHideMenu = isLoading || (isEditing && isCreatePage);
 
     const getMenuLink = (url, name, customClass) => (
         <Link
@@ -108,6 +108,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
+    isLoading: state.book.isLoading,
     isEditing: state.book.isEditing
 });
 

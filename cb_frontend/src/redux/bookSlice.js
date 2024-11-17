@@ -20,7 +20,7 @@ const firstPage = (title="Coloring \n book") => {
 
 const initialState = {
   pages: [],
-  seeds: {advanced: null, fineTuned: null},
+  seeds: {advanced: null, fineTuned: null, basic: null},
   currentContext: '',
   currentPage: 0,
   isEditing: false,  
@@ -70,12 +70,16 @@ const bookSlice = createSlice({
     finishBook: (state) => {
       state.isBookFinished = true;
     },
-    setSeeds: (state, action) => {
-      state.seeds = { ...state.seeds, ...action.payload};
+    setSeed: (state, action) => {
+      const {model, seed} = action.payload;
+      const modelKey = Object.keys(state.seeds)[model];
+      if (modelKey) {
+        state.seeds[modelKey] = seed;
+      }
     }
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeeds, editPage, creatingPage } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeed, editPage, creatingPage } = bookSlice.actions;
 
 export default bookSlice.reducer;

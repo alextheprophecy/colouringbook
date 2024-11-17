@@ -6,7 +6,7 @@ const DEFAULT_DEV_SEEDS = [19129, 34895, 34135, 23006, 98663, 42145] //19129 goo
 //34135(a bit too much shading), 23006 -good
 //19129 more cartoonish
 
-const PRO_SEEDS = [38681, 79698, 21705]
+const PRO_SEEDS = [38681, 79698, 21705, 61187]
 
 const LORA_SEEDS = [9890, 17362/*really nice*/, 51337, 26610, 27398, 88699]
 

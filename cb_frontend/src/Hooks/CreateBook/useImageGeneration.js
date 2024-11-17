@@ -1,6 +1,6 @@
 import api from '../../Hooks/ApiHandler';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPage, updateContext, updatePage, setSeeds } from '../../redux/bookSlice';
+import { addPage, updateContext, updatePage, setSeed } from '../../redux/bookSlice';
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
@@ -25,15 +25,10 @@ const useImageGeneration = () => {
             ...imageSeedAndRest
         });
 
-        if(creationSettings.useAdvancedModel){
-            dispatch(setSeeds({
-                advanced: imageSeedAndRest.seed
-            }));    
-        } else {
-            dispatch(setSeeds({
-                fineTuned: imageSeedAndRest.seed,
-            }));    
-        }
+        dispatch(setSeed({
+            model: creationSettings.usingModel,
+            seed: imageSeedAndRest.seed
+        }));   
         
         dispatch(addPage({
             userDescription: description, 

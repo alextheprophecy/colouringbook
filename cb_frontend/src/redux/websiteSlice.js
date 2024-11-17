@@ -11,7 +11,7 @@ const initialState = {
   dontRefreshWarning: true,
   settings: {
     testMode: false,
-    useAdvancedModel: false,
+    usingModel: 1,
     useAdvancedContext: true
   }
 }
@@ -61,7 +61,12 @@ const websiteSlice = createSlice({
       state.credits += action.payload;
     },
     toggleSetting: (state, action) => {
-      state.settings[action.payload] = !state.settings[action.payload];
+      const {model} = action.payload
+      if(model !== undefined) {
+        state.settings.usingModel = model;
+      } else {
+        state.settings[action.payload] = !state.settings[action.payload];
+      }
     },
     setAskFeedback: (state, action) => {
       state.askFeedback = action.payload;

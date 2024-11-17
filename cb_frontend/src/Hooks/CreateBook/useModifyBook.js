@@ -153,7 +153,6 @@ const useModifyBook = () => {
 
     const handleFinishBook = async () => {
         if (isFinishing) return;
-        setIsFinishing(true);
 
         if (isBookFinished) {
             if (!pdfUrl && !pages[0]?.pdfUrl) {
@@ -167,7 +166,8 @@ const useModifyBook = () => {
             window.open(pdfUrl || pages[0].pdfUrl, '_blank');
             return;
         }                
-              
+        
+        setIsFinishing(true);      
         try {
             const response = await loadRequest(
                 async () => await api.post('image/finishBook', {

@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import useEditPage from '../../Hooks/CreateBook/useEditPage';
 import {Wand2, RotateCcw, Info} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { toggleSetting } from '../../redux/websiteSlice';
-
+import ImageQualityOptions from './UI/ImageQualityOptions';
+import { MODEL_COSTS } from '../../Constants/qualityOptions';
 const EditPage = () => {
     const { t } = useTranslation();
     const {currentPage} = useSelector((state) => state.book);
@@ -36,9 +36,9 @@ const EditPage = () => {
             onClick={handleClose}
         >
             <div 
-                className={`bg-white rounded-lg w-full max-w-4xl mx-4
-                    relative my-8
-                    grid grid-cols-1 lg:grid-cols-2 gap-6 p-6`}
+                className={`bg-white rounded-lg w-full max-w-4xl mx-6
+                    relative my-6
+                    grid grid-cols-1 lg:grid-cols-2 gap-2 p-6`}
                 onClick={(e) => e.stopPropagation()}
             >   
                 {/* Left Column - Image/Info Preview */}
@@ -133,7 +133,7 @@ const EditPage = () => {
                             {/* Action Cards */}
                             <div className="space-y-4">
                                 {/* Enhance Card */}
-                                <div className="group bg-green-100 p-4 rounded-lg shadow-md hover:shadow-lg 
+                                <div className="group bg-green-100 px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
                                     <button 
                                         className="w-full flex items-center gap-4"
@@ -144,18 +144,21 @@ const EditPage = () => {
                                             <Wand2 className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <h3 className="font-children font-semibold text-green-600 mb-1">
+                                            <h3 className="font-children font-semibold text-green-600">
                                                 {t('edition.enhance')}
                                             </h3>
                                         </div>
                                         <span className="text-xs font-mono text-red-500 ml-2">
-                                            <strong>-3</strong> {t('edition.credits')}
+                                            <strong>-{MODEL_COSTS[settings.usingModel]}</strong> {t('edition.credits')}
                                         </span>
                                     </button>
+                                    <p className="text-xs text-green-600 text-center -mt-2">
+                                        {t('edition.enhance-description')}
+                                    </p>
                                 </div>
 
                                 {/* Regenerate Card */}
-                                <div className="group bg-blue-100 p-4 rounded-lg shadow-md hover:shadow-lg 
+                                <div className="group bg-blue-100 px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
                                     transition-all duration-300 hover:scale-[1.01] border border-gray-100">
                                     <button 
                                         className="w-full flex items-center gap-4"
@@ -171,32 +174,15 @@ const EditPage = () => {
                                             </h3>
                                         </div>
                                         <span className="text-xs font-mono text-red-500 ml-2">
-                                            <strong>-3</strong> {t('edition.credits')}
+                                            <strong>-{MODEL_COSTS[settings.usingModel]}</strong> {t('edition.credits')}
                                         </span>
                                     </button>
                                 </div>
                             
 
                             {/* Creative Model Toggle */}
-                            <div className="p-3 bg-white/80 rounded-lg shadow-md hover:shadow-lg ring-1 ring-blue-100 mt-4">
-                                <label className="flex items-center justify-between cursor-pointer">
-                                    <div className="flex flex-col">
-                                        <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
-                                        <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
-                                    </div>
-                                    <div className="relative">
-                                        <input
-                                            type="checkbox"
-                                            checked={settings.useAdvancedModel}
-                                            onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
-                                            className="sr-only"
-                                        />
-                                        <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
-                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
+                            <ImageQualityOptions />
+
                             </div>
 
                             {/* Desktop Cancel Button - Now at bottom */}

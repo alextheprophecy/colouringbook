@@ -12,6 +12,8 @@ import { setCurrentPage, setIsEditing, finishBook, editPage, creatingPage, reset
 import EditButton from './UI/EditButton';
 import useLoadRequest from '../../Hooks/CreateBook/useLoadRequest';
 import { resetPersistedState } from '../../redux/store';
+import ImageQualityOptions from './UI/ImageQualityOptions';
+import DeleteButton from './UI/DeleteButton';
 
 
 const ModifyBook = () => {
@@ -263,34 +265,14 @@ const ModifyBook = () => {
                         <Plus className="w-5 h-5" />
                         {t('creation.new-page')}
                     </button>
-                    {/* Creative Model Toggle */}
-                    <div className={`p-3 max-w-md bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
-                        ${!isOnCreationPage() ? 'scale-0 pointer-events-none absolute' : 'scale-100 relative'}`}>
-                        <label className="flex items-center justify-between cursor-pointer">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
-                                <span className="text-sm text-gray-500 mr-1">{t('modifybook.creative_model_description')}</span>
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    checked={settings.useAdvancedModel}
-                                    onChange={() => dispatch(toggleSetting('useAdvancedModel'))}
-                                    className="sr-only"
-                                />
-                                <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedModel ? 'bg-purple-500' : 'bg-gray-300'}`}>
-                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedModel ? 'transform translate-x-6' : ''}`}></div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
+                    <ImageQualityOptions isVisible={isOnCreationPage()} />
                     
                     </>
                 )}
 
                 <button 
-                    className={`w-full max-w-md 
-                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
+                    className={`w-full
+                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600 max-w-md ' : 'bg-blue-600 hover:bg-blue-600 w-32'}
                         
                         ${''/* isOnCreationPage() && !isBookFinished ? '' : '-mt-16' */}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
@@ -413,17 +395,8 @@ const ModifyBook = () => {
                         </div>
                     </div>
                     
-                    {/* New Reset Button placement */}
-                    <button
-                        onClick={() => dispatch(resetPersistedState())}
-                        className="w-fit mx-auto py-2 px-4 text-sm text-red-600 hover:text-red-700
-                                  bg-red-50 hover:bg-red-100
-                                  rounded-lg transition-all duration-200
-                                  font-children flex items-center justify-center gap-2"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                        {t('modifybook.reset_book')}
-                    </button>
+                    {/* Use the new DeleteButton component */}
+                    <DeleteButton />
                 </div>)}
             </div>
 

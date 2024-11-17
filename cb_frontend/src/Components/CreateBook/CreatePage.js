@@ -5,7 +5,7 @@ import { BookPlus, Image, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { BarLoader } from 'react-spinners';
-
+import { MODEL_COSTS } from '../../Constants/qualityOptions';
 const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave, disabled}, ref) => {  
     const { t } = useTranslation();
     const {settings: creationSettings, isLoading} = useSelector(state => state.website);
@@ -77,8 +77,8 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave,
                                 <Image className="w-5 h-5 text-white" />
                                 <span className="text-white text-lg font-children font-semibold">{t('creation.create-page')}</span>
                             </button>
-                            <span className="text-red-500 text-[0.9rem] font-mono font-medium">
-                                -{creationSettings.useAdvancedModel ? 5 : 3} {t('edition.credits')}
+                            <span className="text-red-500 text-[0.9rem] md:text-[1.1rem] font-mono font-medium">
+                                <strong>-{MODEL_COSTS[creationSettings.usingModel]}</strong> {t('edition.credits')}
                             </span>
                         </div>
                     </div>}
