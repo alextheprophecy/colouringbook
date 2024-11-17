@@ -16,13 +16,12 @@ import { resetPersistedState } from '../../redux/store';
 
 const ModifyBook = () => {
     const { t } = useTranslation();
-    const MIN_WIDTH = Object.freeze(300);
+    const MIN_WIDTH = Object.freeze(200);
     const { loadRequest } = useLoadRequest();
     const { isLoading } = useSelector((state) => state.website);
 
     // Add test function for loading
     const testLoading = async () => {
-        dispatch(editPage(5));
         await loadRequest(
             () => new Promise(resolve => setTimeout(resolve, 2500)), // 3 second delay
             "Testing loading state...",
@@ -176,8 +175,8 @@ const ModifyBook = () => {
     
 
     return (
-        <div className={`mt-4 p-8 gap-2 rounded-lg mx-auto flex
-            items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px] overflow-hidden`}>
+        <div className={`mt-12 p-4 gap-2 rounded-lg mx-auto flex
+            items-stretch flex-col min-w-[${MIN_WIDTH}px] min-h-[600px] max-w-[900px]`}>
             {/* Credits display at the top */}
            
             <div className=" fixed top-2 right-2 z-10">
@@ -193,12 +192,9 @@ const ModifyBook = () => {
                     </span>                    
                 </div>
             </div>
-
-            <TestButton />
-            <ResetButton />
-
+            
             {/* Book container*/}
-            <div className={`flex justify-center items-center relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
+            <div className={`flex-1 justify-center items-center  relative min-w-[${MIN_WIDTH}px] overflow-hidden p-16 -mx-16 -my-16`}>
                 {renderNavigationButtons()}
                 <HTMLFlipBook
                     key={`book-${pages.length}-${isLoading}-${isBookFinished}`}
@@ -267,14 +263,14 @@ const ModifyBook = () => {
             </div>
 
             {/* Buttons container with absolute scaling */}
-            <div className={`flex flex-col gap-4 items-center transition-all duration-500 ease-in-out mt-2
-                ${isLoading ? 'scale-0 opacity-0 absolute' : 'scale-100 opacity-100'}`}>
+            <div className={`flex mt-4 flex-col gap-4 items-center transition-scale transition-opacity duration-500 ease-in-out
+                ${isLoading ? 'scale-0 opacity-0 absolute' : 'scale-100 opacity-100 relative'}`}>
                 {/* Only show New Page button if book is not finished */}
                 {!isBookFinished && (
                     <>
                     <button 
                         className={`w-full max-w-md 
-                            ${isOnCreationPage() || isFlipping ? 'scale-0 pointer-events-none' : 'scale-100 relative'}
+                            ${isOnCreationPage() ? 'scale-0 absolute pointer-events-none' : 'scale-100 relative'}
                             bg-blue-500 hover:bg-blue-600 
                             text-white py-3 px-6 rounded-lg 
                             transition-scale duration-300 ease-in-out 
@@ -287,10 +283,9 @@ const ModifyBook = () => {
                         <Plus className="w-5 h-5" />
                         {t('creation.new-page')}
                     </button>
-
                     {/* Creative Model Toggle */}
-                    <div className={`p-3 md:-mt-8 -mt-12 max-w-md bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
-                        ${!isOnCreationPage() ? 'opacity-0 pointer-events-none' : 'opacity-100 relative'}`}>
+                    <div className={`p-3 max-w-md bg-white/80 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ring-1 ring-blue-100 
+                        ${!isOnCreationPage() ? 'scale-0 pointer-events-none absolute' : 'scale-100 relative'}`}>
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex flex-col">
                                 <span className="text-lg font-children font-semibold text-gray-700">{t('modifybook.creative_model')}</span>
@@ -309,13 +304,15 @@ const ModifyBook = () => {
                             </div>
                         </label>
                     </div>
+                    
                     </>
                 )}
 
                 <button 
                     className={`w-full max-w-md 
                         ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
-                        ${isOnCreationPage() && !isBookFinished ? '' : '-mt-16'}
+                        
+                        ${''/* isOnCreationPage() && !isBookFinished ? '' : '-mt-16' */}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
                         ${pages.length <= 1 ? 'hidden' : ''}
                         text-white py-3 px-6 rounded-lg 
