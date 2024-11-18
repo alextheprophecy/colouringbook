@@ -54,14 +54,14 @@ api.interceptors.response.use(
                     error.response?.data || 
                     error.message || 
                     i18n.t('error.an-unexpected-error-occurred');
-
+ 
         switch (status) {
             case 401:
                 if(errMsg.includes('Expired Token')) return refreshToken(error);
                 break;
             case 403:
                 showErrorNotification(errMsg);
-                handleLogout();
+                //handleLogout();
                 break;
             default:
                 showErrorNotification(errMsg);

@@ -14,6 +14,7 @@ import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
 import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
 import About from './Components/Views/About';
+import AuthSuccess from './Components/Auth/AuthSuccess';
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
     return <Navigate to="/login" replace />;
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
       { 
         path: '/demo', 
         element: <ErrorBoundaryWrapper><InteractiveDemo /></ErrorBoundaryWrapper>,
+      },
+      { 
+        path: '/auth-success', 
+        element: <AuthSuccess />,
       },
     ]
   }

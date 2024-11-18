@@ -20,9 +20,9 @@ const LanguageChange = () => {
         <div className="relative">
             <button
                 onClick={toggleDropdown}
-                className="language-button bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/20 hover:bg-blue-600/30 transition-all duration-200"
             >
-                <Globe className="w-6 h-6" />
+                <Globe className="w-5 h-5 text-blue-500" />
             </button>
             {isOpen && (
                 <div className="absolute top-12 left-0 bg-white shadow-lg rounded-md z-[100]">

@@ -93,4 +93,8 @@ class UserControllers {
 
 }
 
-module.exports = UserControllers
+module.exports = {
+    UserControllers,
+    gen_token,
+    add_cookie
+}

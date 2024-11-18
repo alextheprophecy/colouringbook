@@ -100,7 +100,8 @@
     "password": "Password",
     "welcome": "Sign in",
     "logging-in": "Logging in...",
-    "about": "About"
+    "about": "About",
+    "switch-account": "Switch Account"
   },
   "error": {
     "error": "Error",

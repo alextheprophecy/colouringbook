@@ -2,14 +2,14 @@ import { bubble as Menu } from 'react-burger-menu';
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { isUserLoggedIn } from "../../Hooks/UserDataHandler";
-import { handleLogout } from "../../Hooks/LoginHandler";
+import { handleLogout, switchAccount } from "../../Hooks/LoginHandler";
 import { withTranslation } from 'react-i18next';
 import LanguageChange from './language_change.component';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setAskFeedback } from '../../redux/websiteSlice';
-import { MessageSquare } from 'lucide-react';
-
+import { getUserData } from '../../Hooks/UserDataHandler';
+import UserMenu from '../Auth/UserMenu';
 const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -34,7 +34,9 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
         <Link
             onClick={closeMenu}
             to={url}
-            className={`flex items-center justify-center px-3 py-2 rounded ${customClass || 'bg-blue-600 hover:bg-blue-700'} text-white font-bold text-lg shadow-md transition-transform transform hover:scale-105`}
+            className={`flex items-center justify-center w-full px-4 py-3.5 rounded-lg text-lg font-medium transition-all duration-200 ${
+                customClass || 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
         >
             {name}
         </Link>
@@ -42,13 +44,25 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
 
     const login_logout_button = () => (
         isUserLoggedIn() ?
-            <span 
-                className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 absolute bottom-0 left-0 rounded text-lg font-bold cursor-pointer" 
-                onClick={() => handleLogout()}
-            >
-                {t('login.logout')}
-            </span> :
-            getMenuLink('/login', t('login.login'), 'bg-green-600 hover:bg-green-700')
+            <div className="flex flex-col space-y-2 absolute bottom-4 left-0 w-fit">
+                <div className="text-gray-400 text-sm text-center mb-1">
+                    {getUserData().email}
+                </div>
+                <button 
+                    className="w-full text-gray-700 bg-white hover:bg-gray-100 px-4 py-2.5 rounded-lg text-base font-medium transition-all duration-200 flex items-center justify-center border border-gray-200" 
+                    onClick={() => switchAccount()}
+                >
+                    {t('login.switch-account')}
+                    
+                </button>
+                <button 
+                    className="w-full text-red-600 bg-transparent hover:bg-red-800 px-4 py-2.5 rounded-lg text-base font-medium transition-all duration-200 flex items-center justify-center border border-gray-700" 
+                    onClick={() => handleLogout()}
+                >
+                    {t('login.logout')}
+                </button>
+            </div> :
+            getMenuLink('/login', t('login.login'), 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200')
     );
     
     // Hide menu if editing or on create page
@@ -60,10 +74,10 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
                 isOpen={isOpen}
                 onOpen={toggleMenu}
                 onClose={toggleMenu}
-                burgerButtonClassName="fixed w-10 h-8 left-4 top-4 md:left-8 md:top-8 transition-all duration-200 hover:shadow-lg"
+                burgerButtonClassName="fixed w-10 h-8 left-4 top-4 md:left-8 md:top-8 transition-all duration-200 hover:opacity-80"
                 burgerBarClassName="bg-blue-500 rounded h-1 mx-auto my-0.5"
-                crossButtonClassName="flex items-center justify-center w-8 h-8 bg-red-500 rounded-full cursor-pointer"
-                crossClassName="bg-white w-5 h-0.5"
+                crossButtonClassName="flex items-center justify-center w-8 h-8 hover:bg-gray-700 rounded-full cursor-pointer transition-all duration-200"
+                crossClassName="bg-gray-400 w-5 h-0.5"
                 menuClassName="bg-gray-900 p-6 backdrop-blur-lg w-64"
                 morphShapeClassName="fill-gray-900 w-72"
                 overlayClassName="bg-gray-900 backdrop-blur-lg"
@@ -74,16 +88,17 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
                 </div>
                 <div className="relative z-[50] flex flex-col space-y-4 h-full">
                     <div className="flex flex-col space-y-4">
-                        {getMenuLink('/', t('login.home'))}                        
-                        {isUserLoggedIn() && getMenuLink('/create', t('login.create'))}
-                        {isUserLoggedIn() && getMenuLink('/gallery', t('login.my-gallery'))}
-                        {login_logout_button()}
-                        <div className="mt-16">
-                            {getMenuLink('/about', t('login.about'), 'bg-green-600 hover:bg-green-700 mt-16')}
+                        {getMenuLink('/', t('login.home'), 'bg-blue-600 hover:bg-blue-700 text-white')}                        
+                        {isUserLoggedIn() && getMenuLink('/create', t('login.create'), 'bg-blue-600 hover:bg-blue-700 text-white')}
+                        {isUserLoggedIn() && getMenuLink('/gallery', t('login.my-gallery'), 'bg-blue-600 hover:bg-blue-700 text-white')}
+                        <div className="mt-auto">
+                            {getMenuLink('/about', t('login.about'), 'text-gray-600 bg-transparent hover:bg-gray-800 border border-gray-700 text-white')}
                         </div>
+                        {login_logout_button()}
                     </div>   
                 </div>
             </Menu>
+            
         </div>
     );
 };

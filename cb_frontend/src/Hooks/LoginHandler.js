@@ -1,27 +1,45 @@
 import api from "./ApiHandler"
-import axios from "axios";
 import {removeAllUserData, saveUserData, saveUserToken} from "./UserDataHandler";
-
+import store, { resetPersistedState } from "../redux/store";
+import { updateCredits } from '../redux/websiteSlice';
 const LOGIN_TIMEOUT = 3000
 
 const handleLogin = (loginData) => {
     api.post('user/login', loginData, {timeout: LOGIN_TIMEOUT}).then((r)=> {
         if(!r)return
-        const {__v, ...data} = r.data.user
+        const {__v, ...user} = r.data.user
+        console.log('user: ', user)
         const tokenData = r.data.token
-        console.log('token_Data savd: ', tokenData)
-        saveUserData(data)
+        saveUserData(user)
         saveUserToken(tokenData)
+        store.dispatch(updateCredits(user.credits))
+
         window.location.href = '/create'
     })
 }
 
-const handleLogout = () => {
-    removeAllUserData()
-    window.location.href = '/login'
+const switchAccount = async () => {    
+    const baseUrl = process.env.NODE_ENV === 'production' 
+            ? process.env.REACT_APP_API_URL 
+            : 'http://localhost:5000';
+            
+    window.location.href = `${baseUrl}/api/user/auth/google?prompt=select_account`;
 }
+
+const handleLogout = async () => {    
+    try {
+        await api.post('user/logout');
+    } catch (error) {
+        console.error('Logout failed:', error);
+    } finally {
+        removeAllUserData()
+        resetPersistedState()
+        window.location.href = '/login';
+    }
+};
 
 export {
     handleLogin,
+    switchAccount,
     handleLogout
 }
