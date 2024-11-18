@@ -113,9 +113,6 @@ async function verifyRecaptcha(token) {
  * Redeem a coupon code
  */
 const redeemCoupon = async (req, res) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
         const { couponCode, recaptchaToken } = req.body;
         const userId = req.user.id;
@@ -132,7 +129,7 @@ const redeemCoupon = async (req, res) => {
             return res.status(400).json({ message: 'Invalid reCAPTCHA' });
         }
 
-        // Find and update the coupon atomically
+        // Find and update the coupon
         const coupon = await Coupon.findOneAndUpdate(
             {
                 code: couponCode.toUpperCase(),
@@ -147,15 +144,10 @@ const redeemCoupon = async (req, res) => {
                     redeemedAt: new Date()
                 }
             },
-            {
-                new: true,
-                session,
-                runValidators: true
-            }
+            { new: true }
         );
 
         if (!coupon) {
-            await session.abortTransaction();
             return res.status(403).json({ message: 'Invalid, expired, or already redeemed coupon code' });
         }
 
@@ -163,20 +155,20 @@ const redeemCoupon = async (req, res) => {
         const user = await User.findByIdAndUpdate(
             userId,
             { $inc: { credits: coupon.credits } },
-            { 
-                new: true,
-                session,
-                runValidators: true
-            }
+            { new: true }
         );
 
         if (!user) {
-            await session.abortTransaction();
+            // If user update fails, revert coupon status
+            await Coupon.findByIdAndUpdate(
+                coupon._id,
+                {
+                    isRedeemed: false,
+                    redeemedBy: null
+                }
+            );
             return res.status(404).json({ message: 'User not found' });
         }
-
-        // Commit transaction
-        await session.commitTransaction();
 
         res.json({
             message: 'Coupon redeemed successfully',
@@ -185,11 +177,8 @@ const redeemCoupon = async (req, res) => {
         });
 
     } catch (error) {
-        await session.abortTransaction();
         console.error('Coupon redemption error:', error);
         res.status(500).json({ message: 'Failed to redeem coupon' });
-    } finally {
-        session.endSession();
     }
 };
 
