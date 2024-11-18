@@ -11,20 +11,29 @@ const AuthSuccess = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        resetPersistedState()  
-        removeAllUserData() 
-        console.log('AuthSuccess')     
-        const user = searchParams.get('user');
-        const token = searchParams.get('token');
-        if (token && user) {
-            const {__v, ...data} = JSON.parse(decodeURIComponent(user))
-            
-            saveUserData(data)
-            saveUserToken(token)
-            dispatch(updateCredits(data.credits))
-            navigate('/create'); 
-        }
-    }, [searchParams, dispatch, navigate]);
+        const handleAuth = async () => {
+            try {
+                await resetPersistedState();
+                removeAllUserData();
+                console.log('AuthSuccess');
+                
+                const user = searchParams.get('user');
+                const token = searchParams.get('token');
+                
+                if (token && user) {
+                    const {__v, ...data} = JSON.parse(decodeURIComponent(user));
+                    saveUserData(data);
+                    saveUserToken(token);
+                    dispatch(updateCredits(data.credits));
+                    window.location.href = '/create';
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+            }
+        };
+
+        handleAuth();
+    }, [searchParams, dispatch, navigate, resetPersistedState]);
 
     return (
         <div className="flex items-center justify-center min-h-screen">

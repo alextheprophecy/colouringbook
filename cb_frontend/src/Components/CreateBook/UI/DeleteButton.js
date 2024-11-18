@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { resetPersistedState } from '../../../redux/store';
+import { resetBook } from '../../../redux/bookSlice';
 import { useTranslation } from 'react-i18next';
 const DeleteButton = () => {
     const dispatch = useDispatch();
@@ -43,9 +43,8 @@ const DeleteButton = () => {
                             </button>
                             <button
                                 onClick={() => {
-                                    dispatch(resetPersistedState());
-                                    window.location.reload(); // Reload the page to ensure clean state
-                                    setShowConfirm(false);
+                                    dispatch(resetBook())
+                                    setShowConfirm(false);                                                                        
                                 }}
                                 className="px-3 py-1.5 text-sm text-white 
                                         bg-red-600 hover:bg-red-700 rounded-lg"

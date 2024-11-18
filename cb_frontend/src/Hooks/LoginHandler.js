@@ -33,7 +33,7 @@ const handleLogout = async () => {
         console.error('Logout failed:', error);
     } finally {
         removeAllUserData()
-        resetPersistedState()
+        await resetPersistedState()
         window.location.href = '/';
     }
 };

@@ -310,7 +310,7 @@ const ModifyBook = () => {
                 {isBookFinished && (
                     <div className="flex flex-col gap-3 w-full max-w-md">
                         <button 
-                            onClick={() => {dispatch(resetPersistedState); window.location.reload()}}
+                            onClick={() => {dispatch(resetBook())}}
                             className="w-full bg-blue-500 hover:bg-blue-600 
                                 text-white py-3 px-6 rounded-lg 
                                 transition-all duration-300 ease-in-out 

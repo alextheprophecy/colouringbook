@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import bookReducer from './bookSlice';
-import websiteReducer from './websiteSlice';
+import bookReducer, { resetBook } from './bookSlice';
+import websiteReducer, { resetWebsite } from './websiteSlice';
 
 const bookPersistConfig = {
   key: 'book',
@@ -39,6 +39,9 @@ export const persistor = persistStore(store);
 // Add reset function
 export const resetPersistedState = async () => {
   await persistor.purge(); // This will clear the persisted state
+  store.dispatch(resetBook());
+  store.dispatch(resetWebsite());
+  return true
 };
 
 export default store;
