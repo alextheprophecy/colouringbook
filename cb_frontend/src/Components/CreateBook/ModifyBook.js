@@ -271,8 +271,8 @@ const ModifyBook = () => {
                 )}
 
                 <button 
-                    className={`w-full
-                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600 max-w-md ' : 'bg-blue-600 hover:bg-blue-600 w-32'}
+                    className={`w-full max-w-md
+                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
                         
                         ${''/* isOnCreationPage() && !isBookFinished ? '' : '-mt-16' */}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
