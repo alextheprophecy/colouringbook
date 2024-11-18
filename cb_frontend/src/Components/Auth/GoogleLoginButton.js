@@ -1,4 +1,5 @@
 import React from 'react';
+import GoogleButton from 'react-google-button'
 
 const GoogleLoginButton = () => {
     const handleGoogleLogin = () => {
@@ -10,19 +11,7 @@ const GoogleLoginButton = () => {
         window.location.href = `${baseUrl}/api/user/auth/google`;
     };
 
-    return (
-        <button 
-            onClick={handleGoogleLogin}
-            className="flex items-center justify-center gap-2 w-full py-2 px-4 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-            <img 
-                src="/google-icon.png" 
-                alt="Google" 
-                className="w-5 h-5"
-            />
-            Continue with Google
-        </button>
-    );
+    return <div className="flex w-full justify-center mb-4"><GoogleButton onClick={handleGoogleLogin} /></div>       
 }; 
 
 export default GoogleLoginButton;

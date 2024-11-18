@@ -34,7 +34,7 @@ const handleLogout = async () => {
     } finally {
         removeAllUserData()
         resetPersistedState()
-        window.location.href = '/login';
+        window.location.href = '/';
     }
 };
 
