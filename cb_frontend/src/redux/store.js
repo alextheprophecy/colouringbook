@@ -39,7 +39,6 @@ export const persistor = persistStore(store);
 // Add reset function
 export const resetPersistedState = async () => {
   await persistor.purge(); // This will clear the persisted state
-  window.location.reload(); // Reload the page to ensure clean state
 };
 
 export default store;

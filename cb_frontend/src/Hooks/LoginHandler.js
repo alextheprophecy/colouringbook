@@ -18,10 +18,10 @@ const handleLogin = (loginData) => {
     })
 }
 
-const switchAccount = async () => {    
+const switchAccount = async () => {
     const baseUrl = process.env.NODE_ENV === 'production' 
             ? process.env.REACT_APP_API_URL 
-            : 'http://localhost:5000';
+            : 'http://172.20.10.2:5000';
             
     window.location.href = `${baseUrl}/api/user/auth/google?prompt=select_account`;
 }

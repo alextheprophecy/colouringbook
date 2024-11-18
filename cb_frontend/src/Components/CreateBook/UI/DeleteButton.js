@@ -44,6 +44,7 @@ const DeleteButton = () => {
                             <button
                                 onClick={() => {
                                     dispatch(resetPersistedState());
+                                    window.location.reload(); // Reload the page to ensure clean state
                                     setShowConfirm(false);
                                 }}
                                 className="px-3 py-1.5 text-sm text-white 

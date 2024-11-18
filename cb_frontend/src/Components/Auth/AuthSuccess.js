@@ -1,14 +1,19 @@
 import { useEffect, React } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { saveUserToken, saveUserData } from '../../Hooks/UserDataHandler';
+import { saveUserToken, saveUserData, removeAllUserData } from '../../Hooks/UserDataHandler';
 import { updateCredits } from '../../redux/websiteSlice';
+import { resetPersistedState } from '../../redux/store';
+
 const AuthSuccess = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
+        resetPersistedState()  
+        removeAllUserData() 
+        console.log('AuthSuccess')     
         const user = searchParams.get('user');
         const token = searchParams.get('token');
         if (token && user) {
@@ -17,10 +22,7 @@ const AuthSuccess = () => {
             saveUserData(data)
             saveUserToken(token)
             dispatch(updateCredits(data.credits))
-            window.location.href = '/create'            
-            
-            // Redirect to home or dashboard
-            navigate('/');
+            navigate('/create'); 
         }
     }, [searchParams, dispatch, navigate]);
 
