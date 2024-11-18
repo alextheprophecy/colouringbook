@@ -28,6 +28,10 @@ const UserSchema = new Schema({
         type: String,
         sparse: true,
         unique: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 

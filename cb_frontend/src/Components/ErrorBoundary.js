@@ -52,13 +52,13 @@ class ErrorBoundary extends React.Component {
 }
 
 // Wrapper component to access Redux dispatch
-const ErrorBoundaryWrapper = ({ children, t }) => {
+const ErrorBoundaryWrapper = ({ children }) => {
   const dispatch = useDispatch();
 
   const handleError = (error) => {
     dispatch(addNotification({
       type: 'error',
-      message: error.message || t('error.an-unexpected-error-occurred'),
+      message: error.message || 'Unknown error',
       duration: 5000
     }));
   };

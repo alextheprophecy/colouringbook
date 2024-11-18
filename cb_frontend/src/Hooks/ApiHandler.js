@@ -17,7 +17,7 @@ const api = axios.create({
     }
 });
 
-const showErrorNotification = (errMsg) => {
+const showErrorNotification = (errMsg='An unexpected error occurred') => {
     store.dispatch(addNotification({
         type: 'error',
         message: errMsg,
@@ -46,15 +46,13 @@ api.interceptors.response.use(
         const errCode = error.code
 
         if (errCode === 'ECONNABORTED') {
-            showErrorNotification(i18n.t('error.api.request-timeout'));
+            showErrorNotification('Request timeout');
             return Promise.reject(error);
         }
 
-        let errMsg = error.response?.data?.error || 
-                    error.response?.data || 
-                    error.message || 
-                    i18n.t('error.an-unexpected-error-occurred');
- 
+        let errMsg = error.response?.data?.error || error.response?.data?.message ||
+                    error.message || 'An unexpected error occurred';
+        console.log('errMsg', errMsg);
         switch (status) {
             case 401:
                 if(errMsg.includes('Expired Token')) return refreshToken(error);

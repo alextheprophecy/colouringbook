@@ -1,7 +1,8 @@
 const express =  require("express");
 const {UserControllers} = require("../controllers/user/login.controller");
-const {getUserBooks, verifyCredits, createBook, feedback} = require("../controllers/user/user.controller");
+const {getUserBooks, verifyCredits, createBook, feedback, redeemCoupon, createCoupon, getCouponsList} = require("../controllers/user/user.controller");
 const {verifyToken} = require("../middleware/auth");
+const isAdmin = require("../middleware/isAdmin");
 const { googleAuth, googleAuthCallback, handleGoogleAuthSuccess, logout } = require('../controllers/user/passport.controller');
 const router = express.Router();
 const {RegisterForm, Register, Login, RefreshToken} = UserControllers
@@ -16,6 +17,9 @@ router.get('/getBooks', verifyToken, getUserBooks);
 router.post('/createBook', verifyToken, createBook)
 router.post('/verifyCredits', verifyToken, verifyCredits)
 router.post('/feedback', verifyToken, feedback)
+router.post('/coupons/redeem', verifyToken, redeemCoupon)
+router.post('/coupons/create', [verifyToken, isAdmin], createCoupon)
+router.get('/coupons/list', [verifyToken, isAdmin], getCouponsList)
 
 router.get('/auth/google', googleAuth);
 router.get('/auth/google/callback', googleAuthCallback, handleGoogleAuthSuccess);
