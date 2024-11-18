@@ -100,7 +100,10 @@
     "password": "Password",
     "welcome": "Sign in",
     "logging-in": "Logging in...",
-    "about": "About"
+    "about": "About",
+    "switch-account": "Switch Account",
+    "profile": "Profile",
+    "admin": "Admin"
   },
   "error": {
     "error": "Error",
@@ -173,5 +176,25 @@
         "description": "We use "
       }
     }
+  },
+  "profile": {
+    "name": "Full name",
+    "email": "Email",
+    "credits": "Credits",
+    "redeemCoupon": "Redeem Coupon",
+    "enterCouponDesc": "Enter your 12-character coupon code to add credits to your account",
+    "redeemButton": "Redeem Coupon",
+    "processing": "Processing...",
+    "pleaseVerifyCaptcha": "Please complete the captcha verification",
+    "adminCreateCoupon": "Admin: Create Coupon",
+    "showForm": "Show Form",
+    "hideForm": "Hide Form",
+    "creditsAmount": "Credits Amount",
+    "maxUses": "Max Uses",
+    "expiresIn": "Expires In (days)",
+    "createCoupon": "Create Coupon",
+    "couponCreated": "Coupon created successfully: {{code}}",
+    "couponRedeemed": "Success! Added {{creditsAdded}} credits. New balance: {{newTotal}} credits",
+    "redemptionError": "Failed to redeem coupon. Please try again."
   }
 }

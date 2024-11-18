@@ -85,13 +85,13 @@ const CreateBook = () => {
 
                             <button 
                                 onClick={handleCreateBook} 
-                                disabled={credits < 3}
+                                disabled={credits < 0}
                                 className={`w-full py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] font-children font-semibold tracking-wide
-                                    ${credits >= 3 
+                                    ${credits >= 0 
                                         ? 'bg-blue-500 hover:bg-blue-600 text-white' 
                                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                             >
-                                {credits >= 3 ? t('creation.start-creating') : t('creation.not-enough-credits')}
+                                {credits >= 0 ? t('creation.start-creating') : t('creation.not-enough-credits')}
                             </button>
                         </div>                                           
                     </div>) : (

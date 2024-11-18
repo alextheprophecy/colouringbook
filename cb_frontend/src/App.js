@@ -14,9 +14,24 @@ import Feedback from './Components/Feedback/feedback';
 import { isUserLoggedIn } from './Hooks/UserDataHandler';
 import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
 import About from './Components/Views/About';
+import AuthSuccess from './Components/Auth/AuthSuccess';
+import Profile from "./Components/Views/Profile";
+import { getUserData } from './Hooks/UserDataHandler';
+import Admin from './Components/Views/Admin';
+
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
     return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const AdminRoute = ({ children }) => {
+  const userData = getUserData();
+  
+  if (!userData || !userData.isAdmin) {
+      return <Navigate to="/" replace />;
   }
 
   return children;
@@ -78,6 +93,14 @@ const router = createBrowserRouter([
             path: '/gallery', 
             element: <ErrorBoundaryWrapper><GalleryView /></ErrorBoundaryWrapper>,
           },
+          { 
+            path: '/profile', 
+            element: <ErrorBoundaryWrapper><Profile /></ErrorBoundaryWrapper>,
+          },
+          {
+            path: '/admin',
+            element: <AdminRoute><ErrorBoundaryWrapper><Admin /></ErrorBoundaryWrapper></AdminRoute>,
+          },
         ]
       },
       { 
@@ -95,6 +118,10 @@ const router = createBrowserRouter([
       { 
         path: '/demo', 
         element: <ErrorBoundaryWrapper><InteractiveDemo /></ErrorBoundaryWrapper>,
+      },
+      { 
+        path: '/auth-success', 
+        element: <AuthSuccess />,
       },
     ]
   }

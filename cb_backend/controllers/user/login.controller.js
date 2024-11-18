@@ -10,7 +10,7 @@ const emailValidator = (email) => {
 }
 
 const gen_token = (access_t = true, user) => jwt.sign(
-    { id: user._id, email: user.email },
+    { id: user._id, email: user.email, isAdmin: user.isAdmin },
     access_t?process.env.JWT_ACCESS_SECRET:process.env.JWT_REFRESH_SECRET,
     { expiresIn: access_t?access_TTL:refresh_TTL})
 
@@ -93,4 +93,8 @@ class UserControllers {
 
 }
 
-module.exports = UserControllers
+module.exports = {
+    UserControllers,
+    gen_token,
+    add_cookie
+}

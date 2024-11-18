@@ -19,12 +19,12 @@ const websitePersistConfig = {
 };
 
 const persistedBookReducer = persistReducer(bookPersistConfig, bookReducer);
-//const persistedWebsiteReducer = persistReducer(websitePersistConfig, websiteReducer);
+const persistedWebsiteReducer = persistReducer(websitePersistConfig, websiteReducer);
 
 const store = configureStore({
   reducer: {
     book: persistedBookReducer,
-    website: websiteReducer,
+    website: persistedWebsiteReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

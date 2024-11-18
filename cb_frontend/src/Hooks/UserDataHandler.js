@@ -19,7 +19,7 @@ const getUserId = () => getUserData()._id
  * @param {UserData} data
  */
 const saveUserData = (data) => {
-    setShouldShowIntro(true)
+    console.log('saving user data: ', data)
     localStorage.setItem(USER_DATA, JSON.stringify(data))
 }
 

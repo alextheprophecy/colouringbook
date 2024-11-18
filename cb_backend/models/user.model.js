@@ -5,20 +5,33 @@ const DEFAULT_CREDITS = 0
 
 const UserSchema = new Schema({
     full_name: {
-        type:String,
-        required:true
+        type: String,
+        required: function() {
+            return !this.googleId; // Only required for non-Google users
+        }
     },
     email: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
     password: {
         type: String,
-        required: true
+        required: function() {
+            return !this.googleId; // Only required for non-Google users
+        }
     },
     credits: {
         type: Number,
         default: DEFAULT_CREDITS
+    },
+    googleId: {
+        type: String,
+        sparse: true,
+        unique: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 

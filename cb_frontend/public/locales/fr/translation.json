@@ -94,7 +94,8 @@
     "email": "E-mail",
     "logging-in": "Connexion...",
     "welcome": "Connexion",
-    "about": "Info"
+    "about": "Info",
+    "switch-account": "Changer de compte"
   },
   "gallery": {
     "failed-to-load-books-please-try-again": "Échec du chargement des livres. \nVeuillez réessayer.",
