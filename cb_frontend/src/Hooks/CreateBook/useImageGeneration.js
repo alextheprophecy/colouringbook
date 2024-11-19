@@ -10,12 +10,12 @@ const useImageGeneration = () => {
     const generateImage = async (description, currentContext, bookId, seed=null) => {
         if (!description || description.trim() === '') throw new Error('No description found');
                                      
-        const response = await api.post('image/generatePageWithContext', {
+        const response = await api.post('image/generate', {
             sceneDescription: description,  
             currentContext, 
             bookId,
             seed,
-            ... creationSettings
+            creationSettings
         });        
         
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
@@ -44,11 +44,11 @@ const useImageGeneration = () => {
         console.log('Context', currentContext);     
         const detailedDescription = pages[currentPage]?.detailedDescription;
         if (!detailedDescription) throw new Error('No detailed description found');
-        const response = await api.post('image/regeneratePage', {
+        const response = await api.post('image/regenerate', {
             detailedDescription, 
             bookId, 
             currentPage: currentPage-1,
-            ...creationSettings
+            creationSettings
         });
         const { image, seed } = response.data;
         
@@ -60,14 +60,14 @@ const useImageGeneration = () => {
         const currentSeed = pages[currentPage]?.seed;
         if (!currentDescription || !enhancementRequest) throw new Error('Missing required parameters for enhancement');
 
-        const response = await api.post('image/enhancePage', {
+        const response = await api.post('image/enhance', {
             previousDescription: currentDescription,
             enhancementRequest,
             bookId,
             currentContext,                
-            currentPage: currentPage-1,
-            ...creationSettings,
-            seed: currentSeed
+            currentPage: currentPage-1,            
+            seed: currentSeed,
+            creationSettings
         });
         const { enhancedDescription, updatedContext, image, seed } = response.data;
 
