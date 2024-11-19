@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import PropTypes from 'prop-types';
 
 const UsersTab = ({
     users,
     fetchUsers,
-    isLoadingUsers,
-    userSortConfig,
-    handleUserSort
+    isLoadingUsers
 }) => {
+    const [sortConfig, setSortConfig] = useState({
+        key: 'createdAt',
+        direction: 'desc'
+    });
+
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
     const sortUsers = (users, key, direction) => {
         return [...users].sort((a, b) => {
             switch (key) {
@@ -69,14 +79,14 @@ const UsersTab = ({
                             ].map(({ key, label }) => (
                                 <th
                                     key={key}
-                                    onClick={() => handleUserSort(key)}
+                                    onClick={() => handleSort(key)}
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                                 >
                                     <div className="flex items-center space-x-1">
                                         <span>{label}</span>
-                                        {userSortConfig.key === key && (
+                                        {sortConfig.key === key && (
                                             <span className="text-purple-600">
-                                                {userSortConfig.direction === 'asc' ? '↑' : '↓'}
+                                                {sortConfig.direction === 'asc' ? '↑' : '↓'}
                                             </span>
                                         )}
                                     </div>
@@ -85,7 +95,7 @@ const UsersTab = ({
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {sortUsers(users, userSortConfig.key, userSortConfig.direction).map(user => (
+                        {sortUsers(users, sortConfig.key, sortConfig.direction).map(user => (
                             <tr key={user._id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">
                                     {user._id}

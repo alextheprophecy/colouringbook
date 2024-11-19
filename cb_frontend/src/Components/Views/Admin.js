@@ -29,17 +29,9 @@ const Admin = () => {
     const [timeRange, setTimeRange] = useState('day');
     const [selectedBooks, setSelectedBooks] = useState([]);
     const [loadingPDF, setLoadingPDF] = useState({});
-    const [sortConfig, setSortConfig] = useState({
-        key: 'createdAt',
-        direction: 'desc'
-    });
     const [showOnlyReady, setShowOnlyReady] = useState(false);
     const [users, setUsers] = useState([]);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-    const [userSortConfig, setUserSortConfig] = useState({
-        key: 'createdAt',
-        direction: 'desc'
-    });
     const [feedbacks, setFeedbacks] = useState([]);
     const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(false);
 
@@ -140,20 +132,6 @@ const Admin = () => {
         }
     };
 
-    const handleUserSort = (key) => {
-        setUserSortConfig(prevConfig => ({
-            key,
-            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
-        }));
-    };
-
-    const handleSort = (key) => {
-        setSortConfig(prevConfig => ({
-            key,
-            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
-        }));
-    };
-
     const fetchFeedbacks = async () => {
         setIsLoadingFeedbacks(true);
         try {
@@ -195,8 +173,6 @@ const Admin = () => {
                         users={users}
                         fetchUsers={fetchUsers}
                         isLoadingUsers={isLoadingUsers}
-                        userSortConfig={userSortConfig}
-                        handleUserSort={handleUserSort}
                     />
                 );
             case 'books':
@@ -213,8 +189,6 @@ const Admin = () => {
                         fetchBookPDF={fetchBookPDF}
                         showOnlyReady={showOnlyReady}
                         setShowOnlyReady={setShowOnlyReady}
-                        sortConfig={sortConfig}
-                        handleSort={handleSort}
                     />
                 );
             default:

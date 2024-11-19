@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     LineChart, 
     Line, 
@@ -19,10 +19,20 @@ const BooksGraph = ({
     loadingPDF,
     fetchBookPDF,
     showOnlyReady,
-    setShowOnlyReady,
-    sortConfig,
-    handleSort
+    setShowOnlyReady
 }) => {
+    const [sortConfig, setSortConfig] = useState({
+        key: 'createdAt',
+        direction: 'desc'
+    });
+
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
     const getChartData = () => {
         const endDate = endOfDay(new Date());
         const startDate = startOfDay(timeRange === 'day' 

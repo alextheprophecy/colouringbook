@@ -189,6 +189,7 @@ const getAllFeedbacks = async (req, res) => {
             _id: feedback._id,
             rating: feedback.rating,
             comment: feedback.comment,
+            route: feedback.route,
             userEmail: feedback.userId ? feedback.userId.email : 'Anonymous',
             createdAt: feedback.createdAt
         }));
