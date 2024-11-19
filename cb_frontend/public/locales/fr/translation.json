@@ -163,7 +163,7 @@
     }
   },
   "profile": {
-    "name": "Nom et prénom",
+    "name": "Nom",
     "email": "E-mail",
     "credits": "Crédits",
     "redeemCoupon": "Utiliser un coupon",
