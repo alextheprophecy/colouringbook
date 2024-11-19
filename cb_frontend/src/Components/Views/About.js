@@ -75,15 +75,15 @@ const About = () => {
                         </p>
                         <ul className="space-y-3 text-gray-600">
                             <li className="flex items-center">
-                                <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                                <div className="flex-shrink-0 w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                                 <span>Generating prompts for our AI image models</span>
                             </li>
                             <li className="flex items-center">
-                                <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                                <div className="flex-shrink-0 w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                                 <span>Processing and understanding user requests</span>
                             </li>
                             <li className="flex items-center">
-                                <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                                <div className="flex-shrink-0 w-2 h-2 bg-green-400 rounded-full mr-3"></div>
                                 <span>Maintaining narrative consistency across coloring book stories</span>
                             </li>
                         </ul>
@@ -108,21 +108,21 @@ const About = () => {
                         </p>
                         <ul className="space-y-4 text-gray-600">                            
                             <li className="flex items-start">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
+                                <div className="flex-shrink-0 w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
                                 <div>
                                     <span className="font-medium">Flux 1.1 Pro</span>
                                     <p className="text-sm mt-1">Advanced model for complex, detailed colouring pages</p>
                                 </div>
                             </li>
                             <li className="flex items-start">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
+                                <div className="flex-shrink-0  w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
                                 <div>
                                     <span className="font-medium">Flux Dev with Custom LoRA</span>
                                     <p className="text-sm mt-1">Good model using specialized fine-tuned LoRA weights by LamEmy on civitai</p>
                                 </div>
                             </li>
                             <li className="flex items-start">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
+                                <div className="flex-shrink-0  w-2 h-2 bg-purple-400 rounded-full mr-3 mt-2"/>
                                 <div>
                                     <span className="font-medium">Flux Schnell</span>
                                     <p className="text-sm mt-1">Basic model for quick, reliable coloring page generation</p>
