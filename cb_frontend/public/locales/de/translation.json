@@ -32,7 +32,7 @@
   },
   "creation": {
     "a-goblin-in-a-forest-eating-a-mushroom": "Ein Kobold im Wald, der einen Pilz frisst ...",
-    "not-enough-credits": "Nicht genügend Credits",
+    "not-enough-credits": "Gutschein einlösen",
     "credits-remaining": "Restguthaben",
     "create-your-book": "Erstellen Sie Ihr Buch",
     "enter-book-title": "Abenteuerbuch ...",
@@ -101,5 +101,13 @@
   "success": {
     "your-book-has-been-successfully-generated": "Ihr Buch wurde erfolgreich generiert!"
   },
-  "cancel": "Stornieren"
+  "cancel": "Stornieren",
+  "profile": {
+    "name": "Vollständiger Name",
+    "email": "E-Mail",
+    "credits": "Credits",
+    "redeemCoupon": "Gutschein einlösen",
+    "enterCouponDesc": "Geben Sie Ihren 12-stelligen Gutscheincode ein, um Ihrem Konto Guthaben hinzuzufügen",
+    "redeemButton": "Gutschein einlösen"
+  }
 }

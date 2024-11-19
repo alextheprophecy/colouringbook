@@ -7,7 +7,7 @@
     "credits-remaining": "credits",
     "enter-book-title": "Adventure book ...",
     "start-creating": "Start Creating",
-    "not-enough-credits": "Not Enough Credits",
+    "not-enough-credits": "Rdeem coupon",
     "page": "Page",
     "hooks": {
       "please-enter-a-book-title": "Please enter a book title",
@@ -183,7 +183,7 @@
     "credits": "Credits",
     "redeemCoupon": "Redeem Coupon",
     "enterCouponDesc": "Enter your 12-character coupon code to add credits to your account",
-    "redeemButton": "Redeem Coupon",
+    "redeemButton": "Redeem",
     "processing": "Processing...",
     "pleaseVerifyCaptcha": "Please complete the captcha verification",
     "adminCreateCoupon": "Admin: Create Coupon",

@@ -232,7 +232,7 @@ const ModifyBook = () => {
                         !(isBookFinished || isFinishing) ? (
                             <CreatePage 
                                 key="create-page" 
-                                disabled={(isLoading && workingOnPage!==-1)}
+                                disabled={(isLoading && workingOnPage!==-1) || credits<=0}
                                 classNameProp={pageClassname(pages.length)}
                                 onMouseEnter={handleCreatePageMouseEnter}
                                 onMouseLeave={handleCreatePageMouseLeave}

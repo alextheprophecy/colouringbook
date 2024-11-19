@@ -32,7 +32,7 @@
   },
   "creation": {
     "a-goblin-in-a-forest-eating-a-mushroom": "Un goblin in una foresta che mangia un fungo...",
-    "not-enough-credits": "Crediti insufficienti",
+    "not-enough-credits": "Riscatta coupon",
     "credits-remaining": "crediti rimanenti",
     "create-your-book": "Crea il tuo libro",
     "enter-book-title": "Libro di avventure...",
@@ -100,5 +100,13 @@
   "success": {
     "your-book-has-been-successfully-generated": "Il tuo libro è stato generato con successo!"
   },
-  "cancel": "Cancellare"
+  "cancel": "Cancellare",
+  "profile": {
+    "name": "Nome e cognome",
+    "email": "E-mail",
+    "credits": "Crediti",
+    "redeemCoupon": "Riscatta buono",
+    "enterCouponDesc": "Inserisci il tuo codice coupon di 12 caratteri per aggiungere crediti al tuo account",
+    "redeemButton": "Riscatta buono"
+  }
 }
