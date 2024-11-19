@@ -14,6 +14,12 @@ const FeedbackSchema = new Schema({
     comment: {
         type: String,
         required: false
+    },
+    route: {
+        type: String,
+        default: 'OTHER',
+        required: true,
+        uppercase: true
     }
 }, {
     timestamps: true

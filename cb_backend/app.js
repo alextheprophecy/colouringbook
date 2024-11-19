@@ -16,6 +16,7 @@ CONNECT_DB(process.env.MONGO_DB_URL);
 
 const ImageRoute = require("./routes/image.route");
 const UserRoute = require("./routes/user.route");
+const AdminRoute = require("./routes/admin.route");
 
 const app = express();
 
@@ -55,7 +56,7 @@ require('./controllers/user/passport.controller');
 //Routes
 app.use("/api/image", ImageRoute);
 app.use("/api/user", UserRoute);
-
+app.use("/api/admin", AdminRoute);
 //404 Error Handling
 app.use((req, res) => {
     res.status(404).send('404: Page not Found');

@@ -18,8 +18,6 @@ router.post('/createBook', verifyToken, createBook)
 router.post('/verifyCredits', verifyToken, verifyCredits)
 router.post('/feedback', verifyToken, feedback)
 router.post('/coupons/redeem', verifyToken, redeemCoupon)
-router.post('/coupons/create', [verifyToken, isAdmin], createCoupon)
-router.get('/coupons/list', [verifyToken, isAdmin], getCouponsList)
 
 router.get('/auth/google', googleAuth);
 router.get('/auth/google/callback', googleAuthCallback, handleGoogleAuthSuccess);
