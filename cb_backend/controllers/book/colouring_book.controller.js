@@ -93,7 +93,7 @@ const generatePageWithContext = async (req, res) => {
 
     } catch (error) {
         console.error("Error in generatePageWithContext:", error);
-        res.status(500).json({ error: 'An error occurred while processing the request' });
+        res.status(500).json({error: error.message || 'An error occurred while processing the request' });
     }
 };
 
