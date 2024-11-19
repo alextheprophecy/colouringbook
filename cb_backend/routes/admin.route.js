@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllBooks, createCoupon, getCouponsList, getBookPDFUrl, getAllUsers, getAllFeedbacks } = require("../controllers/user/admin.controller");
+const { getAllBooks, createCoupon, getCouponsList, getBookPDFUrl, getAllUsers, getAllFeedbacks, deleteFeedback } = require("../controllers/user/admin.controller");
 const { verifyToken } = require("../middleware/auth");
 const isAdmin = require("../middleware/isAdmin");
 
@@ -20,5 +20,6 @@ router.get('/users/list', getAllUsers);
 
 // Feedback routes
 router.get('/feedbacks/list', getAllFeedbacks);
+router.delete('/feedbacks/:feedbackId', deleteFeedback);
 
 module.exports = router;

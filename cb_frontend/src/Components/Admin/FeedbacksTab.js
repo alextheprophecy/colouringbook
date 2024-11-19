@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { Trash2 } from 'lucide-react';
+import axios from 'axios';
 import { format, parseISO } from 'date-fns';
+import api from '../../Hooks/ApiHandler';
 
 const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
     const [sortConfig, setSortConfig] = useState({
         key: 'createdAt',
         direction: 'desc'
     });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [feedbackToDelete, setFeedbackToDelete] = useState(null);
 
     useEffect(() => {
         fetchFeedbacks();
@@ -70,6 +75,52 @@ const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
         return colors[route] || 'bg-gray-100 text-gray-800';
     };
 
+    const handleDeleteClick = (feedback) => {
+        setFeedbackToDelete(feedback);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            await api.delete(`/admin/feedbacks/${feedbackToDelete._id}`);
+            setShowDeleteModal(false);
+            setFeedbackToDelete(null);
+            fetchFeedbacks(); // Refresh the list
+        } catch (error) {
+            console.error('Error deleting feedback:', error);
+            // You might want to show an error message to the user here
+        }
+    };
+
+    const DeleteConfirmationModal = () => {
+        if (!showDeleteModal) return null;
+
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
+                    <h3 className="text-lg font-medium mb-4">Delete Feedback</h3>
+                    <p className="text-gray-600 mb-6">
+                        Are you sure you want to delete this feedback? This action cannot be undone.
+                    </p>
+                    <div className="flex justify-end space-x-3">
+                        <button
+                            onClick={() => setShowDeleteModal(false)}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleConfirmDelete}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     if (isLoadingFeedbacks) {
         return (
             <div className="flex justify-center items-center py-8">
@@ -80,6 +131,7 @@ const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
 
     return (
         <div className="bg-white rounded-lg shadow">
+            <DeleteConfirmationModal />
             <div className="px-2 sm:px-4 py-3 sm:py-5">
                 <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4 flex flex-wrap items-center gap-2">
                     <button 
@@ -145,6 +197,15 @@ const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
                                     <td className="px-4 sm:px-6 py-2 sm:py-4 text-sm text-gray-500">
                                         <span className="sm:hidden font-medium text-gray-900">Date: </span>
                                         {new Date(feedback.createdAt).toLocaleDateString()}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                        <button
+                                            onClick={() => handleDeleteClick(feedback)}
+                                            className="text-red-500 hover:text-red-700 transition-colors"
+                                            title="Delete feedback"
+                                        >
+                                            <Trash2 className="h-5 w-5" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

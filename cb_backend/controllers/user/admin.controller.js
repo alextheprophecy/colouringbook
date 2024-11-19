@@ -209,6 +209,32 @@ const getAllFeedbacks = async (req, res) => {
     }
 };
 
+const deleteFeedback = async (req, res) => {
+    try {
+        const { feedbackId } = req.params;
+        
+        const deletedFeedback = await Feedback.findByIdAndDelete(feedbackId);
+        
+        if (!deletedFeedback) {
+            return res.status(404).json({
+                success: false,
+                message: 'Feedback not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Feedback deleted successfully'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error deleting feedback',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAllBooks,
     createCoupon,
@@ -216,4 +242,5 @@ module.exports = {
     getBookPDFUrl,
     getAllUsers,
     getAllFeedbacks,
+    deleteFeedback,
 };

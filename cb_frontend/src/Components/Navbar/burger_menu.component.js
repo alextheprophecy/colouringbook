@@ -10,7 +10,9 @@ import { connect } from 'react-redux';
 import { setAskFeedback } from '../../redux/websiteSlice';
 import { getUserData } from '../../Hooks/UserDataHandler';
 import UserMenu from '../Auth/UserMenu';
-import { LogOut, LogIn, Home, Info, SwitchCamera, BookCopy, BookPlus, UserCircle, Shield } from 'lucide-react';
+import Feedback from '../Feedback/feedback';
+import { LogOut, LogIn, Home, Info, SwitchCamera, BookCopy, BookPlus, UserCircle, Shield, MessageCircle } from 'lucide-react';
+
 const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -99,6 +101,13 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
                     ${location.pathname === '/about' ? 'border-2 border-blue-500 bg-blue-600/60' : ''}`}
             >
                 <Info className="w-5 h-5 text-blue-500" />
+            </button>   
+
+            <button
+                onClick={handleFeedback}
+                className={`flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/20 hover:bg-blue-600/30 transition-all duration-200`}
+            >
+                <MessageCircle className="w-5 h-5 text-blue-500" />
             </button>
         </div>
     );
@@ -127,7 +136,7 @@ const BurgerMenu = ({ t, isLoading, isEditing, setAskFeedback }) => {
                         <div className="relative z-[60] mb-16">
                             <TopNavIcons />
                         </div>
-                        <div className="flex flex-col space-y-4">
+                        <div className="flex flex-col space-y-4">                            
                             {getMenuLink('/', t('login.home'), 'bg-blue-200 hover:bg-blue-300 text-blue-700', <Home className="w-5 h-5" />)}
                             {isUserLoggedIn() && getMenuLink('/profile', t('login.profile'), 'bg-blue-200 hover:bg-blue-300 text-blue-700', <UserCircle className="w-5 h-5" />)}
                                 
