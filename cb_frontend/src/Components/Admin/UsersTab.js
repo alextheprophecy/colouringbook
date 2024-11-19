@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { format, parseISO } from 'date-fns';
 import PropTypes from 'prop-types';
+import { ShieldBan, ShieldCheck } from 'lucide-react';
+import api from '../../Hooks/ApiHandler';
 
 const UsersTab = ({
     users,
@@ -11,6 +13,8 @@ const UsersTab = ({
         key: 'createdAt',
         direction: 'desc'
     });
+
+    const [blockingUsers, setBlockingUsers] = useState({});
 
     const handleSort = (key) => {
         setSortConfig(prevConfig => ({
@@ -47,6 +51,24 @@ const UsersTab = ({
             }
         });
     };
+
+    const handleToggleBlock = useCallback(async (userId) => {
+        try {
+            setBlockingUsers(prev => ({ ...prev, [userId]: true }));
+            
+            const response = await api.post(`/admin/users/${userId}/toggle-block`);
+
+            if (!response)throw new Error('Failed to toggle user block status');            
+
+            // Refresh the users list
+            fetchUsers();
+        } catch (error) {
+            console.error('Error toggling user block:', error);
+            // You might want to show an error toast here
+        } finally {
+            setBlockingUsers(prev => ({ ...prev, [userId]: false }));
+        }
+    }, [fetchUsers]);
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden p-4 sm:p-6">
@@ -92,6 +114,9 @@ const UsersTab = ({
                                     </div>
                                 </th>
                             ))}
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -101,9 +126,42 @@ const UsersTab = ({
                                     <span className="font-mono text-gray-500">{user._id}</span>
                                 </td>
                                 <td className="px-4 sm:px-6 py-2 sm:py-4">
-                                    <div className="flex flex-col sm:block">
-                                        <span className="text-blue-600 font-medium">{user.email}</span>
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                        <div className="flex flex-col sm:block">
+                                            <div className="text-blue-600 font-medium flex items-center justify-between">
+                                                {user.email}  
+                                                <button
+                                                    onClick={() => handleToggleBlock(user._id)}
+                                                    disabled={blockingUsers[user._id]}
+                                                    className={`mt-2 sm:mt-0 px-3 py-1 mr-0 rounded-md text-sm font-medium inline-flex sm:hidden items-center gap-2
+                                                        ${user.isBlocked
+                                                            ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                            : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                        } ${blockingUsers[user._id] ? 'opacity-50 cursor-wait' : ''}`}
+                                                >
+                                                    {blockingUsers[user._id] ? (
+                                                        'Processing...'
+                                                    ) : (
+                                                        <>
+                                                            {user.isBlocked ? (
+                                                                <>
+                                                                    <ShieldBan className="w-4 h-4" />
+                                                                    <span>Blocked</span>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <ShieldCheck className="w-4 h-4" />
+                                                                    <span>Active</span>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )}
+                                            </button>
+                                        </div>
                                         <span className="text-xs text-gray-500 font-mono sm:hidden">{user._id}</span>
+                                           
+                                        </div>
+                                        
                                     </div>
                                 </td>
                                 <td className="px-4 sm:px-6 py-2 sm:py-4">
@@ -153,6 +211,33 @@ const UsersTab = ({
                                             : 'No date available'
                                         }
                                     </span>
+                                </td>
+                                <td className="px-4 hidden sm:table-cell">
+                                    <button
+                                        onClick={() => handleToggleBlock(user._id)}
+                                        disabled={blockingUsers[user._id]}
+                                        className={`mt-2 sm:mt-0 px-3 py-1 rounded-md text-sm font-medium inline-flex items-center gap-2
+                                                ${user.isBlocked
+                                                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                    : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                } ${blockingUsers[user._id] ? 'opacity-50 cursor-wait' : ''}`}
+                                        >
+                                            {blockingUsers[user._id] ? (
+                                                'Processing...'
+                                            ) : (
+                                                <>
+                                                    {user.isBlocked ? (
+                                                        <>
+                                                            <ShieldBan className="w-4 h-4" />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <ShieldCheck className="w-4 h-4" />
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
+                                        </button>
                                 </td>
                             </tr>
                         ))}

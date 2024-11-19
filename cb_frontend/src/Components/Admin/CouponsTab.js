@@ -149,33 +149,76 @@ const CouponsTab = ({
                     {isLoadingCoupons ? 'Loading...' : 'Fetch Coupons'}
                 </button>
 
-                <div className="mt-6 space-y-4">
-                    {coupons.map((coupon) => (
-                        <div key={coupon.code} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start">
-                                <div className="font-mono text-lg font-bold text-purple-600">{coupon.code}</div>
-                                <div className={`text-sm px-2 py-1 rounded ${
-                                    coupon.isRedeemed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                }`}>
-                                    {coupon.isRedeemed ? 'Redeemed' : 'Available'}
-                                </div>
-                            </div>
-                            <div className="mt-2 text-sm text-gray-600">
-                                <div>Credits: {coupon.credits}</div>
-                                <div>Expires: {format(new Date(coupon.expiresAt), 'PPp')}</div>
-                                {coupon.isRedeemed && (
-                                    <>
-                                        <div className="mt-1 text-red-600">
-                                            Redeemed at: {format(new Date(coupon.redeemedAt), 'PPp')}
+                <div className="mt-6 space-y-6">
+                    {/* Available Coupons */}
+                    <div>
+                        <h4 className="text-lg font-medium text-gray-900 mb-3">Available Coupons</h4>
+                        <div className="space-y-4">
+                            {coupons
+                                .filter(coupon => !coupon.isRedeemed)
+                                .map((coupon) => (
+                                    <div key={coupon.code} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-start">
+                                            <div className="font-mono text-lg font-bold text-purple-600">{coupon.code}</div>
+                                            <div className={`text-sm px-2 py-1 rounded ${
+                                                coupon.isRedeemed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                            }`}>
+                                                {coupon.isRedeemed ? 'Redeemed' : 'Available'}
+                                            </div>
                                         </div>
-                                        <div className="mt-1 text-red-600">
-                                            Redeemed by: <strong>{coupon.redeemedBy}</strong>
+                                        <div className="mt-2 text-sm text-gray-600">
+                                            <div>Credits: {coupon.credits}</div>
+                                            <div>Expires: {format(new Date(coupon.expiresAt), 'PPp')}</div>
+                                            {coupon.isRedeemed && (
+                                                <>
+                                                    <div className="mt-1 text-red-600">
+                                                        Redeemed at: {format(new Date(coupon.redeemedAt), 'PPp')}
+                                                    </div>
+                                                    <div className="mt-1 text-red-600">
+                                                        Redeemed by: <strong>{coupon.redeemedBy}</strong>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
-                                    </>
-                                )}
-                            </div>
+                                    </div>
+                                ))}
                         </div>
-                    ))}
+                    </div>
+
+                    {/* Redeemed Coupons */}
+                    <div>
+                        <h4 className="text-lg font-medium text-gray-900 mb-3">Redeemed Coupons</h4>
+                        <div className="space-y-4">
+                            {coupons
+                                .filter(coupon => coupon.isRedeemed)
+                                .map((coupon) => (
+                                    <div key={coupon.code} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-start">
+                                            <div className="font-mono text-lg font-bold text-purple-600">{coupon.code}</div>
+                                            <div className={`text-sm px-2 py-1 rounded ${
+                                                coupon.isRedeemed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                            }`}>
+                                                {coupon.isRedeemed ? 'Redeemed' : 'Available'}
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 text-sm text-gray-600">
+                                            <div>Credits: {coupon.credits}</div>
+                                            <div>Expires: {format(new Date(coupon.expiresAt), 'PPp')}</div>
+                                            {coupon.isRedeemed && (
+                                                <>
+                                                    <div className="mt-1 text-red-600">
+                                                        Redeemed at: {format(new Date(coupon.redeemedAt), 'PPp')}
+                                                    </div>
+                                                    <div className="mt-1 text-red-600">
+                                                        Redeemed by: <strong>{coupon.redeemedBy}</strong>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

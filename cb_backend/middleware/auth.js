@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken")
 const Book2 = require('../models/book2.model')
+const verifyBlocked = require('./checkBlocked')
+
 require("dotenv").config()
 
 const verifyToken = (req,res,next) => {
@@ -13,7 +15,7 @@ const verifyToken = (req,res,next) => {
                 res.status(401).json("Expired Token!")
             }else{
                 req.user = user
-                next();
+                verifyBlocked(req, res, next);
             }
         })
     } else {

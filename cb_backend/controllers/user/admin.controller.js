@@ -135,7 +135,7 @@ const getAllUsers = async (req, res) => {
     try {
         // Get all users with basic info
         const users = await User.find()
-            .select('email credits createdAt')
+            .select('email credits createdAt isBlocked')
             .sort({ createdAt: -1 });
 
         // Get book counts for all users in one query
@@ -235,6 +235,28 @@ const deleteFeedback = async (req, res) => {
     }
 };
 
+const toggleUserBlock = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.isBlocked = !user.isBlocked;
+        await user.save();
+
+        return res.status(200).json({ 
+            message: `User ${user.isBlocked ? 'blocked' : 'unblocked'} successfully`,
+            isBlocked: user.isBlocked 
+        });
+    } catch (error) {
+        console.error('Error toggling user block status:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 module.exports = {
     getAllBooks,
     createCoupon,
@@ -243,4 +265,5 @@ module.exports = {
     getAllUsers,
     getAllFeedbacks,
     deleteFeedback,
+    toggleUserBlock,
 };
