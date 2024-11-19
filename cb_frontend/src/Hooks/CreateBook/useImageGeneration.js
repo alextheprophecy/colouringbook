@@ -4,18 +4,20 @@ import { addPage, updateContext, updatePage, setSeed } from '../../redux/bookSli
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
-    const {workingOnPage} = useSelector(state => state.book);
+    const {workingOnPage, seeds} = useSelector(state => state.book);
     const creationSettings = useSelector(state => state.website.settings);
 
-    const generateImage = async (description, currentContext, bookId, seed=null) => {
+    const generateImage = async (description, currentContext, bookId) => {
         if (!description || description.trim() === '') throw new Error('No description found');
-                                     
+
+        const modelKey = Object.keys(seeds)[creationSettings.usingModel];
+        const lastSeed = seeds[modelKey];//currently just fetching the last seed for the model in use
+  
         const response = await api.post('image/generate', {
             sceneDescription: description,  
             currentContext, 
             bookId,
-            seed,
-            creationSettings
+            creationSettings: {...creationSettings, seed: lastSeed}
         });        
         
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
@@ -57,17 +59,17 @@ const useImageGeneration = () => {
 
     const enhanceImage = async (enhancementRequest, currentPage, pages, currentContext, bookId) => {        
         const currentDescription = pages[currentPage]?.detailedDescription;
-        const currentSeed = pages[currentPage]?.seed;
+        const currentSeed = pages[currentPage]?.seed || null;
         if (!currentDescription || !enhancementRequest) throw new Error('Missing required parameters for enhancement');
+       
 
         const response = await api.post('image/enhance', {
             previousDescription: currentDescription,
             enhancementRequest,
             bookId,
             currentContext,                
-            currentPage: currentPage-1,            
-            seed: currentSeed,
-            creationSettings
+            currentPage: currentPage-1,
+            creationSettings : {...creationSettings, seed: currentSeed}
         });
         const { enhancedDescription, updatedContext, image, seed } = response.data;
 

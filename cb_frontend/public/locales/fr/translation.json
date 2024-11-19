@@ -45,7 +45,8 @@
     "standard_model": "Bonne",
     "basic_model": "Simple",
     "standard_basic_description": "Modèle très basique",
-    "standard_model_description": "Images ressemblent plus à des pages de coloriage. Mieux pour des scènes simples"
+    "standard_model_description": "Images ressemblent plus à des pages de coloriage. Mieux pour des scènes simples",
+    "modifying": "En cours de modification..."
   },
   "edition": {
     "context": "Contexte",

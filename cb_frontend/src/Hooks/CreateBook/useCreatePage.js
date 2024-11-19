@@ -40,10 +40,8 @@ const useCreatePage = () => {
             /* const lastPage = pages[pages.length - 1];
             const lastSeed = pages[0]?.seed //lastPage?.seed; TODO: handling the seed to use for new image, regenerations, etc */
             
-            const modelKey = Object.keys(seeds)[usingModel];
-            const lastSeed = seeds[modelKey];//currently just fetching the last seed for the model in use
             await loadRequest(
-                () => generateImage(description, currentContext, bookId, lastSeed),
+                () => generateImage(description, currentContext, bookId),
                 t('creation.hooks.creating-image')
             )
         } catch (error) {

@@ -47,7 +47,8 @@
     "standard_model": "Good",
     "basic_model": "Basic",
     "standard_basic_description": "Very basic model with limited capabilities",
-    "standard_model_description": "Images look more like colouring books, good for simple scenes"
+    "standard_model_description": "Images look more like colouring books, good for simple scenes",
+    "modifying": "Modifying..."
   },
   "edition": {
     "context": "Context",

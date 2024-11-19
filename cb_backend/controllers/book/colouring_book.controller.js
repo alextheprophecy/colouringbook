@@ -65,7 +65,7 @@ const generatePageWithContext = async (req, res) => {
     if (!sceneDescription || sceneDescription.trim() === '') {
         return res.status(400).json({ error: 'No sceneDescription found' });
     }
-
+ 
     try {
         const parsedContext = parseContextInput(currentContext);   
         const descriptions = await _generateDescription(sceneDescription, parsedContext);
