@@ -40,38 +40,66 @@ const BooksGraph = ({
             : subDays(endDate, 7)
         );
 
+        // Create array of all time intervals
+        const timePoints = [];
+        let currentDate = startDate;
+        
+        if (timeRange === 'day') {
+            // Create hourly intervals for the day
+            while (currentDate <= new Date()) {
+                timePoints.push({
+                    time: format(currentDate, 'HH:mm'),
+                    count: 0,
+                    books: []
+                });
+                currentDate = new Date(currentDate.getTime() + 60 * 60 * 1000); // Add 1 hour
+            }
+        } else {
+            // Create daily intervals for the week
+            while (currentDate <= endDate) {
+                timePoints.push({
+                    time: format(currentDate, 'MM/dd'),
+                    count: 0,
+                    books: []
+                });
+                currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000); // Add 1 day
+            }
+        }
+
+        // Convert timePoints array to object for easier lookup
+        const timePointsMap = timePoints.reduce((acc, point) => {
+            acc[point.time] = point;
+            return acc;
+        }, {});
+
+        // Add books to their respective time slots
         const filteredBooks = books.filter(book => {
             const bookDate = parseISO(book.createdAt);
             return bookDate >= startDate && bookDate <= endDate;
         });
 
-        const groupedBooks = filteredBooks.reduce((acc, book) => {
+        filteredBooks.forEach(book => {
             const bookDate = parseISO(book.createdAt);
-            const timeKey = timeRange === 'day'
-                ? format(bookDate, 'HH:mm')
-                : format(bookDate, 'MM/dd');
-
-            if (!acc[timeKey]) {
-                acc[timeKey] = {
-                    time: timeKey,
-                    count: 0,
-                    books: []
-                };
-            }
-            acc[timeKey].count++;
-            acc[timeKey].books.push(book);
-            return acc;
-        }, {});
-
-        return Object.values(groupedBooks).sort((a, b) => {
+            let timeKey;
+            
             if (timeRange === 'day') {
-                return a.time.localeCompare(b.time);
+                // Round to nearest hour for day view
+                const roundedDate = new Date(bookDate);
+                roundedDate.setMinutes(roundedDate.getMinutes() >= 30 ? 60 : 0);
+                roundedDate.setSeconds(0);
+                roundedDate.setMilliseconds(0);
+                timeKey = format(roundedDate, 'HH:mm');
             } else {
-                const [aMonth, aDay] = a.time.split('/');
-                const [bMonth, bDay] = b.time.split('/');
-                return new Date(2024, aMonth - 1, aDay) - new Date(2024, bMonth - 1, bDay);
+                timeKey = format(bookDate, 'MM/dd');
+            }
+
+            if (timePointsMap[timeKey]) {
+                timePointsMap[timeKey].count++;
+                timePointsMap[timeKey].books.push(book); // Original book with unrounded timestamp
             }
         });
+
+        return timePoints;
     };
 
     const handleDataPointClick = (data) => {

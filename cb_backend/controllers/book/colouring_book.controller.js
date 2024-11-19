@@ -28,7 +28,7 @@ const _generateImage = async (user, book, pageNumber, description, {usingModel =
         if (usingModel === 0)      
             imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
         else if (usingModel === 1)  
-            imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
+            imageData = await queryFineTuned(`${description}`, {seed: seed});
         else
             imageData = await queryFluxSchnell(CHILD_PROMPT(description), seed);
         
