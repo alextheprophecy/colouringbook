@@ -56,11 +56,6 @@ const useEditPage = () => {
                 t('edition.hooks.regenrating-image')
             )
         } catch (error) {
-            dispatch(addNotification({
-                type: 'error',
-                message: error.message || t('error.failed-to-regenerate-image-please-try-again'),
-                duration: 3000
-            }));
             return false;
         }         
     }, [workingOnPage, bookId, currentContext, pages, creationSettings]);
@@ -82,11 +77,7 @@ const useEditPage = () => {
                 t('edition.hooks.enhancing-description')
             )
         } catch (error) {
-            dispatch(addNotification({
-                type: 'error',
-                message: error.message || t('error.failed-to-enhance-description-please-try-again'),
-                duration: 3000
-            }));
+            return false;
         }
     }, [editText, workingOnPage, bookId, currentContext, pages]);
 

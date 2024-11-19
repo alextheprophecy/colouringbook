@@ -59,13 +59,12 @@ const _generateDescription = async (sceneDescription, currentContext, isTwoStepG
 const generatePageWithContext = async (req, res) => {
     const user = req.user;
     const book = req.book;  
-    const { sceneDescription, currentContext, ...creationSettings} = req.body;
-    const { testMode, useAdvancedContext, ...generationSettings } = creationSettings;
+    const { sceneDescription, currentContext } = req.body;
+    const { testMode, useAdvancedContext, generationSettings, credits } = req.generationData;
 
-    //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
-
-    if (!sceneDescription || sceneDescription.trim() === '') return res.status(400).json({ error: 'No sceneDescription found' });
+    if (!sceneDescription || sceneDescription.trim() === '') {
+        return res.status(400).json({ error: 'No sceneDescription found' });
+    }
 
     try {
         const parsedContext = parseContextInput(currentContext);   
@@ -101,15 +100,15 @@ const generatePageWithContext = async (req, res) => {
 const regeneratePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
-    const { detailedDescription, currentPage, ...creationSettings } = req.body;
-    const { testMode, ...generationSettings } = creationSettings;
-    console.log('regenerating page with:', generationSettings.usingModel);
+    const { detailedDescription, currentPage } = req.body;
+    const { testMode, generationSettings, credits } = req.generationData;
 
-    //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
-
-    if (!detailedDescription || detailedDescription.trim() === '') return res.status(400).json({ error: 'No detailedDescription found' });
-    if (currentPage === undefined || !Number.isInteger(currentPage)) return res.status(400).json({ error: 'Invalid page number' });
+    if (!detailedDescription || detailedDescription.trim() === '') {
+        return res.status(400).json({ error: 'No detailedDescription found' });
+    }
+    if (currentPage === undefined || !Number.isInteger(currentPage)) {
+        return res.status(400).json({ error: 'Invalid page number' });
+    }
     
     try {
         console.log('regenerating page with:', detailedDescription);
@@ -132,13 +131,12 @@ const regeneratePage = async (req, res) => {
 const enhancePage = async (req, res) => {
     const user = req.user;
     const book = req.book;
-    const { previousDescription, enhancementRequest, currentContext, currentPage, ...creationSettings } = req.body;
-    const { testMode, ...generationSettings } = creationSettings;
+    const { previousDescription, enhancementRequest, currentContext, currentPage } = req.body;
+    const { testMode, generationSettings, credits } = req.generationData;
 
-    //VERIFY CREDITS
-    const credits = await verifyPageCredits(user, generationSettings.usingModel).catch(error => res.status(403).json({ error: error.message }));
-
-    if (!previousDescription || !enhancementRequest) return res.status(400).json({ error: 'Missing required parameters' });
+    if (!previousDescription || !enhancementRequest) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
     
     try {
         // First get the enhanced description
@@ -157,7 +155,7 @@ const enhancePage = async (req, res) => {
                 generationSettings
             ),
             (async () => {
-                const shouldUpdate = await shouldUpdateBookContext(enhancementRequest, currentContext);
+                const shouldUpdate = await shouldUpdateBookContext(enhancedDescription, currentContext);
                 return shouldUpdate ? await updateBookContext(enhancedDescription, currentContext) : null;
             })()
         ]);

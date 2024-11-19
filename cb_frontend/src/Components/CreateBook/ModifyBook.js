@@ -232,7 +232,7 @@ const ModifyBook = () => {
                         !(isBookFinished || isFinishing) ? (
                             <CreatePage 
                                 key="create-page" 
-                                disabled={(isLoading && workingOnPage!==-1)}
+                                disabled={(isLoading && workingOnPage!==-1) || credits<=0}
                                 classNameProp={pageClassname(pages.length)}
                                 onMouseEnter={handleCreatePageMouseEnter}
                                 onMouseLeave={handleCreatePageMouseLeave}
@@ -310,7 +310,7 @@ const ModifyBook = () => {
                 {isBookFinished && (
                     <div className="flex flex-col gap-3 w-full max-w-md">
                         <button 
-                            onClick={() => {dispatch(resetPersistedState); window.location.reload()}}
+                            onClick={() => {dispatch(resetBook())}}
                             className="w-full bg-blue-500 hover:bg-blue-600 
                                 text-white py-3 px-6 rounded-lg 
                                 transition-all duration-300 ease-in-out 

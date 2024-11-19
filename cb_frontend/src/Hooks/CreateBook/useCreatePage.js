@@ -48,11 +48,6 @@ const useCreatePage = () => {
             )
         } catch (error) {
             console.error('Error generating page:', error);
-            dispatch(addNotification({
-                type: 'error',
-                message: error.message || t('creation.hooks.failed-to-generate-image-please-try-again'),
-                duration: 5000
-            }));
             return false;
         }
     };

@@ -8,7 +8,7 @@ import { MODEL_COSTS } from '../../Constants/qualityOptions';
 const EditPage = () => {
     const { t } = useTranslation();
     const {currentPage} = useSelector((state) => state.book);
-    const {settings} = useSelector((state) => state.website);
+    const {settings, credits} = useSelector((state) => state.website);
     const dispatch = useDispatch()
 
     const {
@@ -26,7 +26,8 @@ const EditPage = () => {
         handleEnhance
     } = useEditPage();
 
-    
+    const hasEnoughCredits = credits>=MODEL_COSTS[settings.usingModel];
+
     if (!isVisible || currentPage === 0) return null;        
 
     return (
@@ -133,18 +134,21 @@ const EditPage = () => {
                             {/* Action Cards */}
                             <div className="space-y-4">
                                 {/* Enhance Card */}
-                                <div className="group bg-green-100 px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
-                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100">
+                                <div className={`group  px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
+                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100
+                                    ${!hasEnoughCredits ? 'bg-green-100 cursor-not-allowed' : 'bg-green-300'}`}>
                                     <button 
-                                        className="w-full flex items-center gap-4"
+                                        className={`w-full flex items-center gap-4 ${!hasEnoughCredits ? 'bg-green-100 text-gray-400 cursor-not-allowed' : 'text-green-600'}`}
                                         onClick={() => setIsEnhancing(true)}
+                                        disabled={!hasEnoughCredits}
                                     >
-                                        <div className="flex-shrink-0 p-3 bg-green-600 rounded-full 
-                                            group-hover:bg-green-200 transition-colors duration-300">
+                                        <div className={`flex-shrink-0 p-3 rounded-full 
+                                            group-hover:bg-green-200 transition-colors duration-300
+                                            ${!hasEnoughCredits ? 'bg-green-200' : 'bg-green-600'}`}>
                                             <Wand2 className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <h3 className="font-children font-semibold text-green-600">
+                                            <h3 className="font-children font-semibold">
                                                 {t('edition.enhance')}
                                             </h3>
                                         </div>
@@ -152,24 +156,29 @@ const EditPage = () => {
                                             <strong>-{MODEL_COSTS[settings.usingModel]}</strong> {t('edition.credits')}
                                         </span>
                                     </button>
-                                    <p className="text-xs text-green-600 text-center -mt-2">
-                                        {t('edition.enhance-description')}
-                                    </p>
+                                    {hasEnoughCredits && (
+                                        <p className="text-xs text-green-600 text-center -mt-2">
+                                            {t('edition.enhance-description')}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Regenerate Card */}
-                                <div className="group bg-blue-100 px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
-                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100">
+                                <div className={`group px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
+                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100 
+                                    ${!hasEnoughCredits ? 'bg-blue-100 cursor-not-allowed' : 'bg-blue-300'}`}>
                                     <button 
-                                        className="w-full flex items-center gap-4"
+                                        className={`w-full flex items-center gap-4 ${!hasEnoughCredits ? 'bg-blue-100 text-gray-400 cursor-not-allowed' : ' text-blue-600 '}`}
                                         onClick={handleRegenerate}
+                                        disabled={!hasEnoughCredits}
                                     >
-                                        <div className="flex-shrink-0 p-3 bg-blue-600 rounded-full 
-                                            group-hover:bg-blue-200 transition-colors duration-300">
+                                        <div className={`flex-shrink-0 p-3 rounded-full 
+                                            group-hover:bg-blue-200 transition-colors duration-300 
+                                            ${!hasEnoughCredits ? 'bg-blue-200' : 'bg-blue-600'}`}>
                                             <RotateCcw className="w-6 h-6 text-white" />
                                         </div>
                                         <div className="flex-1 text-left">
-                                            <h3 className="font-children font-semibold text-blue-600 mb-1">
+                                            <h3 className={`font-children font-semibold mb-1 `}>
                                                 {t('edition.regenerate')}
                                             </h3>
                                         </div>
@@ -237,11 +246,11 @@ const EditPage = () => {
                                 <button 
                                     className={`px-6 py-2.5 rounded-lg font-children font-semibold
                                         transition-all duration-300 shadow-sm hover:shadow
-                                        ${editText.trim() !== '' 
+                                        ${(editText.trim() !== '' && hasEnoughCredits)
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white' 
                                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                     onClick={handleEnhance}
-                                    disabled={editText.trim() === ''}
+                                    disabled={(editText.trim() === '') || !hasEnoughCredits}
                                 >
                                     {t('edition.enhance-image')}
                                 </button>

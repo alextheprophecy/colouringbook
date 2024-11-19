@@ -3,7 +3,7 @@
     "create-page": "Générer",
     "new-page": "Nouvelle page",
     "a-goblin-in-a-forest-eating-a-mushroom": "Un gobelin dans une forêt mangeant un champignon...",
-    "not-enough-credits": "Pas assez de crédits",
+    "not-enough-credits": "Rajouter des crédits",
     "credits-remaining": "crédits restants",
     "create-your-book": "Creer mon livre",
     "enter-book-title": "L'aventure de ...",
@@ -160,5 +160,13 @@
     "contact": {
       "title": "Contactez nous"
     }
+  },
+  "profile": {
+    "name": "Nom et prénom",
+    "email": "E-mail",
+    "credits": "Crédits",
+    "redeemCoupon": "Utiliser un coupon",
+    "enterCouponDesc": "Entrez votre code coupon à 12 caractères pour ajouter des crédits à votre compte",
+    "redeemButton": "Valider"
   }
 }

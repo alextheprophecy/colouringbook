@@ -1,28 +1,39 @@
 import { useEffect, React } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { saveUserToken, saveUserData } from '../../Hooks/UserDataHandler';
+import { saveUserToken, saveUserData, removeAllUserData } from '../../Hooks/UserDataHandler';
 import { updateCredits } from '../../redux/websiteSlice';
+import { resetPersistedState } from '../../redux/store';
+
 const AuthSuccess = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const user = searchParams.get('user');
-        const token = searchParams.get('token');
-        if (token && user) {
-            const {__v, ...data} = JSON.parse(decodeURIComponent(user))
-            
-            saveUserData(data)
-            saveUserToken(token)
-            dispatch(updateCredits(data.credits))
-            window.location.href = '/create'            
-            
-            // Redirect to home or dashboard
-            navigate('/');
-        }
-    }, [searchParams, dispatch, navigate]);
+        const handleAuth = async () => {
+            try {
+                await resetPersistedState();
+                removeAllUserData();
+                console.log('AuthSuccess');
+                
+                const user = searchParams.get('user');
+                const token = searchParams.get('token');
+                
+                if (token && user) {
+                    const {__v, ...data} = JSON.parse(decodeURIComponent(user));
+                    saveUserData(data);
+                    saveUserToken(token);
+                    dispatch(updateCredits(data.credits));
+                    window.location.href = '/create';
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+            }
+        };
+
+        handleAuth();
+    }, [searchParams, dispatch, navigate, resetPersistedState]);
 
     return (
         <div className="flex items-center justify-center min-h-screen">

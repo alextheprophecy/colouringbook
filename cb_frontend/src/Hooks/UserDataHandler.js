@@ -36,6 +36,7 @@ const updateUserCredits = (newCredits) => {
  * @return {UserData|null} The user data object if available, otherwise null.
  */
 const getUserData = () => JSON.parse(localStorage.getItem(USER_DATA))
+
 const removeAllUserData = () => {
     localStorage.removeItem(USER_DATA)
     localStorage.removeItem(BOOK_DATA)

@@ -2,7 +2,7 @@
   "creation": {
     "create": "Crea mi libro",
     "a-goblin-in-a-forest-eating-a-mushroom": "Un duende en un bosque comiendo una seta...",
-    "not-enough-credits": "No hay suficientes créditos",
+    "not-enough-credits": "Canjear cupón",
     "credits-remaining": "créditos restantes",
     "create-your-book": "Crea tu libro",
     "enter-book-title": "Libro de aventuras...",
@@ -100,5 +100,13 @@
   "success": {
     "your-book-has-been-successfully-generated": "¡Su libro se ha generado exitosamente!"
   },
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "profile": {
+    "name": "nombre completo",
+    "email": "Correo electrónico",
+    "credits": "Créditos",
+    "redeemCoupon": "Canjear cupón",
+    "enterCouponDesc": "Ingrese su código de cupón de 12 caracteres para agregar créditos a su cuenta",
+    "redeemButton": "Canjear cupón"
+  }
 }

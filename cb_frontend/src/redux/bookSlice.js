@@ -76,10 +76,13 @@ const bookSlice = createSlice({
       if (modelKey) {
         state.seeds[modelKey] = seed;
       }
+    },
+    resetBook: (state) => {
+      return initialState;
     }
   },
 });
 
-export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeed, editPage, creatingPage } = bookSlice.actions;
+export const { addPage, updatePage, updateContext, setCurrentPage, setIsEditing, startBook, finishBook, setSeed, editPage, creatingPage, resetBook } = bookSlice.actions;
 
 export default bookSlice.reducer;

@@ -70,6 +70,9 @@ const websiteSlice = createSlice({
     },
     setAskFeedback: (state, action) => {
       state.askFeedback = action.payload;
+    },
+    resetWebsite: (state) => {
+      return initialState;
     }
   },
 });
@@ -84,7 +87,8 @@ export const {
   decrementCredits, 
   incrementCredits,
   toggleSetting,
-  setAskFeedback
+  setAskFeedback,
+  resetWebsite
 } = websiteSlice.actions;
 
 export default websiteSlice.reducer;
