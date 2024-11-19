@@ -119,6 +119,8 @@ const getBookPDFUrl = async (req, res) => {
         req.book = book;
         
         // Call the existing getBookPDF function
+        const user = await User.findById(book.userId);
+        req.user = user;
         await getBookPDF(req, res);
     } catch (error) {
         res.status(500).json({
