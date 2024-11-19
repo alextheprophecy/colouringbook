@@ -45,58 +45,73 @@ const EditPage = () => {
                 {/* Left Column - Image/Info Preview */}
                 <div className="relative w-full h-[50vh] lg:h-[70vh] bg-gray-50 rounded-lg overflow-y">
                     {showDescription ? (
-                        <div className="h-full overflow-y-auto bg-gray-100 p-4">
-                            <h3 className="text-lg font-bold mb-2">{t('edition.user-description')}</h3>
-                            <p className="text-sm mb-4">{sceneDescription[0]}</p>
-                            
-                            <h3 className="text-lg font-bold mb-2">{t('edition.composition-idea')}</h3>
-                            <p className="text-sm mb-4 italic text-gray-700">{sceneDescription[4]}</p>
-                            
-                            <div className="flex justify-between items-center mb-2">
-                                <h3 className="text-lg font-bold">{t('edition.api-description')}</h3>
-                                <p className="text-m font-bold text-red-500">Seed: {sceneDescription[2]}</p>
-                            </div>
-                            <p className="text-sm mb-4">{sceneDescription[1]}</p>
-                            
-                            <h3 className="text-lg font-bold mb-2">{t('edition.context')}</h3>
-                            {sceneDescription[3] && (
-                                <div className="text-sm">
-                                    <div className="mb-2">
-                                        <span className="font-semibold">{t('edition.story-summary')}</span> {sceneDescription[3].storySummary}
+                        <div className="h-full overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 p-6">
+                            {/* Main Description Section */}
+                            <div className="bg-white rounded-xl p-6 shadow-sm mb-6 border border-gray-200">
+                                <div className="mb-2 flex items-center justify-center">
+                                    <div className="bg-gray-100 px-4 py-2 rounded-full font-mono font-semibold text-blue-700">
+                                        Seed: {sceneDescription[2]}
                                     </div>
-                                    <div className="mb-2">
-                                        <span className="font-semibold">{t('edition.environment')}</span> {sceneDescription[3].environment}
-                                    </div>
-                                    <div className="mb-2">
-                                        <span className="font-semibold">{t('edition.current-situation')}</span> {sceneDescription[3].currentSituation}
-                                    </div>
-                                    {sceneDescription[3].characters && (
-                                        <div className="mb-2">
-                                            <span className="font-semibold">Characters:</span>
-                                            <ul className="list-disc pl-4">
-                                                {sceneDescription[3].characters.map((char, index) => (
-                                                    <li key={index}>
-                                                        <span className="font-medium">{char.name}:</span> {char.description}
-                                                        {char.lastSeenDoing && (
-                                                            <span className="italic"> ({t('edition.last-seen-doing')}{char.lastSeenDoing})</span>
-                                                        )}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                    {sceneDescription[3].keyObjects && sceneDescription[3].keyObjects.length > 0 && (
-                                        <div>
-                                            <span className="font-semibold">{t('edition.key-objects')}</span>
-                                            <ul className="list-disc pl-4">
-                                                {sceneDescription[3].keyObjects.map((obj, index) => (
-                                                    <li key={index}>{obj}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
                                 </div>
-                            )}
+                                <p className="text-lg leading-relaxed text-gray-800">{sceneDescription[1]}</p>
+                                
+                            </div>
+
+                            {/* Additional Information */}
+                            <div className="space-y-6">
+                                <section className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                                    <h3 className="text-lg font-bold text-gray-800 mb-2">{t('edition.user-description')}</h3>
+                                    <p className="text-gray-600">{sceneDescription[0]}</p>
+                                </section>
+                                
+                                <section className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                                    <h3 className="text-lg font-bold text-gray-800 mb-2">{t('edition.composition-idea')}</h3>
+                                    <p className="text-gray-600 italic">{sceneDescription[4]}</p>
+                                </section>
+
+                                {sceneDescription[3] && (
+                                    <section className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                                        <h3 className="text-lg font-bold text-gray-800 mb-4">{t('edition.context')}</h3>
+                                        <div className="space-y-4 text-sm">
+                                            {/* Rest of the context information remains the same */}
+                                            <div className="mb-2">
+                                                <span className="font-semibold">{t('edition.story-summary')}</span> {sceneDescription[3].storySummary}
+                                            </div>
+                                            <div className="mb-2">
+                                                <span className="font-semibold">{t('edition.environment')}</span> {sceneDescription[3].environment}
+                                            </div>
+                                            <div className="mb-2">
+                                                <span className="font-semibold">{t('edition.current-situation')}</span> {sceneDescription[3].currentSituation}
+                                            </div>
+                                            {sceneDescription[3].characters && (
+                                                <div className="mb-2">
+                                                    <span className="font-semibold">Characters:</span>
+                                                    <ul className="list-disc pl-4">
+                                                        {sceneDescription[3].characters.map((char, index) => (
+                                                            <li key={index}>
+                                                                <span className="font-medium">{char.name}:</span> {char.description}
+                                                                {char.lastSeenDoing && (
+                                                                    <span className="italic"> ({t('edition.last-seen-doing')}{char.lastSeenDoing})</span>
+                                                                )}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                            {sceneDescription[3].keyObjects && sceneDescription[3].keyObjects.length > 0 && (
+                                                <div>
+                                                    <span className="font-semibold">{t('edition.key-objects')}</span>
+                                                    <ul className="list-disc pl-4">
+                                                        {sceneDescription[3].keyObjects.map((obj, index) => (
+                                                            <li key={index}>{obj}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </section>
+                                )}
+                            </div>
                         </div>                
                     ) : (
                         currentImage && (
@@ -134,8 +149,8 @@ const EditPage = () => {
                             {/* Action Cards */}
                             <div className="space-y-4">
                                 {/* Enhance Card */}
-                                <div className={`group  px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
-                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100
+                                <div className={`group  px-4 py-3 rounded-lg shadow-md hover:shadow-lg border-b-4
+                                    transition-all duration-300 hover:scale-[1.01] border border-green-400
                                     ${!hasEnoughCredits ? 'bg-green-100 cursor-not-allowed' : 'bg-green-300'}`}>
                                     <button 
                                         className={`w-full flex items-center gap-4 ${!hasEnoughCredits ? 'bg-green-100 text-gray-400 cursor-not-allowed' : 'text-green-600'}`}
@@ -164,8 +179,8 @@ const EditPage = () => {
                                 </div>
 
                                 {/* Regenerate Card */}
-                                <div className={`group px-4 py-3 rounded-lg shadow-md hover:shadow-lg 
-                                    transition-all duration-300 hover:scale-[1.01] border border-gray-100 
+                                <div className={`group px-4 py-3 rounded-lg shadow-md hover:shadow-lg border-b-4
+                                    transition-all duration-300 hover:scale-[1.01] border border-blue-400
                                     ${!hasEnoughCredits ? 'bg-blue-100 cursor-not-allowed' : 'bg-blue-300'}`}>
                                     <button 
                                         className={`w-full flex items-center gap-4 ${!hasEnoughCredits ? 'bg-blue-100 text-gray-400 cursor-not-allowed' : ' text-blue-600 '}`}

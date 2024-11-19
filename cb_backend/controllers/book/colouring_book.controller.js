@@ -21,20 +21,23 @@ const verifyPageCredits = async (user, usingModel) => {
 };
 
 const _generateImage = async (user, book, pageNumber, description, {usingModel = 2, seed}) => { 
-    if(!seed) seed = randomSeed();
-    let imageData;
-    usingModel = parseInt(usingModel);
-    if (usingModel === 0)      
-        imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
-    else if (usingModel === 1)  
-        imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
-    else
-        imageData = await queryFluxSchnell(CHILD_PROMPT(description), seed);
-    console.log('imageData', imageData);
-    console.log('seed', seed);
-    console.log('description', description);
-    const { url, versionId } = await savePageData(user, book.id, pageNumber, imageData);
-    return { url, seed, versionId };
+    try {
+        if(!seed) seed = randomSeed();
+        let imageData;
+        usingModel = parseInt(usingModel);
+        if (usingModel === 0)      
+            imageData = await queryFluxPro(CHILD_PROMPT(description), seed);
+        else if (usingModel === 1)  
+            imageData = await queryFineTuned(`coloring page, ${description}`, {seed: seed});
+        else
+            imageData = await queryFluxSchnell(CHILD_PROMPT(description), seed);
+        
+        const { url, versionId } = await savePageData(user, book.id, pageNumber, imageData);
+        return { url, seed, versionId };
+    } catch (error) {
+        console.error('Error generating image:', error);
+        throw error;
+    }
 };
 
 const _generateDescription = async (sceneDescription, currentContext, isTwoStepGeneration = TWO_STEP_DESCRIPTION_GENERATION) => {

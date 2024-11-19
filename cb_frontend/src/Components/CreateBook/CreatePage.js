@@ -66,11 +66,11 @@ const CreatePage = React.forwardRef(({classNameProp, onMouseEnter, onMouseLeave,
                                 onClick={createImage}
                                 disabled={disabled}
                                 className={`relative flex items-center gap-2 px-5 py-2 
-                                        rounded-lg shadow-md
+                                        rounded-lg shadow-md border-b-4 border-blue-600
                                         transform transition-all duration-200
                                         mb-0.5
                                         ${disabled 
-                                            ? 'bg-gray-400 cursor-not-allowed' 
+                                            ? 'bg-gray-300 cursor-not-allowed' 
                                             : 'bg-blue-500 hover:bg-blue-600 hover:shadow-lg hover:scale-[1.02]'
                                         }`}
                             >

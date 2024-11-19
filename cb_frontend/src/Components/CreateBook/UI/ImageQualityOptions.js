@@ -25,10 +25,10 @@ const ImageQualityOptions = ({ isVisible = true }) => {
                         <select
                             value={settings.usingModel}
                             onChange={(e) => dispatch(toggleSetting({model: e.target.value}))}
-                            className="w-full px-3 py-1 bg-amber-300/20 rounded-lg border border-gray-200 font-children
+                            className="w-full px-3 py-1 bg-amber-100 rounded-lg border border-amber-200 border-b-4 font-children
                                 appearance-none cursor-pointer font-semibold tracking-wider
                                 text-black text-sm
-                                focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                                focus:outline-none focus:border-transparent"
                         >
                             {qualityOptions.map((option) => (
                                 <option key={option.id} value={option.id}>

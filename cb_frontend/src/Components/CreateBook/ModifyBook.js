@@ -258,7 +258,7 @@ const ModifyBook = () => {
                             transition-scale duration-300 ease-in-out 
                             hover:scale-[1.02] shadow-md hover:shadow-lg
                             flex items-center justify-center gap-2
-                            font-children font-semibold tracking-wider`}
+                            font-children font-semibold tracking-wider border-b-4 border-blue-600`}
                         onClick={flipToCreationPage}
                         disabled={isOnCreationPage() || isFlipping}
                     >
@@ -272,7 +272,7 @@ const ModifyBook = () => {
 
                 <button 
                     className={`w-full max-w-md
-                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-600 hover:bg-blue-600'}
+                        ${!isBookFinished ? 'bg-green-500 hover:bg-green-600 border-b-4 border-green-600' : 'bg-blue-600 hover:bg-blue-600 border-b-4 border-blue-600'}
                         
                         ${''/* isOnCreationPage() && !isBookFinished ? '' : '-mt-16' */}
                         ${isFinishing ? 'cursor-not-allowed' : ''}
@@ -316,7 +316,7 @@ const ModifyBook = () => {
                                 transition-all duration-300 ease-in-out 
                                 hover:scale-[1.02] shadow-md hover:shadow-lg
                                 font-children font-semibold tracking-wider
-                                flex items-center justify-center gap-2"
+                                flex items-center justify-center gap-2 border-b-4 border-blue-600"
                         >
                             <Plus className="w-5 h-5" />
                             {t('creation.new-book')}
@@ -329,7 +329,7 @@ const ModifyBook = () => {
                                 transition-all duration-300 ease-in-out 
                                 hover:scale-[1.02] shadow-md hover:shadow-lg
                                 font-children font-semibold tracking-wider
-                                flex items-center justify-center gap-2"
+                                flex items-center justify-center gap-2 border-b-4 border-purple-600"
                         >
                             <BookOpen className="w-5 h-5" />
                             {t('login.my-gallery')}
@@ -366,7 +366,7 @@ const ModifyBook = () => {
                                             className="sr-only"
                                         />
                                         <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.testMode ? 'bg-red-500' : 'bg-gray-300'}`}>
-                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.testMode ? 'transform translate-x-6' : ''}`}></div>
+                                            <div className={`absolute left-1 top-1 bg-white border-b-2 border-gray-500 w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.testMode ? 'transform translate-x-6' : ''}`}></div>
                                         </div>
                                     </div>
                                 </label>
@@ -387,7 +387,7 @@ const ModifyBook = () => {
                                             className="sr-only"
                                         />
                                         <div className={`block w-14 h-8 rounded-full transition-colors duration-200 ease-in-out ${settings.useAdvancedContext ? 'bg-blue-500' : 'bg-gray-300'}`}>
-                                            <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedContext ? 'transform translate-x-6' : ''}`}></div>
+                                            <div className={`absolute left-1 top-1 bg-white border-b-2 border-gray-500 w-6 h-6 rounded-full transition-transform duration-200 ease-in-out ${settings.useAdvancedContext ? 'transform translate-x-6' : ''}`}></div>
                                         </div>
                                     </div>
                                 </label>

@@ -10,7 +10,7 @@ const PRO_SEEDS = [38681, 79698, 21705, 61187]
 
 const LORA_SEEDS = [9890, 17362/*really nice*/, 51337, 26610, 27398, 88699]
 
-const SAFETY_CHECKER = false
+const SAFETY_CHECKER = true
 
 const randomSavedSeed = (seed_list= DEFAULT_DEV_SEEDS) => {
     return seed_list[Math.floor(Math.random()*seed_list.length)]
@@ -29,6 +29,10 @@ const randomSeed = () => {
 const _runModel = async (input, model) => {
     const output = await replicate.run(model, {input: input});
     console.log('output', output);
+
+    if(output.length == 0) {
+        throw new Error("Keep it SFW! No violence, tobacco, alcohol, drugs, etc.");
+    }
     // Get the stream    
     const stream = model.includes("flux-1.1-pro") ? output : output[0];
     
