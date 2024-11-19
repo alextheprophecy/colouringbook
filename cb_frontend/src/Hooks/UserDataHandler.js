@@ -10,6 +10,7 @@ const USER_DATA = 'cb-auth-user-data'
 const TOKEN_DATA = 'cb-auth-user-token'
 const BOOK_DATA = 'cb-book-data'
 const SHOW_INTRO = 'cb-show-intro'
+const ADMIN_BOOKS_DATA = 'cb-admin-books-data'
 
 const shouldShowIntro = () => sessionStorage.getItem(SHOW_INTRO)==='true'
 const setShouldShowIntro = (show) => sessionStorage.setItem(SHOW_INTRO, show?'true':'false')
@@ -42,6 +43,7 @@ const removeAllUserData = () => {
     localStorage.removeItem(BOOK_DATA)
     localStorage.removeItem(TOKEN_DATA)
     localStorage.removeItem(SHOW_INTRO)
+    localStorage.removeItem(ADMIN_BOOKS_DATA)
 }
 
 const isUserLoggedIn = () => getUserData()!==null
@@ -54,6 +56,15 @@ const saveUserToken = (tokenData) => localStorage.setItem(TOKEN_DATA, JSON.strin
 
 const getUserToken = () => JSON.parse(localStorage.getItem(TOKEN_DATA))
 
+const saveAdminBooks = (books) => {
+    if (!books) return;
+    localStorage.setItem(ADMIN_BOOKS_DATA, JSON.stringify(books));
+}
+
+const getAdminBooks = () => {
+    const data = localStorage.getItem(ADMIN_BOOKS_DATA);
+    return data ? JSON.parse(data) : [];
+}
 
 export {
     getUserId,
@@ -68,5 +79,7 @@ export {
     getUserToken,
     shouldShowIntro,
     setShouldShowIntro,
-    updateUserCredits
+    updateUserCredits,
+    saveAdminBooks,
+    getAdminBooks
 }

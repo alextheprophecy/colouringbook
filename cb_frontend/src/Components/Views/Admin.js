@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import api from '../../Hooks/ApiHandler';
-import { format } from 'date-fns';
+import React, { useState, useEffect } from 'react';
 import { 
     TicketIcon, 
     ChatBubbleLeftRightIcon, 
     UsersIcon, 
     BookOpenIcon 
 } from '@heroicons/react/24/outline';
+import { saveAdminBooks, getAdminBooks } from '../../Hooks/UserDataHandler';
+import BooksTab from '../Admin/BooksTab';
+import CouponsTab from '../Admin/CouponsTab';
+import UsersTab from '../Admin/UsersTab';
+import api from '../../Hooks/ApiHandler';
+import FeedbacksTab from '../Admin/FeedbacksTab';
 
 const Admin = () => {
-    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('coupons');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -22,6 +24,24 @@ const Admin = () => {
     });
     const [coupons, setCoupons] = useState([]);
     const [isLoadingCoupons, setIsLoadingCoupons] = useState(false);
+    const [books, setBooks] = useState([]);
+    const [isLoadingBooks, setIsLoadingBooks] = useState(false);
+    const [timeRange, setTimeRange] = useState('day');
+    const [selectedBooks, setSelectedBooks] = useState([]);
+    const [loadingPDF, setLoadingPDF] = useState({});
+    const [sortConfig, setSortConfig] = useState({
+        key: 'createdAt',
+        direction: 'desc'
+    });
+    const [showOnlyReady, setShowOnlyReady] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [userSortConfig, setUserSortConfig] = useState({
+        key: 'createdAt',
+        direction: 'desc'
+    });
+    const [feedbacks, setFeedbacks] = useState([]);
+    const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(false);
 
     const tabs = [
         { id: 'coupons', name: 'Coupons', icon: TicketIcon },
@@ -30,13 +50,26 @@ const Admin = () => {
         { id: 'books', name: 'Books', icon: BookOpenIcon },
     ];
 
+    useEffect(() => {
+        const savedBooks = getAdminBooks();
+        if (savedBooks.length > 0) {
+            setBooks(savedBooks);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (books.length > 0) {
+            saveAdminBooks(books);
+        }
+    }, [books]);
+
     const handleAdminFormSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
 
         try {
-            const response = await api.post('/user/coupons/create', {
+            const response = await api.post('/admin/coupons/create', {
                 adminFormData: {
                     ...adminFormData,
                     code: adminFormData.useCustomCode ? adminFormData.customCode : undefined
@@ -60,7 +93,7 @@ const Admin = () => {
     const fetchCoupons = async () => {
         setIsLoadingCoupons(true);
         try {
-            const response = await api.get('/user/coupons/list');
+            const response = await api.get('/admin/coupons/list');
             setCoupons(response.data.coupons);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch coupons');
@@ -69,187 +102,125 @@ const Admin = () => {
         }
     };
 
+    const fetchBooks = async () => {
+        setIsLoadingBooks(true);
+        try {
+            const response = await api.get('/admin/books/list');
+            setBooks(response.data.books);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch books');
+        } finally {
+            setIsLoadingBooks(false);
+        }
+    };
+
+    const fetchBookPDF = async (bookId) => {
+        setLoadingPDF(prev => ({ ...prev, [bookId]: true }));
+        try {
+            const response = await api.get(`/admin/books/${bookId}/pdf`);
+            if (response.data.bookPDF) {
+                window.open(response.data.bookPDF, '_blank');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch PDF');
+        } finally {
+            setLoadingPDF(prev => ({ ...prev, [bookId]: false }));
+        }
+    };
+
+    const fetchUsers = async () => {
+        setIsLoadingUsers(true);
+        try {
+            const response = await api.get('/admin/users/list');
+            setUsers(response.data.users);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch users');
+        } finally {
+            setIsLoadingUsers(false);
+        }
+    };
+
+    const handleUserSort = (key) => {
+        setUserSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
+    const fetchFeedbacks = async () => {
+        setIsLoadingFeedbacks(true);
+        try {
+            const response = await api.get('/admin/feedbacks/list');
+            setFeedbacks(response.data.feedbacks);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch feedbacks');
+        } finally {
+            setIsLoadingFeedbacks(false);
+        }
+    };
+
     const renderContent = () => {
         switch (activeTab) {
             case 'coupons':
-                return renderCouponsContent();
+                return (
+                    <CouponsTab
+                        adminFormData={adminFormData}
+                        setAdminFormData={setAdminFormData}
+                        handleAdminFormSubmit={handleAdminFormSubmit}
+                        error={error}
+                        success={success}
+                        coupons={coupons}
+                        fetchCoupons={fetchCoupons}
+                        isLoadingCoupons={isLoadingCoupons}
+                    />
+                );
             case 'feedback':
-                return <div className="text-center py-8">Feedback management coming soon</div>;
+                return (
+                    <FeedbacksTab
+                        feedbacks={feedbacks}
+                        fetchFeedbacks={fetchFeedbacks}
+                        isLoadingFeedbacks={isLoadingFeedbacks}
+                    />
+                );
             case 'users':
-                return <div className="text-center py-8">User management coming soon</div>;
+                return (
+                    <UsersTab
+                        users={users}
+                        fetchUsers={fetchUsers}
+                        isLoadingUsers={isLoadingUsers}
+                        userSortConfig={userSortConfig}
+                        handleUserSort={handleUserSort}
+                    />
+                );
             case 'books':
-                return <div className="text-center py-8">Book management coming soon</div>;
+                return (
+                    <BooksTab
+                        books={books}
+                        fetchBooks={fetchBooks}
+                        isLoadingBooks={isLoadingBooks}
+                        timeRange={timeRange}
+                        setTimeRange={setTimeRange}
+                        selectedBooks={selectedBooks}
+                        setSelectedBooks={setSelectedBooks}
+                        loadingPDF={loadingPDF}
+                        fetchBookPDF={fetchBookPDF}
+                        showOnlyReady={showOnlyReady}
+                        setShowOnlyReady={setShowOnlyReady}
+                        sortConfig={sortConfig}
+                        handleSort={handleSort}
+                    />
+                );
             default:
                 return null;
         }
     };
-
-    const renderCouponsContent = () => (
-        <>
-            <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 mb-6">
-                <div className="text-center mb-6">
-                    <h3 className="text-xl font-semibold text-gray-900">Create Coupon</h3>
-                </div>
-
-                <form onSubmit={handleAdminFormSubmit} className="space-y-4">
-                    <div>
-                        <label htmlFor="credits" className="block text-sm font-medium text-gray-700">
-                            Credits Amount
-                        </label>
-                        <input
-                            type="number"
-                            id="credits"
-                            value={adminFormData.credits}
-                            onChange={(e) => setAdminFormData({
-                                ...adminFormData,
-                                credits: e.target.value
-                            })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                            required
-                            min="1"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="expiresIn" className="block text-sm font-medium text-gray-700">
-                            Expires In (days)
-                        </label>
-                        <input
-                            type="number"
-                            id="expiresIn"
-                            value={adminFormData.expiresIn}
-                            onChange={(e) => setAdminFormData({
-                                ...adminFormData,
-                                expiresIn: e.target.value
-                            })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                            required
-                            min="1"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id="useCustomCode"
-                                checked={adminFormData.useCustomCode}
-                                onChange={(e) => setAdminFormData({
-                                    ...adminFormData,
-                                    useCustomCode: e.target.checked,
-                                    customCode: ''
-                                })}
-                                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-                            />
-                            <label htmlFor="useCustomCode" className="ml-2 block text-sm text-gray-700">
-                                Use Custom Coupon Code
-                            </label>
-                        </div>
-
-                        {adminFormData.useCustomCode && (
-                            <div>
-                                <label htmlFor="customCode" className="block text-sm font-medium text-gray-700">
-                                    Custom Code (12 characters)
-                                </label>
-                                <input
-                                    type="text"
-                                    id="customCode"
-                                    value={adminFormData.customCode}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-                                        setAdminFormData({
-                                            ...adminFormData,
-                                            customCode: value.slice(0, 12)
-                                        });
-                                    }}
-                                    placeholder="XXXXXXXXXXXX"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 uppercase"
-                                    required={adminFormData.useCustomCode}
-                                    maxLength="12"
-                                    pattern="[A-Z0-9]{12}"
-                                    title="12 characters (letters and numbers only)"
-                                />
-                                <p className="mt-1 text-sm text-gray-500">
-                                    {adminFormData.customCode.length}/12 characters
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={adminFormData.useCustomCode && adminFormData.customCode.length !== 12}
-                        className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-                            ${(adminFormData.useCustomCode && adminFormData.customCode.length !== 12)
-                                ? 'bg-purple-300 cursor-not-allowed'
-                                : 'bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'
-                            }`}
-                    >
-                        Create Coupon
-                    </button>
-                </form>
-
-                {error && (
-                    <div className="text-red-500 text-sm text-center mt-4">
-                        {error}
-                    </div>
-                )}
-
-                {success && (
-                    <div className="text-green-500 text-sm text-center mt-4">
-                        {success}
-                    </div>
-                )}
-            </div>
-
-            <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
-                <div className="text-center mb-6">
-                    <h3 className="text-xl font-semibold text-gray-900">Coupons List</h3>
-                </div>
-                
-                <button
-                    onClick={fetchCoupons}
-                    disabled={isLoadingCoupons}
-                    className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-                        ${isLoadingCoupons
-                            ? 'bg-purple-300 cursor-not-allowed'
-                            : 'bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'
-                        }`}
-                >
-                    {isLoadingCoupons ? 'Loading...' : 'Fetch Coupons'}
-                </button>
-
-                <div className="mt-6 space-y-4">
-                    {coupons.map((coupon) => (
-                        <div key={coupon.code} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start">
-                                <div className="font-mono text-lg font-bold text-purple-600">{coupon.code}</div>
-                                <div className={`text-sm px-2 py-1 rounded ${
-                                    coupon.isRedeemed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                }`}>
-                                    {coupon.isRedeemed ? 'Redeemed' : 'Available'}
-                                </div>
-                            </div>
-                            <div className="mt-2 text-sm text-gray-600">
-                                <div>Credits: {coupon.credits}</div>
-                                <div>Expires: {format(new Date(coupon.expiresAt), 'PPp')}</div>
-                                {coupon.isRedeemed && (
-                                    <>
-                                        <div className="mt-1 text-red-600">
-                                        Redeemed at: {format(new Date(coupon.redeemedAt), 'PPp')}
-                                        </div>
-                                        <div className="mt-1 text-red-600">
-                                            Redeemed by: <strong>{coupon.redeemedBy}</strong>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </>
-    );
 
     return (
         <div className="min-h-screen bg-gray-50">

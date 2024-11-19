@@ -41,7 +41,8 @@ const Feedback = () => {
             const route = getCurrentRoute();
             await api.post('/user/feedback', {
                 rating: selectedEmoji.rating,
-                comment: `[${route.toUpperCase()}] ${comment.trim()}`
+                comment: comment.trim(),
+                route: route
             });
             
             // Reset states
