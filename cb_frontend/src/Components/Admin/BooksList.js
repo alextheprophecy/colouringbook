@@ -30,12 +30,12 @@ const BooksList = ({
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
-                            <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Book ID
-                                </th>
+                            <tr>                                
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Title
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status/Actions
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     User
@@ -43,31 +43,21 @@ const BooksList = ({
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Page Count
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status/Actions
-                                </th>
+                                
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Created At
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Book ID
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {books.map((book) => (
                                 <tr key={book._id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">
-                                        {book._id}
-                                    </td>
+                                    
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {book.title}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div className="flex flex-col">
-                                            <span className="font-mono text-xs text-gray-400">{book.userId}</span>
-                                            <span className="text-blue-600">{book.userEmail}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {book.pageCount}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center space-x-2">
@@ -95,7 +85,20 @@ const BooksList = ({
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div className="flex flex-col">
+                                            <span className="font-mono text-xs text-gray-400">{book.userId}</span>
+                                            <span className="text-blue-600">{book.userEmail}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {book.pageCount}
+                                    </td>
+                                    
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {format(parseISO(book.createdAt), 'PPp')}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">
+                                        {book._id}
                                     </td>
                                 </tr>
                             ))}

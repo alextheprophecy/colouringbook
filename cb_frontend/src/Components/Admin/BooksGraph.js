@@ -108,13 +108,13 @@ const BooksGraph = ({
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 mb-6">
-            <div className="flex justify-between items-center mb-6">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden p-4 sm:p-6 mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
                 <h3 className="text-xl font-semibold text-gray-900">Books Creation Timeline</h3>
-                <div className="flex space-x-4">
+                <div className="flex space-x-4 w-full sm:w-auto">
                     <button
                         onClick={() => setTimeRange('day')}
-                        className={`px-3 py-1 rounded-md ${
+                        className={`flex-1 sm:flex-none px-3 py-1 rounded-md ${
                             timeRange === 'day'
                                 ? 'bg-purple-600 text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -124,7 +124,7 @@ const BooksGraph = ({
                     </button>
                     <button
                         onClick={() => setTimeRange('week')}
-                        className={`px-3 py-1 rounded-md ${
+                        className={`flex-1 sm:flex-none px-3 py-1 rounded-md ${
                             timeRange === 'week'
                                 ? 'bg-purple-600 text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -135,28 +135,31 @@ const BooksGraph = ({
                 </div>
             </div>
 
-            <div className="h-[300px]">
+            <div className="h-[300px] -mx-4 sm:mx-0">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                         data={getChartData()}
                         onClick={handleDataPointClick}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis 
                             dataKey="time"
                             interval="preserveStartEnd"
-                            padding={{ left: 30, right: 30 }}
+                            tick={{ fontSize: 12 }}
+                            padding={{ left: 10, right: 10 }}
                         />
                         <YAxis 
                             allowDecimals={false}
                             padding={{ top: 20, bottom: 20 }}
+                            tick={{ fontSize: 12 }}
+                            width={30}
                         />
                         <Tooltip
                             content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                     return (
-                                        <div className="bg-white p-3 border rounded shadow-lg">
+                                        <div className="bg-white p-2 sm:p-3 border rounded shadow-lg text-sm">
                                             <p className="font-semibold">{payload[0].payload.time}</p>
                                             <p className="text-purple-600">
                                                 Books created: {payload[0].value}
@@ -175,8 +178,8 @@ const BooksGraph = ({
                             dataKey="count"
                             stroke="#9333ea"
                             strokeWidth={2}
-                            dot={{ r: 4 }}
-                            activeDot={{ r: 6 }}
+                            dot={{ r: 3 }}
+                            activeDot={{ r: 5 }}
                             connectNulls
                         />
                     </LineChart>
@@ -185,7 +188,7 @@ const BooksGraph = ({
 
             {selectedBooks.length > 0 && (
                 <div className="mt-6">
-                    <div className="flex justify-between items-center mb-3">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-3">
                         <h4 className="font-semibold text-gray-900">
                             Selected Time Period Books ({selectedBooks.length})
                         </h4>
@@ -203,9 +206,10 @@ const BooksGraph = ({
                             </div>
                         </label>
                     </div>
-                    <div className="max-h-[200px] overflow-y-auto">
+
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
                         <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50 sticky top-0">
+                            <thead className="hidden sm:table-header-group bg-gray-50 sticky top-0">
                                 <tr>
                                     {[
                                         { key: 'status', label: 'Status/Actions' },
@@ -236,10 +240,10 @@ const BooksGraph = ({
                                 {sortBooks(selectedBooks, sortConfig.key, sortConfig.direction)
                                     .filter(book => !showOnlyReady || book.finished)
                                     .map(book => (
-                                    <tr key={book._id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center space-x-2">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    <tr key={book._id} className="hover:bg-gray-50 flex flex-col sm:table-row">
+                                        <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                                                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                                     ${book.finished 
                                                         ? 'bg-green-100 text-green-800' 
                                                         : 'bg-yellow-100 text-yellow-800'}`}
@@ -250,7 +254,7 @@ const BooksGraph = ({
                                                     <button
                                                         onClick={() => fetchBookPDF(book._id)}
                                                         disabled={loadingPDF[book._id]}
-                                                        className={`px-3 py-1 rounded-md text-xs font-medium
+                                                        className={`px-3 py-1 rounded-md text-xs font-medium w-full sm:w-auto text-center
                                                             ${loadingPDF[book._id]
                                                                 ? 'bg-purple-100 text-purple-400 cursor-wait'
                                                                 : 'bg-purple-600 text-white hover:bg-purple-700'
@@ -262,20 +266,23 @@ const BooksGraph = ({
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {book.title}
+                                        <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                            <span className="sm:hidden font-medium text-gray-900">Title: </span>
+                                            <span className="text-sm text-gray-900">{book.title}</span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">
-                                            {book._id}
+                                        <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                            <span className="sm:hidden font-medium text-gray-900">User: </span>
+                                            <span className="text-sm text-blue-600">{book.userEmail}</span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                                            {book.userEmail}
+                                        <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                            <span className="sm:hidden font-medium text-gray-900">Pages: </span>
+                                            <span className="text-sm text-gray-900">{book.pageCount}</span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {book.pageCount}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {format(parseISO(book.createdAt), 'PPp')}
+                                        <td className="px-4 sm:px-6 py-2 sm:py-4 border-b sm:border-b-0">
+                                            <span className="sm:hidden font-medium text-gray-900">Created: </span>
+                                            <span className="text-sm text-gray-500">
+                                                {format(parseISO(book.createdAt), 'PPp')}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))}

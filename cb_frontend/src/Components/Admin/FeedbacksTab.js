@@ -80,20 +80,20 @@ const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
 
     return (
         <div className="bg-white rounded-lg shadow">
-            <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+            <div className="px-2 sm:px-4 py-3 sm:py-5">
+                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4 flex flex-wrap items-center gap-2">
                     <button 
-                        className="bg-purple-500 hover:bg-purple-700 text-white text-sm font-bold py-2 px-4 rounded mr-2" 
+                        className="bg-purple-500 hover:bg-purple-700 text-white text-sm font-bold py-2 px-4 rounded" 
                         onClick={fetchFeedbacks}
                     >
                         Refresh
                     </button>
-                    User Feedback 
+                    <span>User Feedback</span>
                 </h3>
                 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-2 sm:mx-0">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead>
+                        <thead className="hidden sm:table-header-group">
                             <tr>
                                 {[
                                     { key: 'userEmail', label: 'User' },
@@ -121,24 +121,29 @@ const FeedbacksTab = ({ feedbacks, fetchFeedbacks, isLoadingFeedbacks }) => {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {sortFeedbacks(feedbacks, sortConfig.key, sortConfig.direction).map((feedback) => (
-                                <tr key={feedback._id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr key={feedback._id} className="hover:bg-gray-50 flex flex-col sm:table-row">
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4 text-sm text-gray-900">
+                                        <span className="sm:hidden font-medium">User: </span>
                                         {feedback.userEmail}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                        <span className="sm:hidden font-medium">Rating: </span>
                                         <div className="flex">
                                             {renderStars(feedback.rating)}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4">
+                                        <span className="sm:hidden font-medium">Route: </span>
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getRouteColor(feedback.route)}`}>
                                             {feedback.route}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4 text-sm text-gray-500">
+                                        <span className="sm:hidden font-medium text-gray-900">Comment: </span>
                                         {feedback.comment}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-4 sm:px-6 py-2 sm:py-4 text-sm text-gray-500">
+                                        <span className="sm:hidden font-medium text-gray-900">Date: </span>
                                         {new Date(feedback.createdAt).toLocaleDateString()}
                                     </td>
                                 </tr>
