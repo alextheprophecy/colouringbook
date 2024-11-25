@@ -1,7 +1,7 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
 
-const access_TTL = '6h' //TODO: production change to 1h
+const access_TTL = '1h'
 const refresh_TTL = '7d'
 
 const emailValidator = (email) => {
@@ -15,9 +15,17 @@ const gen_token = (access_t = true, user) => jwt.sign(
     { expiresIn: access_t?access_TTL:refresh_TTL})
 
 const add_cookie = (res, cookie_name, cookie) => {
-    const cookieOptions = { httpOnly: true,
-        secure: true,
-        sameSite: 'Strict' }
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: process.env.NODE_ENV === 'production' 
+            ? '.crayons.me' 
+            : undefined,
+        signed: true
+    }
 
     res.cookie(cookie_name, cookie, cookieOptions);
     return res
@@ -68,14 +76,24 @@ class UserControllers {
     }
 
     static RefreshToken = (req, res) => {
-        const cookies = req.cookies
-        jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
-            if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
-            else {
-                console.log("refreshed token")
-                res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+        const refreshToken = req.signedCookies.refreshToken || req.cookies.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(401).json({ error: 'No refresh token provided' });
+        }
+
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+            if (err) {
+                console.error('Token verification error:', err);
+                return res.status(403).json({ error: 'Refresh token invalid or expired' });
             }
-        })
+            
+            const access_token = gen_token(true, { _id: user.id, email: user.email });
+            
+            add_cookie(res, 'refreshToken', gen_token(false, { _id: user.id, email: user.email }))
+                .status(200)
+                .json(access_token);
+        });
     }
 
     static RegisterForm = (req, res) => {
