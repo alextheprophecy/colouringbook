@@ -35,6 +35,7 @@ jobs:
           output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
         env:
+          REACT_APP_APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.REACT_APP_APPINSIGHTS_INSTRUMENTATIONKEY}}
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL}}
           REACT_APP_RECAPTCHA_SITE_KEY: ${{ secrets.REACT_APP_RECAPTCHA_SITE_KEY}}
           
