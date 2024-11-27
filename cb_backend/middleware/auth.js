@@ -11,14 +11,15 @@ const verifyToken = (req,res,next) => {
         const access_token = authHeader.split(" ")[1];
         jwt.verify(access_token, process.env.JWT_ACCESS_SECRET, (err, user) => {
             if (err){ //access token expired
-                res.status(401).json({error: "Expired Token!"})
+                console.log("expired token ", err)
+                res.status(401).json("Expired Token!")
             }else{
                 req.user = user
                 verifyBlocked(req, res, next);
             }
         })
     } else {
-        return res.status(403).json({error: "You are not authenticated!"})
+        return res.status(403).json("You are not authenticated!")
     }
 }
 
