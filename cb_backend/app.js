@@ -20,6 +20,7 @@ const AdminRoute = require("./routes/admin.route");
 
 const app = express();
 
+
 const developmentOrigins = [
     "http://localhost:3000",
     "http://172.20.10.2:3000",
@@ -94,3 +95,5 @@ app.use("/api/admin", AdminRoute);
 app.use((req, res) => {
     res.status(404).send('404: Page not Found');
 });
+
+

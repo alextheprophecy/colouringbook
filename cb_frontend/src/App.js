@@ -1,4 +1,4 @@
-import React, { Suspense, useState} from 'react';
+import React, { Suspense } from 'react';
 import { RouterProvider, createBrowserRouter, Outlet, ScrollRestoration, Navigate } from 'react-router-dom';
 import LoginView from "./Components/Views/login.view";
 import GalleryView from "./Components/Views/gallery.view";
@@ -18,6 +18,10 @@ import AuthSuccess from './Components/Auth/AuthSuccess';
 import Profile from "./Components/Views/Profile";
 import { getUserData } from './Hooks/UserDataHandler';
 import Admin from './Components/Views/Admin';
+import { AppInsightsErrorBoundary } from '@microsoft/applicationinsights-react-js';
+import { reactPlugin, browserHistory } from './utils/appInsights';
+import { usePageTracking } from './utils/usePageTracking';
+import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ children }) => {
   if (!isUserLoggedIn()) {
@@ -38,6 +42,8 @@ const AdminRoute = ({ children }) => {
 };
 
 const AppLayout = () => {    
+    usePageTracking();
+
     return (
         <ErrorBoundaryWrapper>
             <Popup />
@@ -125,17 +131,27 @@ const router = createBrowserRouter([
       },
     ]
   }
-]);
+], {
+    history: browserHistory
+});
+
+ProtectedRoute.propTypes = {
+    children: PropTypes.node.isRequired
+};
+
+AdminRoute.propTypes = {
+    children: PropTypes.node.isRequired
+};
+
 export default function TranslatedApp() {
-    //const [showIntro, setShowIntro] = useState(shouldShowIntro);
-   
-    
     return (
         <Suspense fallback="...loading page...">
-            <RouterProvider router={router} />
-            {/* <AnimatePresence>
-                {showIntro && <IntroScreen />}
-            </AnimatePresence> */}
+            <AppInsightsErrorBoundary 
+                onError={() => errorElement()} 
+                appInsights={reactPlugin}
+            >
+                <RouterProvider router={router} />
+            </AppInsightsErrorBoundary>
         </Suspense>
     );
 }
