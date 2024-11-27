@@ -1,8 +1,9 @@
 const User = require('../../models/user.model')
 const jwt = require('jsonwebtoken')
+require("dotenv").config()
 
-const access_TTL = '6h' //TODO: production change to 1h
-const refresh_TTL = '7d'
+const access_TTL_JWT = '6h' //TODO: production change to 1h
+const refresh_TTL_JWT = '7d'  // for JWT
 
 const emailValidator = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -12,12 +13,18 @@ const emailValidator = (email) => {
 const gen_token = (access_t = true, user) => jwt.sign(
     { id: user._id, email: user.email, isAdmin: user.isAdmin },
     access_t?process.env.JWT_ACCESS_SECRET:process.env.JWT_REFRESH_SECRET,
-    { expiresIn: access_t?access_TTL:refresh_TTL})
+    { expiresIn: (access_t?access_TTL_JWT:refresh_TTL_JWT)})
 
 const add_cookie = (res, cookie_name, cookie) => {
-    const cookieOptions = { httpOnly: true,
+    const refreshTokenExpiry = new Date();
+    refreshTokenExpiry.setSeconds(refreshTokenExpiry.getSeconds() + parseInt(refresh_TTL_JWT));
+    
+    const cookieOptions = { 
+        httpOnly: true,
         secure: true,
-        sameSite: 'Strict' }
+        sameSite: 'Strict',
+        expires: refreshTokenExpiry
+    }
 
     res.cookie(cookie_name, cookie, cookieOptions);
     return res
@@ -68,15 +75,24 @@ class UserControllers {
     }
 
     static RefreshToken = (req, res) => {
-        const cookies = req.cookies
-        console.log("Here are the cookies: ", cookies)
+        const cookies = req.cookies;
+        
+        if (!cookies?.refreshToken) {
+            return res.status(401).json({ error: "No refresh token provided" });
+        }
+
         jwt.verify(cookies.refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
-            if(err) res.status(403).json(`Refresh token expired. Login again!${err}`)
-            else {
-                console.log("refreshed token")
-                res.status(200).json(gen_token(true, {_id: user.id, email: user.email}))
+            if (err) {
+                console.log("Here is the error: ", err)
+                if (err.name === 'TokenExpiredError') {
+                    return res.status(403).json({ error: "Refresh token has expired" });
+                }
+                return res.status(403).json({ error: "Invalid refresh token" });
             }
-        })
+            
+            const access_token = gen_token(true, {_id: user.id, email: user.email});
+            res.status(200).json(access_token);
+        });
     }
 
     static RegisterForm = (req, res) => {
