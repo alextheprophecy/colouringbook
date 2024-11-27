@@ -32,11 +32,18 @@ const corsOptions = {
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
-        'Content-Type', 
+        // Standard headers
+        'Accept',
+        'Accept-Language',
+        'Content-Language',
+        'Content-Type',
+        // Authentication
         'Authorization',
+        // Custom headers your app needs
         'Cache-Control',
         'Pragma',
-        'Accept'
+        'request-id',
+        'x-requested-with'
     ],
     exposedHeaders: ['Set-Cookie'],
     preflightContinue: false,
