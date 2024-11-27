@@ -6,7 +6,7 @@ import store from '../redux/store';
 import { addNotification, updateCredits } from '../redux/websiteSlice';
 import { updateUserCredits } from "./UserDataHandler";
 import i18n from '../i18n'; // Adjust the path based on your project structure
-const localAddress = '172.20.10.2'//'localhost'
+const localAddress = 'localhost'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
 const api = axios.create({
@@ -57,9 +57,9 @@ api.interceptors.response.use(
             case 401:
                 if(errMsg.includes('Expired Token')) return refreshToken(error);
                 break;
-            case 403:
-                showErrorNotification(errMsg);
-                //handleLogout();
+            case 403:      
+                showErrorNotification(errMsg);          
+                handleLogout();
                 break;
             default:
                 showErrorNotification(errMsg);
@@ -77,18 +77,27 @@ const setReqTokenHeaders = (req, token) => {
 
 const refreshToken = async (error) => {
     try {
-        const newAccessToken = await api.get('/user/refreshToken');
-        saveUserToken(newAccessToken.data);
 
-        const originalRequest = error.config;
-        return await api.request(originalRequest);
-    } catch (refreshError) {
+        const newAccessToken = await api.get('/user/refreshToken', {
+            withCredentials: true
+        });
+
+        console.log('Refresh token response:', newAccessToken);
+
+        if (newAccessToken.data) {
+            saveUserToken(newAccessToken.data);
+            const originalRequest = error.config;
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken.data}`;
+            return await axios(originalRequest);
+        }
+    } catch (refreshError) {        
+        await handleLogout();
+        alert(i18n.t('error.api.session-expired'));
         store.dispatch(addNotification({
             type: 'error',
             message: i18n.t('error.api.session-expired'), // Use i18n.t for translations
             duration: 5000
         }));
-        handleLogout();
         return Promise.reject(refreshError);
     }
 }
