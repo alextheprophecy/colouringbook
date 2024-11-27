@@ -6,7 +6,7 @@ import store from '../redux/store';
 import { addNotification, updateCredits } from '../redux/websiteSlice';
 import { updateUserCredits } from "./UserDataHandler";
 import i18n from '../i18n'; // Adjust the path based on your project structure
-const localAddress = '172.20.10.2'//'localhost'
+const localAddress = 'localhost'//'localhost'
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://api.crayons.me/api' : `http://${localAddress}:5000/api`;
 
 const api = axios.create({
@@ -14,6 +14,7 @@ const api = axios.create({
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
     }
 });
 
@@ -55,11 +56,14 @@ api.interceptors.response.use(
         console.log('errMsg', errMsg);
         switch (status) {
             case 401:
-                if(errMsg.includes('Expired Token')) return refreshToken(error);
+                if(errMsg.includes('Expired Token')){
+                    console.log('refreshing token');
+                    return refreshToken(error);
+                }
                 break;
             case 403:
                 showErrorNotification(errMsg);
-                //handleLogout();
+                if(errMsg.includes('Refresh Token'))handleLogout();
                 break;
             default:
                 showErrorNotification(errMsg);
@@ -76,19 +80,26 @@ const setReqTokenHeaders = (req, token) => {
 }
 
 const refreshToken = async (error) => {
+    console.log('Attempting token refresh');
     try {
-        const newAccessToken = await api.get('/user/refreshToken');
-        saveUserToken(newAccessToken.data);
-
-        const originalRequest = error.config;
-        return await api.request(originalRequest);
+        const newAccessToken = await api.get('/user/refreshToken', {
+            withCredentials: true
+        });
+        
+        console.log('Refresh token response:', newAccessToken);
+        
+        if (newAccessToken.data) {
+            saveUserToken(newAccessToken.data);
+            
+            const originalRequest = error.config;
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken.data}`;
+            return await axios(originalRequest);
+        }
     } catch (refreshError) {
-        store.dispatch(addNotification({
-            type: 'error',
-            message: i18n.t('error.api.session-expired'), // Use i18n.t for translations
-            duration: 5000
-        }));
-        handleLogout();
+        console.error('Refresh token error:', refreshError);
+        if (refreshError.response?.status === 401 || refreshError.response?.status === 403) {
+            handleLogout();
+        }
         return Promise.reject(refreshError);
     }
 }

@@ -20,23 +20,6 @@ const AdminRoute = require("./routes/admin.route");
 
 const app = express();
 
-// Configure session before passport and routes
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true
-}));
-
-// Initialize passport after session
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(cookieParser());
-
 const developmentOrigins = [
     "http://localhost:3000",
     "http://172.20.10.2:3000",
@@ -47,8 +30,51 @@ const corsOptions = {
         ? process.env.FRONTEND_CORS_ORIGIN 
         : developmentOrigins,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+        'Content-Type', 
+        'Authorization',
+        'Cache-Control',
+        'Pragma',
+        'Accept'
+    ],
+    exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }
+
 app.use(cors(corsOptions));
+
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    }
+}));
+
+// Initialize passport after session
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.listen(PORT, ()=> {
+    console.log(`listening to port ${PORT}`);
+    console.log(`accepting requests from 
+        ${process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_CORS_ORIGIN 
+        : developmentOrigins}`);
+});
 
 // Import passport config after middleware setup
 require('./controllers/user/passport.controller');
@@ -60,12 +86,4 @@ app.use("/api/admin", AdminRoute);
 //404 Error Handling
 app.use((req, res) => {
     res.status(404).send('404: Page not Found');
-});
-
-app.listen(PORT, ()=> {
-    console.log(`listening to port ${PORT}`);
-    console.log(`accepting requests from 
-        ${process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_CORS_ORIGIN 
-        : developmentOrigins}`);
 });
