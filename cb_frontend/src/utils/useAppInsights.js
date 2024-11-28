@@ -1,18 +1,60 @@
 import { useEffect } from 'react';
-import { appInsights } from '../utils/appInsights';
+import { appInsights } from './appInsights';
+import { getUserData } from '../Hooks/UserDataHandler';
 
 export const useAppInsights = () => {
   const trackEvent = (name, properties = {}) => {
-    appInsights.trackEvent({ name, properties });
+    const userData = getUserData();
+    const enrichedProperties = {
+      ...properties,
+      userEmail: userData?.email,
+      userId: userData?._id,
+      userCredits: userData?.credits,
+    };
+    appInsights.trackEvent({ name, properties: enrichedProperties });
   };
 
   const trackPageView = (name, properties = {}) => {
-    appInsights.trackPageView({ name, properties });
+    const userData = getUserData();
+    const enrichedProperties = {
+      ...properties,
+      userEmail: userData?.email,
+      userId: userData?._id,
+    };
+    appInsights.trackPageView({ name, properties: enrichedProperties });
   };
 
   const trackException = (error, severityLevel = 3) => {
-    appInsights.trackException({ error, severityLevel });
+    const userData = getUserData();
+    const properties = {
+      userEmail: userData?.email,
+      userId: userData?._id,
+    };
+    appInsights.trackException({ 
+      error, 
+      severityLevel,
+      properties 
+    });
   };
 
-  return { trackEvent, trackPageView, trackException };
+  const trackMetric = (name, value, properties = {}) => {
+    const userData = getUserData();
+    const enrichedProperties = {
+      ...properties,
+      userEmail: userData?.email,
+      userId: userData?._id,
+    };
+    appInsights.trackMetric({ 
+      name, 
+      average: value, 
+      properties: enrichedProperties 
+    });
+  };
+
+  return { 
+    trackEvent, 
+    trackPageView, 
+    trackException, 
+    trackMetric 
+  };
 };

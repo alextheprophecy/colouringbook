@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '../redux/websiteSlice';
+import { appInsights } from '../utils/appInsights';
+import { getUserData } from '../Hooks/UserDataHandler';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -14,7 +16,20 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    // You can log the error to your error reporting service here
+    
+    // Track error in App Insights
+    const userData = getUserData();
+    appInsights.trackException({
+      error,
+      properties: {
+        userEmail: userData?.email,
+        userId: userData?._id,
+        errorMessage: error.message,
+        errorName: error.name,
+        errorStack: error.stack
+      },
+      severityLevel: 1 // Error level
+    });
     
     if (this.props.onError) {
       this.props.onError(error);

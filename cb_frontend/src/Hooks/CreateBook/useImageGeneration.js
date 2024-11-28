@@ -1,18 +1,22 @@
 import api from '../../Hooks/ApiHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { addPage, updateContext, updatePage, setSeed } from '../../redux/bookSlice';
+import { useAppInsights } from '../../utils/useAppInsights';
 
 const useImageGeneration = () => {
     const dispatch = useDispatch();
     const {workingOnPage, seeds} = useSelector(state => state.book);
     const creationSettings = useSelector(state => state.website.settings);
+    const { trackEvent, trackMetric, trackException } = useAppInsights();
 
-    const generateImage = async (description, currentContext, bookId) => {
+    const generateImage = async (description, currentContext, bookId) => {    
         if (!description || description.trim() === '') throw new Error('No description found');
 
         const modelKey = Object.keys(seeds)[creationSettings.usingModel];
-        const lastSeed = seeds[modelKey];//currently just fetching the last seed for the model in use
-  
+        const lastSeed = seeds[modelKey];
+        
+        const startTime = Date.now();
+        
         const response = await api.post('image/generate', {
             sceneDescription: description,  
             currentContext, 
@@ -21,10 +25,15 @@ const useImageGeneration = () => {
         });        
         
         const { detailedDescription, updatedContext, ...imageSeedAndRest } = response.data;
-        console.log('NEW IMAGE', {
-            userDescription: description, 
-            detailedDescription, 
-            ...imageSeedAndRest
+
+        // Track generation success and duration
+        const duration = Date.now() - startTime;
+
+        trackEvent('image_generated', {
+            bookId,
+            seed: imageSeedAndRest.seed,
+            duration,
+            creationSettings: creationSettings
         });
 
         dispatch(setSeed({
@@ -38,20 +47,29 @@ const useImageGeneration = () => {
             ...imageSeedAndRest
         }));
 
-        return dispatch(updateContext(updatedContext));        
+        return dispatch(updateContext(updatedContext));     
     }
 
-    const regenerateImage = async (currentPage, pages, currentContext, bookId) => {   
-        console.log('regenerating image', currentPage, pages);
-        console.log('Context', currentContext);     
+    const regenerateImage = async (currentPage, pages, currentContext, bookId) => {  
         const detailedDescription = pages[currentPage]?.detailedDescription;
         if (!detailedDescription) throw new Error('No detailed description found');
+
+        const startTime = Date.now();
+
         const response = await api.post('image/regenerate', {
             detailedDescription, 
             bookId, 
             currentPage: currentPage-1,
             creationSettings
         });
+
+        const duration = Date.now() - startTime;
+        trackMetric('image_regenerated', {
+            bookId,
+            duration,
+            creationSettings: creationSettings
+        });
+
         const { image, seed } = response.data;
         
         return dispatch(updatePage({index: workingOnPage, data: { image, seed }, isRegeneration: true}));
@@ -61,7 +79,8 @@ const useImageGeneration = () => {
         const currentDescription = pages[currentPage]?.detailedDescription;
         const currentSeed = pages[currentPage]?.seed || null;
         if (!currentDescription || !enhancementRequest) throw new Error('Missing required parameters for enhancement');
-       
+
+        const startTime = Date.now();
 
         const response = await api.post('image/enhance', {
             previousDescription: currentDescription,
@@ -71,9 +90,18 @@ const useImageGeneration = () => {
             currentPage: currentPage-1,
             creationSettings : {...creationSettings, seed: currentSeed}
         });
+
+        const duration = Date.now() - startTime;
+       
         const { enhancedDescription, updatedContext, image, seed } = response.data;
 
-        console.log('NEW IMAGE', image, seed);
+        trackEvent('image_enhanced', {
+            bookId,
+            duration,
+            enhancementRequest,
+            creationSettings: creationSettings
+        });
+
         dispatch(updatePage({
             index: workingOnPage,
             data: { 
