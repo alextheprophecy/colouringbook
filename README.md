@@ -2,7 +2,7 @@
 
 # crayons.me: AI-Powered Colouring Book Generator  
 
-- **crayons.me** is a web application to allow children fighting cancer to create personalized colouring book stories using AI.  
+- **crayons.me** is a web application to allow children fighting cancer to create personalized colouring book stories using AI. I am working on making it open to public use aswell.
 - Built with the **MERN** tech stack in JS 🛠️  
 
 ## 🌐 Live Demo: [https://crayons.me](https://crayons.me)  
