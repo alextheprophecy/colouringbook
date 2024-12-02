@@ -32,4 +32,9 @@ Currently in **demo testing** at [**Gustave Roussy Cancer Research Hospital**](h
 
 ---
 
+## Screenshots
+
+![image](https://github.com/user-attachments/assets/023db8c7-6e29-47d9-9db8-c12aac80ea54)
+![image](https://github.com/user-attachments/assets/079e5689-1ae6-415e-a7fb-19cc83b2e5aa)
+
 Feedback is always welcome! 🌟  
