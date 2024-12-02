@@ -2,35 +2,34 @@
 
 # crayons.me: AI-Powered Colouring Book Generator  
 
-- **crayons.me** is a web application to allow children to create personalized colouring book stories using AI.
-- Built with the **MERN** tech stack in JS
+- **crayons.me** is a web application to allow children fighting cancer to create personalized colouring book stories using AI.  
+- Built with the **MERN** tech stack in JS 🛠️  
 
-## Live Demo  
-Visit the website: [crayons.me](https://crayons.me)  
-To use the service during the demo phase, please contact the developer at **crayonsme.dev@gmail.com** to receive credits for access.  
-
-
-## Purpose  
-Currently in **demo testing** at [**Gustave Roussy Cancer Research Hospital**](https://guerirlecancer.gustaveroussy.fr/) in Paris, crayons.me aims to provide comfort for children fighting cancer.  
-
+## 🌐 Live Demo: [crayons.me](https://crayons.me)  
+To use the service during the demo phase, please contact the developer at **📧 crayonsme.dev@gmail.com** to receive credits for book generation.  
 
 ---
 
-## Key Features  
-- **AI Colouring books**:  
-  - Story and image prompt generation via **OpenAI API**
-  - Image generation via **Replicate.com** using BlackForestLabs' Flux models.  
+## 💡 Purpose  
+Currently in **demo testing** at [**Gustave Roussy Cancer Research Hospital**](https://guerirlecancer.gustaveroussy.fr/) in Paris, crayons.me aims to provide comfort and creative joy for children fighting cancer.  
 
-- **Secure User Authentication**:  
-  - Custom made JWT-based authentication with secure HTTP-only cookies.
-  - Integrated Google OAuth
+---
 
-- **File Management**:  
+## ✨ Key Features  
+- **🎨 AI Colouring Books**:  
+  - Story and image prompt generation via **OpenAI API** 🤖  
+  - Image generation via **Replicate.com** using BlackForestLabs' Flux models. 🖼️  
+
+- **🔒 Secure User Authentication**:  
+  - Custom made JWT-based authentication with secure HTTP-only cookies.  
+  - Integrated **Google OAuth** for login.  
+
+- **📂 File Management**:  
   - **AWS S3** for saving, versioning, and retrieving images and books.  
 
-- **Database**:  
+- **📊 Database**:  
   - Data stored and managed using **MongoDB**.  
 
 ---
 
-Feedback and contributions are welcome! 🌟
+Feedback is always welcome! 🌟  
