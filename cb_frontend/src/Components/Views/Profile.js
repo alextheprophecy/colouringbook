@@ -18,7 +18,6 @@ const Profile = () => {
     const [redeemAnimation, setRedeemAnimation] = useState(null);
     const recaptchaRef = useRef(null);
     const [captchaValue, setCaptchaValue] = useState(null);
-    const [showAdminForm, setShowAdminForm] = useState(false);
     const [adminFormData, setAdminFormData] = useState({
         credits: '',
         expiresIn: '30',
@@ -90,32 +89,6 @@ const Profile = () => {
         setCaptchaValue(value);
     };
 
-    const handleAdminFormSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccess('');
-
-        try {
-            const response = await api.post('/user/coupons/create', {
-                adminFormData: {
-                    ...adminFormData,
-                    code: adminFormData.useCustomCode ? adminFormData.customCode : undefined
-                }
-            });
-
-            if (response && response.data) {
-                setSuccess(`Coupon created successfully: ${response.data.coupon.code}`);
-                setAdminFormData({
-                    credits: '',
-                    expiresIn: '30',
-                    customCode: '',
-                    useCustomCode: false
-                });
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to create coupon');
-        }
-    };
 
     if (!userData) {
         return (
