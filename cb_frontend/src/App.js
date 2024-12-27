@@ -16,6 +16,7 @@ import InteractiveDemo from './Components/LandingPage/InteractiveDemo';
 import About from './Components/Views/About';
 import AuthSuccess from './Components/Auth/AuthSuccess';
 import Profile from "./Components/Views/Profile";
+import Payment from "./Components/Views/Payment";
 import { getUserData } from './Hooks/UserDataHandler';
 import Admin from './Components/Views/Admin';
 import { AppInsightsErrorBoundary } from '@microsoft/applicationinsights-react-js';
@@ -117,7 +118,20 @@ const router = createBrowserRouter([
             path: '/admin',
             element: <AdminRoute><ErrorBoundaryWrapper><Admin /></ErrorBoundaryWrapper></AdminRoute>,
           },
+         
         ]
+      },
+      {
+        path: '/payment',
+        element: <ErrorBoundaryWrapper><Payment /></ErrorBoundaryWrapper>,
+      },
+      {
+        path: '/payment/success',
+        element: <ErrorBoundaryWrapper><Navigate to="/profile" replace /></ErrorBoundaryWrapper>,
+      },
+      {
+        path: '/payment/cancel',
+        element: <ErrorBoundaryWrapper><Navigate to="/payment" replace /></ErrorBoundaryWrapper>,
       },
       { 
         path: '/about', 
