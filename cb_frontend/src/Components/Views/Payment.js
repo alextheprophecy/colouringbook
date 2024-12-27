@@ -38,22 +38,28 @@ const PaymentContent = () => {
     const [error, setError] = useState(null);
     const [isExplanationOpen, setIsExplanationOpen] = useState(false);
 
-    const handlePayment = async (priceId) => {
+    const handlePayment = async (productId) => {
         try {
             setLoading(true);
             setError(null);
 
             const { data } = await api.post('/user/create-checkout-session', {
-                priceId: priceId,
+                productId: productId,
             });
             
             if (data.url) {
+                // Save current page state
+                sessionStorage.setItem('paymentInProgress', 'true');
+                sessionStorage.setItem('selectedProductId', productId);
+                
+                // Redirect to Stripe
                 window.location.href = data.url;
             } else {
                 setError('Could not initiate checkout. Please try again.');
             }
         } catch (err) {
-            setError(err.response?.data?.error || 'An error occurred. Please try again later.');
+            const errorMessage = err.response?.data?.error || 'An error occurred. Please try again later.';
+            setError(errorMessage);
             console.error('Payment error:', err);
         } finally {
             setLoading(false);
@@ -139,7 +145,7 @@ const PaymentContent = () => {
                             </div>
                             <div className="mt-auto pt-8">
                                 <button
-                                    onClick={() => handlePayment('price_basic')}
+                                    onClick={() => handlePayment('prod_RTMtbqAVxjzUcX')}
                                     disabled={loading}
                                     className="w-full border-b-4 bg-blue-500 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                                 >
@@ -175,14 +181,14 @@ const PaymentContent = () => {
                             </div>
                             <div className="mt-auto pt-8">
                                 <button
-                                    onClick={() => handlePayment('price_standard')}
+                                    onClick={() => handlePayment('prod_RTMvkAr8HqOm1C')}
                                     disabled={loading}
                                     className="w-full bg-blue-500 border-b-4 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                                 >
                                     <CreditCard className="w-5 h-5" />
                                     {loading ? 'Processing...' : 'Buy Credits'}
-                                    </button>
-                                    <p className="text-center text-gray-500 font-children text-sm mt-3">Pay once, no subscription required</p>
+                                </button>
+                                <p className="text-center text-gray-500 font-children text-sm mt-3">Pay once, no subscription required</p>
                             </div>
                         </div>
                     </motion.div>
@@ -212,7 +218,7 @@ const PaymentContent = () => {
                             </div>
                             <div className="mt-auto pt-8">
                                 <button
-                                    onClick={() => handlePayment('price_pro')}
+                                    onClick={() => handlePayment('prod_RTMwpkB6T2Ispf')}
                                     disabled={loading}
                                     className="w-full bg-blue-500 border-b-4 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                                 >
