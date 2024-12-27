@@ -2,13 +2,41 @@ import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import api from '../../Hooks/ApiHandler';
+import ScribbleText from '../UI/ui_scribble_text.component';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CreditCard, Star, ChevronDown, Info, Gift } from 'lucide-react';
 
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
+const FeatureItem = ({ children, isCredit = false, bonusAmount = 0 }) => (
+    <li className="flex items-center gap-3">
+        <Star className={`flex-shrink-0 ${isCredit ? 'w-6 h-6 text-yellow-500' : 'w-5 h-5 text-yellow-500'}`} />
+        <div className={`font-children ${isCredit ? 'text-2xl font-bold text-blue-600' : 'text-lg font-semibold text-gray-700'}`}>
+            {isCredit ? (
+                <span>
+                    {children}
+                    {bonusAmount > 0 && (
+                        <span className="text-yellow-600 text-xl ml-1">+{bonusAmount} </span>
+                    )}
+                    Credits
+                </span>
+            ) : children}
+        </div>
+    </li>
+);
+
+const BonusSticker = ({ amount }) => (
+    <div className="absolute -right-10 top-4 bg-yellow-400 text-blue-800 font-children font-bold py-2 px-12 shadow-lg transform rotate-12 z-10 flex items-center gap-2">
+        <Gift className="w-5 h-5" />
+        +{amount} Credits gifted
+    </div>
+);
+
 const PaymentContent = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isExplanationOpen, setIsExplanationOpen] = useState(false);
 
     const handlePayment = async (priceId) => {
         try {
@@ -33,107 +61,178 @@ const PaymentContent = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-100/50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <div className="text-center">
-                    <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                        Choose Your Plan
-                    </h2>
-                    <p className="mt-4 text-xl text-gray-600">
-                        Select a credit package that suits your needs
-                    </p>
+                <div className="text-center mb-16">
+                    <div className="flex justify-center mb-2">
+                        <ScribbleText
+                            text="Buy Credits"
+                            sizeFactor={0.7}
+                            fillColor="#027a9f"
+                            strokeColor="#00a4d7"
+                            roughness={0.6}
+                            strokeWidth={1.5}
+                            animate={true}
+                        />
+                    </div>
+                    <button 
+                        onClick={() => setIsExplanationOpen(!isExplanationOpen)}
+                        className="text-gray-600 font-children text-lg font-bold hover:text-blue-600 transition-colors flex items-center gap-2 mx-auto bg-white px-2 py-1 rounded-lg"
+                    >
+                        <Info className="w-5 h-5" />
+                        What is a credit?
+                        <ChevronDown 
+                            className={`w-5 h-5 transition-transform duration-200 ${isExplanationOpen ? 'rotate-180' : ''}`}
+                        />
+                    </button>
+                    <AnimatePresence>
+                        {isExplanationOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="mt-4 bg-white/80 backdrop-blur-sm rounded-lg p-4 max-w-lg mx-auto font-children shadow-sm">
+                                    <h4 className="text-gray-600 font-bold text-xl mb-4">Generate colouring pages with credits</h4>
+                                    <div className="grid grid-cols-3 gap-4 text-center">
+                                        <div>
+                                            <div className="text-gray-600">Basic quality</div>
+                                            <div className="text-2xl font-bold text-blue-600">1 credit</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-gray-600">Advanced quality</div>
+                                            <div className="text-2xl font-bold text-blue-600">3 credits</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-gray-600">Excellent quality</div>
+                                            <div className="text-2xl font-bold text-blue-600">5 credits</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {/* Basic Package */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div className="px-6 py-8">
-                            <h3 className="text-2xl font-bold text-gray-900">Basic Package</h3>
-                            <p className="mt-4 text-gray-600">Perfect for getting started</p>
-                            <p className="mt-8">
-                                <span className="text-4xl font-extrabold text-gray-900">$9.99</span>
-                            </p>
-                            <ul className="mt-6 space-y-4">
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">10 Credits</span>
-                                </li>
-                            </ul>
-                            <button
-                                onClick={() => handlePayment('price_basic')}
-                                disabled={loading}
-                                className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors disabled:opacity-50"
-                            >
-                                {loading ? 'Processing...' : 'Get Started'}
-                            </button>
+                    <motion.div 
+                        className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-visible relative group flex flex-col"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                        <div className="px-6 py-8 relative flex-grow flex flex-col">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900 font-children mb-16">Basic Package</h3>
+                                <p className="text-gray-600 font-children text-lg mb-6"></p>
+                                <p className="mb-8 flex items-baseline">
+                                    <span className="text-5xl font-extrabold text-blue-600 font-children">€5</span>
+                                </p>
+                                <ul className="space-y-4">
+                                    <FeatureItem isCredit>200 </FeatureItem>
+                                    <FeatureItem>Access to all AI models</FeatureItem>
+                                </ul>
+                            </div>
+                            <div className="mt-auto pt-8">
+                                <button
+                                    onClick={() => handlePayment('price_basic')}
+                                    disabled={loading}
+                                    className="w-full border-b-4 bg-blue-500 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    <CreditCard className="w-5 h-5" />
+                                    {loading ? 'Processing...' : 'Buy Credits'}
+                                </button>
+                                <p className="text-center text-gray-500 font-children text-sm mt-3">Pay once, no subscription required</p>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Premium Package */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-blue-500">
-                        <div className="px-6 py-8">
-                            <h3 className="text-2xl font-bold text-gray-900">Premium Package</h3>
-                            <p className="mt-4 text-gray-600">Most popular choice</p>
-                            <p className="mt-8">
-                                <span className="text-4xl font-extrabold text-gray-900">$24.99</span>
-                            </p>
-                            <ul className="mt-6 space-y-4">
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">30 Credits</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">Priority Support</span>
-                                </li>
-                            </ul>
-                            <button
-                                onClick={() => handlePayment('price_premium')}
-                                disabled={loading}
-                                className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors disabled:opacity-50"
-                            >
-                                {loading ? 'Processing...' : 'Get Premium'}
-                            </button>
+                    {/* Standard Package */}
+                    <motion.div 
+                        className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-visible relative group transform scale-105 border-2 border-blue-400 flex flex-col"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        <BonusSticker amount={50} />
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                        <div className="px-6 py-8 relative flex-grow flex flex-col">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900 font-children mb-16">Standard Package</h3>
+                                <p className="text-gray-600 font-children text-lg mb-6"></p>
+                                <p className="mb-8 flex items-baseline">
+                                    <span className="text-5xl font-extrabold text-blue-600 font-children">€10</span>
+                                </p>
+                                <ul className="space-y-4">
+                                    <FeatureItem isCredit bonusAmount={50}>500</FeatureItem>
+                                    <FeatureItem>Access to all AI models</FeatureItem>
+                                    <FeatureItem>Standard Support</FeatureItem>
+                                </ul>
+                            </div>
+                            <div className="mt-auto pt-8">
+                                <button
+                                    onClick={() => handlePayment('price_standard')}
+                                    disabled={loading}
+                                    className="w-full bg-blue-500 border-b-4 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    <CreditCard className="w-5 h-5" />
+                                    {loading ? 'Processing...' : 'Buy Credits'}
+                                    </button>
+                                    <p className="text-center text-gray-500 font-children text-sm mt-3">Pay once, no subscription required</p>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Pro Package */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <div className="px-6 py-8">
-                            <h3 className="text-2xl font-bold text-gray-900">Pro Package</h3>
-                            <p className="mt-4 text-gray-600">For power users</p>
-                            <p className="mt-8">
-                                <span className="text-4xl font-extrabold text-gray-900">$49.99</span>
-                            </p>
-                            <ul className="mt-6 space-y-4">
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">75 Credits</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">Priority Support</span>
-                                </li>
-                                <li className="flex items-center">
-                                    <span className="text-green-500">✓</span>
-                                    <span className="ml-3">Advanced Features</span>
-                                </li>
-                            </ul>
-                            <button
-                                onClick={() => handlePayment('price_pro')}
-                                disabled={loading}
-                                className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors disabled:opacity-50"
-                            >
-                                {loading ? 'Processing...' : 'Go Pro'}
-                            </button>
+                    <motion.div 
+                        className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-visible relative group flex flex-col"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <BonusSticker amount={150} />
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                        <div className="px-6 py-8 relative flex-grow flex flex-col">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900 font-children mb-16">Pro Package</h3>
+                                <p className="text-gray-600 font-children text-lg mb-6"></p>
+                                <p className="mb-8 flex items-baseline">
+                                    <span className="text-5xl font-extrabold text-blue-600 font-children">€25</span>
+                                </p>
+                                <ul className="space-y-4">
+                                    <FeatureItem isCredit bonusAmount={150}>1500</FeatureItem>
+                                    <FeatureItem>Access to all AI models</FeatureItem>
+                                    <FeatureItem>Priority Support</FeatureItem>
+                                    <FeatureItem>Get your best drawings on the homepage!</FeatureItem>
+                                </ul>
+                            </div>
+                            <div className="mt-auto pt-8">
+                                <button
+                                    onClick={() => handlePayment('price_pro')}
+                                    disabled={loading}
+                                    className="w-full bg-blue-500 border-b-4 border-blue-600 hover:bg-blue-600 text-white font-children text-lg py-3 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    <CreditCard className="w-5 h-5" />
+                                    {loading ? 'Processing...' : 'Buy Credits'}
+                                </button>
+                                <p className="text-center text-gray-500 font-children text-sm mt-3">Pay once, no subscription required</p>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
                 {error && (
-                    <div className="mt-8 text-center text-red-600">
+                    <motion.div 
+                        className="mt-8 text-center text-red-600 font-children text-lg"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
                         {error}
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>

@@ -118,19 +118,20 @@ const router = createBrowserRouter([
             path: '/admin',
             element: <AdminRoute><ErrorBoundaryWrapper><Admin /></ErrorBoundaryWrapper></AdminRoute>,
           },
-          {
-            path: '/payment',
-            element: <ErrorBoundaryWrapper><Payment /></ErrorBoundaryWrapper>,
-          },
-          {
-            path: '/payment/success',
-            element: <ErrorBoundaryWrapper><Navigate to="/profile" replace /></ErrorBoundaryWrapper>,
-          },
-          {
-            path: '/payment/cancel',
-            element: <ErrorBoundaryWrapper><Navigate to="/payment" replace /></ErrorBoundaryWrapper>,
-          },
+         
         ]
+      },
+      {
+        path: '/payment',
+        element: <ErrorBoundaryWrapper><Payment /></ErrorBoundaryWrapper>,
+      },
+      {
+        path: '/payment/success',
+        element: <ErrorBoundaryWrapper><Navigate to="/profile" replace /></ErrorBoundaryWrapper>,
+      },
+      {
+        path: '/payment/cancel',
+        element: <ErrorBoundaryWrapper><Navigate to="/payment" replace /></ErrorBoundaryWrapper>,
       },
       { 
         path: '/about', 
